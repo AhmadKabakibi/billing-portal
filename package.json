@@ -1,0 +1,19 @@
+{
+  "name": "billing-portal",
+  "version": "1.0.0",
+  "description": "billing portal system",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AhmadKabakibi/billing-portal.git"
+  },
+  "author": "Ahmad Kabakibi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AhmadKabakibi/billing-portal/issues"
+  },
+  "homepage": "https://github.com/AhmadKabakibi/billing-portal#readme"
+}
