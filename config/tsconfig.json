@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "portal",
+    "password": "1q2w3e4r",
+    "database": "portal_development",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "timezone": "Europe/Amsterdam"
+  },
+  "test": {
+    "username": "portal",
+    "password": "1q2w3e4r",
+    "database": "portal_development",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "timezone": "Europe/Amsterdam"
+  },
+  "production": {
+    "username": "",
+    "password": "",
+    "database": "portal_development",
+    "host": "",
+    "dialect": "postgres",
+    "timezone": "Europe/Amsterdam"
+  }
+}

@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "billing portal system",
   "main": "app.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,43 @@
   "bugs": {
     "url": "https://github.com/AhmadKabakibi/billing-portal/issues"
   },
-  "homepage": "https://github.com/AhmadKabakibi/billing-portal#readme"
+  "homepage": "https://github.com/AhmadKabakibi/billing-portal#readme",
+  "dependencies": {
+    "angular-ui-grid": "^3.2.5",
+    "async": "^2.0.0-rc.6",
+    "babyparse": "^0.4.6",
+    "bluebird": "^3.3.5",
+    "body-parser": "~1.15.1",
+    "connect-flash": "^0.1.1",
+    "connect-session-sequelize": "^3.0.0",
+    "cookie-parser": "~1.4.3",
+    "crypto": "0.0.3",
+    "csurf": "^1.9.0",
+    "csv": "^1.1.0",
+    "csv-parse": "^1.1.1",
+    "csv-stream": "^0.1.3",
+    "csv-table": "^0.1.3",
+    "csvtojson": "^1.0.0",
+    "debug": "~2.2.0",
+    "ejs": "^2.4.1",
+    "express": "^4.14.0",
+    "express-session": "^1.13.0",
+    "geopostcodes-sequelize-import": "^1.1.3",
+    "helmet": "^2.1.0",
+    "moment": "~2.7.0",
+    "moment-timezone": "^0.5.3",
+    "morgan": "~1.7.0",
+    "multer": "^1.1.0",
+    "node-uuid": "^1.4.7",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "pg": "^4.5.2",
+    "pg-hstore": "^2.3.2",
+    "sanitize-filename": "^1.5.3",
+    "sequelize": "^3.21.0",
+    "sequelize-cli": "^2.3.1",
+    "serve-favicon": "~2.3.0",
+    "sys": "0.0.1",
+    "xss": "^0.2.13"
+  }
 }
