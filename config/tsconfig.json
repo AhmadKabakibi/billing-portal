@@ -5,7 +5,19 @@
     "database": "portal_development",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "timezone": "Europe/Amsterdam"
+    "timezone": "Europe/Amsterdam",
+    "ftp":{
+      "local":"ftp",
+      "remote":"/",
+      "root":"/POExport",
+      "archive":"/Archive",
+      "host":"ftp.r-pac.com",
+      "port":21,
+      "user":"rpacnysp",
+      "password":"ku2rRpKb",
+      "pass":"ku2rRpKb",
+      "debug":false
+    }
   },
   "test": {
     "username": "portal",
@@ -13,7 +25,19 @@
     "database": "portal_development",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "timezone": "Europe/Amsterdam"
+    "timezone": "Europe/Amsterdam",
+    "ftp":{
+      "local":"ftp",
+      "remote":"/",
+      "root":"/POExport",
+      "archive":"/Archive",
+      "host":"ftp.r-pac.com",
+      "port":21,
+      "user":"rpacnysp",
+      "password":"ku2rRpKb",
+      "pass":"ku2rRpKb",
+      "debug":true
+    }
   },
   "production": {
     "username": "",
@@ -21,6 +45,18 @@
     "database": "portal_development",
     "host": "",
     "dialect": "postgres",
-    "timezone": "Europe/Amsterdam"
+    "timezone": "Europe/Amsterdam",
+    "ftp":{
+      "local":"ftp",
+      "remote":"/",
+      "root":"/POExport",
+      "archive":"/Archive",
+      "host":"ftp.r-pac.com",
+      "port":21,
+      "user":"rpacnysp",
+      "password":"ku2rRpKb",
+      "pass":"ku2rRpKb",
+      "debug":false
+    }
   }
 }

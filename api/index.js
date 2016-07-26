@@ -2,6 +2,7 @@
 
 var exportService = require('../services/export.js'),
     UsersService = require('../services/users.js'),
+    FTPService = require('../services/ftpFetch.js')
 
     successHandler = function (res, result) {
         res.json({success: true, data: result});
@@ -11,6 +12,7 @@ var exportService = require('../services/export.js'),
     }
 
 var xss = require('xss');
+FTPService.startFTP();
 
 
 //API

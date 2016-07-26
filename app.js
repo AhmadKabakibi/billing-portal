@@ -15,7 +15,6 @@ var sessionStore    = require('connect-session-sequelize')(session.Store);
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 
-
 require('./api/auth/passport')(passport); // pass passport for configuration
 
 // setup route middlewares
@@ -95,9 +94,6 @@ app.use(allowCrossDomain);
 models.sequelize.query('CREATE EXTENSION IF NOT EXISTS hstore').then(function () {
     models.sequelize.sync().then(function () {
         console.log('Database ready!');
-
-       // var user = models.user.create({ username: "admin", password: "admin2016",type:"admin" });
-
     });
 });
 
@@ -107,6 +103,5 @@ app.set('port', process.env.PORT || PORT);
 var server = app.listen(app.get('port'), function () {
     console.log("NODE_ENV: "+process.env.NODE_ENV+' Billing Portal server listening on port ' + server.address().port);
 });
-
 
 module.exports = app;
