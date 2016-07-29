@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/AhmadKabakibi/billing-portal#readme",
   "dependencies": {
+    "adm-zip": "^0.4.7",
     "angular-ui-grid": "^3.2.5",
+    "archiver": "^1.0.1",
     "async": "^2.0.0-rc.6",
     "babyparse": "^0.4.6",
     "bluebird": "^3.3.5",
@@ -57,6 +59,8 @@
     "sequelize-cli": "^2.3.1",
     "serve-favicon": "~2.3.0",
     "sys": "0.0.1",
+    "winston": "^2.2.0",
+    "winston-daily-rotate-file": "^1.2.0",
     "xss": "^0.2.13"
   }
 }

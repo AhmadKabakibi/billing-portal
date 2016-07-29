@@ -4,8 +4,9 @@ var path = require("path");
 var moment    = require('moment') //timing utulity module
 var env       = process.env.NODE_ENV || 'development';
 var config    = require(__dirname + '/../config/tsconfig.json')[env];
-var service //this reference to obj instance
 var ftpLocal  =path.join(__dirname,'../',config.ftp.local);
+var logger = require('./logger.js');
+
 var FTP = require('ftpimp'),
 
     //Initializes the main FTP sequence ftp will emit a ready event once the server connection has been established
@@ -41,7 +42,6 @@ var service = module.exports = {
         onFTPError: 'onFTPError'
     },
     startFTP: function() {
-
         //self = this;
         var events = require('events');
         events.EventEmitter.call(service);
@@ -53,6 +53,7 @@ var service = module.exports = {
             service.sweepFTP();
             service.pingFTP();
         });
+
     },
     pingFTP:function(){
         ftp.ping(function(err,info){
@@ -61,9 +62,12 @@ var service = module.exports = {
                 service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'),err);
                 service.startFTP();
             }
-            console.log("FTP ping Ok: "+info);
+            logger.info("FTP ping Ok: "+info);
         });
-        setTimeout(service.pingFTP,20000);
+
+        service.archive();
+
+        setTimeout(service.pingFTP,30000);
     },
     sweepFTP: function() {
         ftp.ls(config.ftp.root, function (err, fileslist) {
@@ -107,6 +111,18 @@ var service = module.exports = {
     },
     archive: function(){
         //append date/time to the file name and upload it to the folder (Archive)
+        var files = fs.readdirSync(ftpLocal);
+        for(var i in files) {
+            if(path.extname(files[i]) === ".zip") {
+                //do something
+                ftp.put([path.join(ftpLocal,files[i]),path.join(config.ftp.archive,files[i])],function(status){
+                    logger.info(files[i]+' :: '+status);
+                });
+            } else{
+                logger.info('wait sweeping ftp processing');
+            }
+        }
+       // setTimeout(service.archive,60000);
     }
 }
 

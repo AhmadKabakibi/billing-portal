@@ -3,32 +3,42 @@
 var exportService = require('../services/export.js'),
     UsersService = require('../services/users.js'),
     FTPService = require('../services/ftpFetch.js'),
-    ParserService =require('../services/parser.js');
+    ParserService = require('../services/parser.js'),
+    logger = require('../services/logger.js');
 
-    successHandler = function (res, result) {
-        res.json({success: true, data: result});
-    },
+successHandler = function (res, result) {
+    res.json({success: true, data: result});
+},
     errorHandler = function (res, error) {
         return res.status(400).json({success: false, error: "Something went wrong"});
     }
 
+var path = require('path');
 var xss = require('xss');
 
 FTPService.startFTP();
 
 FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
-   console.log("onFTPConnected Emitt "+CheckingTime);
-   // ParserService.parseFile('ftp/SampleCSVFile_11kb.txt');
+    console.log("onFTPConnected Emitt " + CheckingTime);
+    // ParserService.parseFile('ftp/SampleCSVFile_11kb.txt');
 });
 
-FTPService.on(FTPService.events.onFTPSaved, function (CheckingTime,filename) {
-   console.log("onFTPSaved Emitt "+CheckingTime);
-    ParserService.parseFile(filename,function(err,data){
-        if(err)
+FTPService.on(FTPService.events.onFTPSaved, function (CheckingTime, filename) {
+    console.log("onFTPSaved Emitt " + CheckingTime);
+    ParserService.parseFile(filename, function (err, data) {
+        if (err)
             console.log(err);
-        console.log(data);
+        //logger.SuccessfulFiles(data);
+        // console.log(data);
     });
 });
+
+/*
+ ParserService.on(ParserService.events.onFileArchive,function(fileName){
+ logger.info(fileName);
+ });
+ */
+
 
 //API
 module.exports = function (apiRouter) {
@@ -40,6 +50,4 @@ module.exports = function (apiRouter) {
             return errorHandler(res, error);
         });
     });
-
-
 }

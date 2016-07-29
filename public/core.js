@@ -1,4 +1,4 @@
-var App = angular.module('portal', ['ui.router','ui.grid']);
+var App = angular.module('portal', ['ngTouch','ui.router','ui.bootstrap','ngAnimate', 'ui.grid','ngSanitize','ui.grid.expandable','ui.grid.pagination','ui.grid.resizeColumns', 'ui.grid.moveColumns','ui.grid.cellNav','ui.grid.autoResize']);
 /**
  * Configure the Routes
  */
