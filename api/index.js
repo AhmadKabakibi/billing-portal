@@ -16,6 +16,7 @@ successHandler = function (res, result) {
 var path = require('path');
 var xss = require('xss');
 
+
 FTPService.startFTP();
 
 FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
@@ -24,20 +25,9 @@ FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
 });
 
 FTPService.on(FTPService.events.onFTPSaved, function (CheckingTime, filename) {
-    console.log("onFTPSaved Emitt " + CheckingTime);
-    ParserService.parseFile(filename, function (err, data) {
-        if (err)
-            console.log(err);
-        //logger.SuccessfulFiles(data);
-        // console.log(data);
-    });
+    console.log("onFTPSaved Emitt " + CheckingTime + ': '+filename);
 });
 
-/*
- ParserService.on(ParserService.events.onFileArchive,function(fileName){
- logger.info(fileName);
- });
- */
 
 
 //API

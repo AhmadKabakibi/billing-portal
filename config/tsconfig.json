@@ -4,7 +4,10 @@
     "password": "1q2w3e4r",
     "database": "portal_development",
     "host": "127.0.0.1",
-    "dialect": "postgres",
+    "dialect": "mssql",
+    "dialectOptions": {
+      "instanceName": "SQLEXPRESS"
+    },
     "timezone": "Europe/Amsterdam",
     "ftp":{
       "local":"ftp",
@@ -41,12 +44,36 @@
       "debug":true
     }
   },
-  "production": {
+  "beta": {
     "username": "",
     "password": "",
     "database": "portal_development",
     "host": "",
     "dialect": "postgres",
+    "timezone": "Europe/Amsterdam",
+    "ftp":{
+      "local":"ftp",
+      "remote":"/",
+      "root":"/POExport",
+      "archive":"/Archive",
+      "interval":900000,
+      "host":"ftp.r-pac.com",
+      "port":21,
+      "user":"rpacnysp",
+      "password":"ku2rRpKb",
+      "pass":"ku2rRpKb",
+      "debug":false
+    }
+  },
+  "production": {
+    "username": "",
+    "password": "",
+    "database": "portal_development",
+    "host": "",
+    "dialect": "mssql",
+    "dialectOptions": {
+      "instanceName": "SQLEXPRESS"
+    },
     "timezone": "Europe/Amsterdam",
     "ftp":{
       "local":"ftp",

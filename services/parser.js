@@ -4,15 +4,14 @@ var csv = require('csv-stream');
 fs = require('fs');
 var path = require('path');
 var winston = require('winston');
-var moment = require('moment'),now; //timing utulity module
-var env       = process.env.NODE_ENV || 'development';
-var config    = require(__dirname + '/../config/tsconfig.json')[env];
-var ftpLocal  =path.join(__dirname,'../',config.ftp.local);
+var moment = require('moment'), now; //timing utulity module
+var env = process.env.NODE_ENV || 'development';
+var config = require(__dirname + '/../config/tsconfig.json')[env];
+var ftpLocal = path.join(__dirname, '../', config.ftp.local);
 var archiver = require('archiver');
 var archive;
 var archiveFile;
 var logger = require('./logger.js');
-
 
 
 /*#PONumber = 0110822
@@ -62,12 +61,12 @@ var csvStream = csv.createStream(options);
 var service = module.exports = {
 
     events: {
-        onFileCheck:'onFileCheck',
-        onPOCheck:'onPOCheck',
-        onFileReject :'onFileReject',
-        onFileArchive:'onFileArchive',
-        onPOReject:'onPOReject',
-        onPOSaved:'onPOSaved',
+        onFileCheck: 'onFileCheck',
+        onPOCheck: 'onPOCheck',
+        onFileReject: 'onFileReject',
+        onFileArchive: 'onFileArchive',
+        onPOReject: 'onPOReject',
+        onPOSaved: 'onPOSaved',
         onParseError: 'onParseError'
     },
 
@@ -84,18 +83,18 @@ var service = module.exports = {
                 .on('data', function (data) {
                     //console.log('Line: '+i++);
                     //console.log(data);
-                        if (Object.keys(data).length >= 22) {
+                    if (Object.keys(data).length >= 22) {
                         ////check file structure if does match the sample file
-                        service.emit(service.events.onFileCheck,Object.keys(data).length);
-                        if(data.PONumber ==='' || data.PartnerCode ==='' || data.POERPStatus ==='' ||data.ItemCode ==='' ||data.QuantityOrdered ===''){
+                        service.emit(service.events.onFileCheck, Object.keys(data).length);
+                        if (data.PONumber === '' || data.PartnerCode === '' || data.POERPStatus === '' || data.ItemCode === '' || data.QuantityOrdered === '') {
                             //reject the PO don't insert to DB
                             logger.BadPOs(data);
                             callback(null, 'reject the PO');
-                        }else{
+                        } else {
                             // create PO into database table POInfo
-                            models.poinfo.create(data).then(function(PO) {
+                            models.poinfo.create(data).then(function (PO) {
                                 logger.SuccessfulFiles(PO);
-                                callback(null,PO);
+                                callback(null, PO);
                             });
                         }
                     } else {
@@ -113,21 +112,21 @@ var service = module.exports = {
                 .on('close', function () {
                     var fileName = filename.replace(/^.*[\\\/]/, '');
                     archive = archiver('zip');
-                    now= new moment();
-                    archiveFile = fs.createWriteStream(filename+'.'+now.format('YYYYMMDDhhmmss')+'.zip');
+                    now = new moment();
+                    archiveFile = fs.createWriteStream(filename + '.' + now.format('YYYYMMDDhhmmss') + '.zip');
 
-                    archiveFile.on('close', function() {
-                        logger.Archiver('archiver has been finalized '+ fileName + ' archive size '+archive.pointer()/1024 + ' total KB')
-                        service.emit(service.events.onFileArchive,fileName);
+                    archiveFile.on('close', function () {
+                        logger.Archiver('archiver has been finalized ' + fileName + ' archive size ' + archive.pointer() / 1024 + ' total KB')
+                        service.emit(service.events.onFileArchive, fileName);
                         callback(null, 'close');
                     });
-                    archive.on('error', function(err) {
+                    archive.on('error', function (err) {
                         logger.error(err);
                         callback(err, 'error');
                     });
                     archive.pipe(archiveFile);
                     archive
-                        .append(fs.createReadStream(filename), { name: fileName })
+                        .append(fs.createReadStream(filename), {name: fileName})
                         .finalize();
                 })
 
