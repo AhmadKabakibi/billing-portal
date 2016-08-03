@@ -104,7 +104,6 @@ if (config.dialect == 'mssql') {
 
 app.set('port', process.env.PORT || PORT);
 
-
 // ROUTES
 require('./routes/index')(app, passport);
 

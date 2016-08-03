@@ -84,7 +84,7 @@ info.configure({
                 return moment().format('YYYY-MM-DD HH:mm:ss');
             },
             filename: 'info',
-            dirname: logDir,
+            dirname: folderSystem,
             datePattern: 'yyyyMMdd.log',
             level: 'info',
             /*maxFiles: 2, maxsize: 10485760, colorize: true, tailable: true,

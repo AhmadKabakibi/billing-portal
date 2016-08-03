@@ -120,9 +120,9 @@ var service = module.exports = {
                 service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
                 service.startFTP();
             }
-            logger.info("FTP ping Ok: " + info);
+            logger.sys("FTP ping Ok: " + info);
         });
-        setTimeout(service.pingFTP, 30000);
+        setTimeout(service.pingFTP, 60000);
     },
     sweepFTP: function () {
         ftp.ls(config.ftp.root, function (err, fileslist) {
@@ -131,9 +131,12 @@ var service = module.exports = {
                 service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
             }
             console.log('sweeping FTP server every ' + (config.ftp.interval / 1000) / 60 + ' minutes!');
+            logger.info('sweeping FTP server every ' + (config.ftp.interval / 1000) / 60 + ' minutes!');
+
             //console.log(fileslist)
             if (fileslist.length == 0) {
                 console.log("There is no new files in root " + config.ftp.root);
+                logger.info("There is no new files in root " + config.ftp.root);
             }
 
             for (var i = 0; i < fileslist.length; i++) {
@@ -161,11 +164,11 @@ var service = module.exports = {
             //start deleteing the file from remote ftp it's already saved to local disk
             ftp.unlink(remote_path_file, function (err, file) {
                 if (err) {
-                    console.log("unlink error: " + err);
+                    logger.error("unlink error: " + err);
                     var now = moment();
                     service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
                 }
-                console.log("unlink deleted from ftp " + file);
+                logger.info("unlink deleted from ftp " + file);
                 var now = moment();
                 service.emit(service.events.onFTPUnlink, now.format('YYYY-MM-DD hh:mm'), file);
             });
@@ -177,8 +180,10 @@ var service = module.exports = {
         ftp.put([path.join(ftpLocal, zipFile), path.join(config.ftp.archive, zipFile)], function (status) {
             logger.SuccessfulFiles(zipFile + ' :FTP status Code: ' + status);
             fs.unlink(path.join(ftpLocal, zipFile), function (err) {
-                if (err) console.log(err);
-                console.log(zipFile + ' deleted successfully from local disk');
+                if (err){
+                    logger.error('error deleting '+zipFile+' '+err);
+                }
+                logger.info(zipFile + ' deleted successfully from local disk')
             });
         });
 
@@ -245,13 +250,15 @@ var service = module.exports = {
                     archiveFile = fs.createWriteStream(filename + '.' + now.format('YYYYMMDDhhmmss') + '.zip');
 
                     archiveFile.on('close', function () {
-                        logger.Archiver('archiver has been finalized and send ' + fileName + ' to FTP uploader, archive size ' + archive.pointer() / 1024 + ' total KB')
+                        logger.Archiver('archiver has been finalized and send ' + fileName + ' to FTP uploader, archive size ' + archive.pointer() / 1024 + ' total KB');
 
 
                         //delete local downloaded file from FTP it has been parsed and prepared to archive and send to FTP archive uploader
                         fs.unlink(filename, function (err) {
-                            if (err) console.log(err);
-                            console.log(fileName + ' deleted successfully from local disk');
+                            if (err){
+                                logger.error('error deleting '+fileName+' '+err);
+                            }
+                            logger.info(fileName + ' deleted successfully from local disk');
                         });
 
                         //start service FTP archive uploader

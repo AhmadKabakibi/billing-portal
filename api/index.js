@@ -20,15 +20,8 @@ var xss = require('xss');
 FTPService.startFTP();
 
 FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
-    console.log("onFTPConnected Emitt " + CheckingTime);
-    // ParserService.parseFile('ftp/SampleCSVFile_11kb.txt');
+    logger.info("onFTPConnected Emitt " + CheckingTime);
 });
-
-FTPService.on(FTPService.events.onFTPSaved, function (CheckingTime, filename) {
-    console.log("onFTPSaved Emitt " + CheckingTime + ': '+filename);
-});
-
-
 
 //API
 module.exports = function (apiRouter) {
