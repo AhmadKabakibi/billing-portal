@@ -117,10 +117,11 @@ var service = module.exports = {
         ftp.ping(function (err, info) {
             if (err) {
                 var now = moment();
-                service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
+                //service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
+                logger.error('error ping ' + err);
                 service.startFTP();
             }
-            logger.sys("FTP ping Ok: " + info);
+            logger.info("FTP ping Ok: " + info);
         });
         setTimeout(service.pingFTP, 60000);
     },
@@ -128,7 +129,8 @@ var service = module.exports = {
         ftp.ls(config.ftp.root, function (err, fileslist) {
             if (err) {
                 var now = moment();
-                service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
+                //service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
+                logger.error('error sweepFTP ' + err);
             }
             console.log('sweeping FTP server every ' + (config.ftp.interval / 1000) / 60 + ' minutes!');
             logger.info('sweeping FTP server every ' + (config.ftp.interval / 1000) / 60 + ' minutes!');
@@ -150,13 +152,14 @@ var service = module.exports = {
         ftp.save([remote_path_file, local_path_file], function (err, filename) {
             if (err) {
                 var now = moment();
-                service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
+                //service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
+                logger.error('error download ' + err);
             }
             console.log("Saved " + filename);
             var now = moment();
 
             //emit onFTPSaved file has been saved already to local disk
-            service.emit(service.events.onFTPSaved, now.format('YYYY-MM-DD hh:mm'), filename);
+            //service.emit(service.events.onFTPSaved, now.format('YYYY-MM-DD hh:mm'), filename);
 
             //start parsing saved file
             service.parseFile(filename);
@@ -165,12 +168,13 @@ var service = module.exports = {
             ftp.unlink(remote_path_file, function (err, file) {
                 if (err) {
                     logger.error("unlink error: " + err);
-                    var now = moment();
-                    service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
+                    //var now = moment();
+                    //service.emit(service.events.onFTPError, now.format('YYYY-MM-DD hh:mm'), err);
+                    logger.error('error deleting from ftp ' + err);
                 }
                 logger.info("unlink deleted from ftp " + file);
-                var now = moment();
-                service.emit(service.events.onFTPUnlink, now.format('YYYY-MM-DD hh:mm'), file);
+                //var now = moment();
+                //service.emit(service.events.onFTPUnlink, now.format('YYYY-MM-DD hh:mm'), file);
             });
         });
     },
@@ -180,8 +184,8 @@ var service = module.exports = {
         ftp.put([path.join(ftpLocal, zipFile), path.join(config.ftp.archive, zipFile)], function (status) {
             logger.SuccessfulFiles(zipFile + ' :FTP status Code: ' + status);
             fs.unlink(path.join(ftpLocal, zipFile), function (err) {
-                if (err){
-                    logger.error('error deleting '+zipFile+' '+err);
+                if (err) {
+                    logger.error('error deleting ' + zipFile + ' ' + err);
                 }
                 logger.info(zipFile + ' deleted successfully from local disk')
             });
@@ -224,10 +228,40 @@ var service = module.exports = {
                                 "QuantityOrdered": data.QuantityOrdered
                             });
                         } else {
-                            // create PO into database table POInfo
-                            models.poinfo.create(data).then(function (PO) {
-                                //logger
-                            });
+                            /*PO Status
+                             If the same PO number is received in the files received from ERP
+                             Check if the status in the PO =
+                             Open                O             ignore and do nothing
+                             Changed             C             replace existing PO if it is not invoiced yet
+                             BackOrdered         B             ignore and do nothing
+                             Completed           X             ignore and do nothing*/
+
+                            if (data.POERPStatus == 'c'||data.POERPStatus == 'C') {
+                                models.poinfo.findAll({
+                                    where: {PONumber: data.PONumber}
+                                }).then(function (pos) {
+                                    if (pos.length) {
+                                        //replace existing PO if it is not invoiced yet
+                                        console.log('found: ' + pos.length);
+                                        models.poinfo.update(data, {where: {PONumber: data.PONumber}}).then(function(){
+                                            logger.debug(data.PONumber+" status has been changed "+ data.POERPStatus)
+                                        });
+                                    } else {
+                                        console.log('no pos found: ');
+                                        //ignore and do nothing
+                                        // create PO into database table POInfo
+                                        models.poinfo.create(data).then(function (PO) {
+                                            //logger
+                                        });
+                                    }
+                                });
+
+                            } else {
+                                // create PO into database table POInfo
+                                models.poinfo.create(data).then(function (PO) {
+                                    //logger
+                                });
+                            }
                         }
                     } else {
                         //reject the file and archive it
@@ -255,8 +289,8 @@ var service = module.exports = {
 
                         //delete local downloaded file from FTP it has been parsed and prepared to archive and send to FTP archive uploader
                         fs.unlink(filename, function (err) {
-                            if (err){
-                                logger.error('error deleting '+fileName+' '+err);
+                            if (err) {
+                                logger.error('error deleting ' + fileName + ' ' + err);
                             }
                             logger.info(fileName + ' deleted successfully from local disk');
                         });
