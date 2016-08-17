@@ -18,13 +18,19 @@ module.exports = function (app,passport) {
   // =====================================
   // HOME PAGE (with login links) ========
   // =====================================
-  app.get('/', function(req, res) {
-    res.render('index'); // load the index.ejs file
+  app.get('/', function (req, res) {
+    // load the single view file (angular will handle the page changes on the front-end)
+    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
   });
+
+  /*
+  app.get('/', function(req, res) {
+    res.sendFile(path.resolve(app.get('appPath') + '/index.html'));
+  });*/
 
 
   // process the login form
-  app.post('/login', passport.authenticate('local', {
+  app.post('/local', passport.authenticate('local', {
     successRedirect : '/dashboard', // redirect to the secure profile section
     failureRedirect : '/', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages

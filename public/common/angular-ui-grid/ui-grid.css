@@ -757,8 +757,8 @@ fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.
 /*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
-    font-family: 'ui-grid';
-    src: url('@{font-path}ui-grid.svg?12312827#ui-grid') format('svg');
+    font-family: 'src-grid';
+    src: url('@{font-path}src-grid.svg?12312827#src-grid') format('svg');
   }
 }
 */

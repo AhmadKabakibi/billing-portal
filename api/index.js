@@ -6,6 +6,8 @@ var exportService = require('../services/export.js'),
     ParserService = require('../services/parser.js'),
     logger = require('../services/logger.js');
 
+var acl = require('acl');
+
 successHandler = function (res, result) {
     res.json({success: true, data: result});
 },

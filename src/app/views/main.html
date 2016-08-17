@@ -1,0 +1,37 @@
+<md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left"
+            class="md-whiteframe-z2 md-sidenav-left">
+    <md-button ng-repeat-start="item in vm.menuItems" layout="column" layout-align="center center"
+               flex class="capitalize" ng-click="vm.selectItem(item)"
+               ui-sref-active="md-warn" ui-sref="{{item.sref}}">
+        <div hide-sm hide-md class="md-tile-content">
+            <i class="material-icons md-36">{{item.icon}}</i>
+        </div>
+        <div class="md-tile-content">
+            {{item.name}}
+        </div>
+    </md-button>
+    <md-divider ng-repeat-end></md-divider>
+    <!-- <md-button ng-click="vm.showActions($event)" layout-align="center center">
+         <div class="md-tile-content">
+           Actions
+         </div>
+     </md-button>-->
+</md-sidenav>
+
+<div layout="column" flex>
+    <md-toolbar layout="row" layout-align="start center">
+        <section layout-margin >
+            <h1>Billing Portal</h1>
+        </section>
+
+        <!--  <section layout-align="start center" layout-fill flex>
+              <md-button hide-gt-sm ng-click="vm.toggleItemsList()" aria-label="Menu">
+                  <i class="material-icons">menu</i>
+              </md-button>
+          </section>-->
+    </md-toolbar>
+
+    <md-content flex class="md-padding page-content">
+        <div ui-view></div>
+    </md-content>
+</div>

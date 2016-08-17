@@ -242,12 +242,13 @@ var service = module.exports = {
                                 }).then(function (pos) {
                                     if (pos.length) {
                                         //replace existing PO if it is not invoiced yet
-                                        console.log('found: ' + pos.length);
+                                        //console.log('found: ' + pos.length);
                                         models.poinfo.update(data, {where: {PONumber: data.PONumber}}).then(function(){
+                                            //console.log(data.PONumber+" status has been changed "+ data.POERPStatus)
                                             logger.debug(data.PONumber+" status has been changed "+ data.POERPStatus)
                                         });
                                     } else {
-                                        console.log('no pos found: ');
+                                        //console.log('no pos found: ');
                                         //ignore and do nothing
                                         // create PO into database table POInfo
                                         models.poinfo.create(data).then(function (PO) {
@@ -256,7 +257,7 @@ var service = module.exports = {
                                     }
                                 });
 
-                            } else {
+                            } else if (data.POERPStatus == 'o'||data.POERPStatus == 'O') {
                                 // create PO into database table POInfo
                                 models.poinfo.create(data).then(function (PO) {
                                     //logger

@@ -33,7 +33,7 @@ if (!fs.existsSync(folderDebugger))    fs.mkdirSync(folderDebugger);
 
 var debug = new winston.Logger({
     levels: {
-        info: 'debug'
+        info: 'info'
     },
     transports: [
         new (winston.transports.Console)({
@@ -54,10 +54,8 @@ debug.configure({
             dirname: folderDebugger,
             datePattern: 'yyyyMMdd.log',
             level: 'info',
-/*
-            maxFiles: 2, maxsize: 10485760, colorize: true, tailable: true,
-            json: true,
-*/
+            /*maxFiles: 2, maxsize: 10485760, colorize: true, tailable: true,
+             json: true,*/
             exitOnError: false
         })
     ]
@@ -253,7 +251,7 @@ Archiver.configure({
 var exports = {
     winston: winston,
     debug: function (msg) {
-        debug.debug(msg);
+        debug.info(msg);
     },
     info: function (msg) {
         if (!global.blHasConsoleOutput && info.transports['console'] != null) info.remove(winston.transports.Console)
