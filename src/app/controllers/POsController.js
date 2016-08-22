@@ -2,51 +2,13 @@
 
     angular
         .module('app')
-        .controller('MainController', [
-            'navService','POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal','$mdEditDialog', '$scope','$rootScope','$timeout',
-            MainController
+        .controller('POsController', [
+            '$mdEditDialog', '$q', '$scope', '$timeout', 'POsService',
+            POsController
         ]);
 
-    function MainController(navService,POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $q, $scope,$rootScope, $timeout) {
+    function POsController($mdEditDialog, $q, $scope, $timeout, POsService) {
         var vm = this;
-
-        $scope.posHeader = null;
-
-        vm.menuItems = [];
-        vm.selectItem = selectItem;
-        vm.toggleItemsList = toggleItemsList;
-        vm.title = $state.current.data.title;
-        vm.toggleRightSidebar = toggleRightSidebar;
-
-
-        navService
-            .loadAllItems()
-            .then(function (menuItems) {
-                vm.menuItems = [].concat(menuItems);
-            });
-
-        function toggleRightSidebar() {
-            $mdSidenav('right').toggle();
-        }
-
-        function toggleItemsList() {
-            var pending = $mdBottomSheet.hide() || $q.when(true);
-
-            pending.then(function () {
-                $mdSidenav('left').toggle();
-            });
-        }
-
-        function selectItem(item) {
-            vm.title = item.name;
-            vm.toggleItemsList();
-        }
-
-        /*
-         vm.signout = function() {
-         principal.authenticate(null);
-         $state.go('login');
-         }*/
 
         //PosService
         // Assume we have a $nutrition service that provides an API for communicating with the server
@@ -95,34 +57,16 @@
         // Order Information: This will include the PO header information.
         // for testing ngRepeat
         $scope.columns = [{
-            name: 'PO Number'
+            name: 'File name'
         }, {
-            name: 'Partner'
+            name: 'Date received'
         }, {
-            name: 'Order Date'
+            name: 'Status'
         }, {
-            name: 'Division data'
+            name: 'Failure reason'
         }, {
-            name: 'Order Type'
-        }, {
-            name: 'Partner Code'
-        }, {
-            name: 'Ship to Name'
-        }, {
-            name: 'Status data'
+            name: 'Download'
         }];
-
-        function getAll() {
-            POsService.loadAllItems()
-                .then(function (response) {
-                    $scope.posHeader = response.data.data;
-                    //alert(JSON.stringify($scope.posHeader));
-                }, function (error) {
-                    $scope.status = 'Unable to load customer data: ' + error.message;
-                    console.log($scope.status);
-                });
-        }
-        getAll();
 
         $scope.pos = {
             "count": 9,
@@ -262,6 +206,9 @@
 
             }, 2000);
         };
+
+
+
 
     }
 

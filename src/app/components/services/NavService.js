@@ -17,17 +17,17 @@
       {
         name: 'Received',
         icon: 'import_export',
-        sref: '.profile'
+        sref: '.received'
       },
       {
         name: 'Exported',
         icon: 'unarchive',
-        sref: '.table'
+        sref: '.exported'
       },
       {
         name: 'Setup',
         icon: 'settings',
-        sref: '.dashboard'
+        sref: '.settings'
       }
     ];
 

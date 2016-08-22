@@ -1,47 +1,93 @@
-<md-content md-theme="light" class="md-padding" layout="row" layout-sm="column">
+<md-content md-theme="light" class="md-padding" layout-xs="column" layout="row">
 
-  <div layout="column" layout-align="center center">
-    <md-select placeholder="Customer" ng-model="user" md-on-open="loadUsers()" style="min-width: 200px;">
-      <md-option ng-value="user" ng-repeat="user in users">{{user.name}}</md-option>
-    </md-select>
-    <!--<p class="md-caption">selected customer: {{ user ? user.name : 'No one yet' }}</p>-->
+    <md-card flex md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout="row" layout-wrap layout-padding>
+        <div flex="30">
+            <md-select placeholder="Customer" ng-model="user" md-on-open="loadUsers()" style="min-width: 200px;">
+                <md-option ng-value="user" ng-repeat="user in users">{{user.name}}</md-option>
+            </md-select>
+            <!--<p class="md-caption">selected customer: {{ user ? user.name : 'No one yet' }}</p>-->
 
-    <md-input-container>
-      <label>PO Number</label>
-      <input ng-model="user.ponumber">
-    </md-input-container>
+            <md-input-container>
+                <label>PO Number</label>
+                <input ng-model="user.ponumber">
+            </md-input-container>
 
-    <md-select placeholder="Status" ng-model="user" md-on-open="loadUsers()" style="min-width: 200px;">
-      <md-option ng-value="user" ng-repeat="user in users">{{user.name}}</md-option>
-    </md-select>
+            <md-select placeholder="Status" ng-model="user" md-on-open="loadUsers()" style="min-width: 200px;">
+                <md-option ng-value="user" ng-repeat="user in users">{{user.name}}</md-option>
+            </md-select>
 
-  </div>
+            <md-button class="md-raised">run</md-button>
 
+        </div>
+    </md-card>
+
+    <md-card flex="30" md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout-margin>
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">My PO Summary:</span>
+                <span class="md-subhead">New:</span>
+                <span class="md-subhead">Pending:</span>
+                <span class="md-subhead">Accepted:</span>
+                <span class="md-subhead">Rejected:</span>
+                <span class="md-subhead">Archived:</span>
+            </md-card-title-text>
+        </md-card-title>
+    </md-card>
 </md-content>
 
 
 <md-toolbar class="md-table-toolbar md-default" ng-show="!options.rowSelection || !selected.length">
-  <div class="md-toolbar-tools">
-    <span>My POs</span>
-    <span flex></span>
-    <md-button class="md-icon-button" ng-click="loadStuff()">
-      <md-icon>refresh</md-icon>
-    </md-button>
-    <md-button class="md-icon-button">
-      <md-icon>filter_list</md-icon>
-    </md-button>
-    <md-button class="md-icon-button">
-      <md-icon>more_vert</md-icon>
-    </md-button>
-  </div>
+    <div class="md-toolbar-tools">
+        <span>My POs</span>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="loadStuff()">
+            <md-icon>refresh</md-icon>
+        </md-button>
+        <md-button class="md-icon-button">
+            <md-icon>filter_list</md-icon>
+        </md-button>
+        <md-button class="md-icon-button">
+            <md-icon>more_vert</md-icon>
+        </md-button>
+    </div>
 </md-toolbar>
 
 <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length">
-  <div class="md-toolbar-tools">
-    <span>{{selected.length}} {{selected.length > 1 ? 'items' : 'item'}} selected</span>
-    <span flex></span>
-    <md-button class="md-icon-button">
-      <md-icon>delete</md-icon>
-    </md-button>
-  </div>
+    <div class="md-toolbar-tools">
+        <span>{{selected.length}} {{selected.length > 1 ? 'items' : 'item'}} selected</span>
+        <span flex></span>
+    </div>
 </md-toolbar>
+
+<md-table-container>
+    <table data-md-table data-md-row-select="options.rowSelection" multiple="{{options.multiSelect}}"
+           data-ng-model="selected" md-progress="promise">
+        <thead md-head md-order="query.order">
+        <tr md-row>
+            <th md-column ng-repeat="column in columns">
+                <span>{{column.name}}</span>
+            </th>
+        </tr>
+        </thead>
+
+        <tbody md-body>
+        <tr md-row md-select="item" md-select-id="name" data-md-on-select="log" md-on-deselect="deselect"
+            x-md-auto-select="options.autoSelect"
+            data-ng-repeat="item in posHeader | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page - 1) * query.limit">
+            <td md-cell>{{item.PONumber}}</td>
+            <td md-cell width="80%">{{item.PartnerName}}</td>
+            <td md-cell width="100%">{{item.PODate | date:'yyyy-dd-MM'}}</td>
+            <td md-cell>{{item.Division}}</td>
+            <td md-cell>{{item.OrderType}}</td>
+            <td md-cell>{{item.PartnerCode}}</td>
+            <td md-cell width="100%">{{item.ShipToName}}</td>
+            <td md-cell>{{item.POERPStatus}}</td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>
+
+<data-md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                          md-total="{{posHeader.length}}" md-on-paginate="onPaginate"
+                          md-page-select="options.pageSelect"
+                          md-boundary-links="options.boundaryLinks"></data-md-table-pagination>

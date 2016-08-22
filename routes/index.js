@@ -1,69 +1,87 @@
 var models = require('../models');
 var express = require('express');
+var jwt = require('jsonwebtoken');
+
+
+//var bcrypt = require('bcrypt');
+
+
+var env = process.env.NODE_ENV || 'development';
+var config = require(__dirname + '/../config/tsconfig.json')[env];
 
 var path = require('path'),
     rootPath = path.normalize(__dirname + '/../'),
     apiRouter = express.Router(),
     router = express.Router();
 
-module.exports = function (app,passport) {
+module.exports = function (app, passport) {
 
-  app.use('/api', isLoggedIn, apiRouter);
-  app.use('/', router);
+    //app.use('/api',isLoggedIn, apiRouter);
+    app.use('/api', apiRouter);
+    app.use('/', router);
 
-  // API routes
-  require('../api/index.js')(apiRouter);
-
-
-  // =====================================
-  // HOME PAGE (with login links) ========
-  // =====================================
-  app.get('/', function (req, res) {
-    // load the single view file (angular will handle the page changes on the front-end)
-    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
-  });
-
-  /*
-  app.get('/', function(req, res) {
-    res.sendFile(path.resolve(app.get('appPath') + '/index.html'));
-  });*/
+    // API routes
+    require('../api/index.js')(apiRouter);
 
 
-  // process the login form
-  app.post('/local', passport.authenticate('local', {
-    successRedirect : '/dashboard', // redirect to the secure profile section
-    failureRedirect : '/', // redirect back to the signup page if there is an error
-    failureFlash : true // allow flash messages
-  }));
-
-  // =====================================
-  // PROFILE SECTION =========================
-  // =====================================
-  // we will want this protected so you have to be logged in to visit
-  // we will use route middleware to verify this (the isLoggedIn function)
-  app.get('/dashboard', isLoggedIn, function(req, res) {
-    res.render('dashboard', {
-      user : req.user // get the user out of session and pass to template
+    // =====================================
+    // HOME PAGE (with login links) ========
+    // =====================================
+    app.get('*', function (req, res) {
+        // load the single view file (angular will handle the page changes on the front-end)
+        res.sendFile(path.join(__dirname, '../dist', 'index.html'));
     });
-  });
 
-  // =====================================
-  // LOGOUT ==============================
-  // =====================================
-  app.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-  });
+    // process the login form
+    // route to authenticate a user (POST http://localhost:PORT/auth/authenticate)
+    // Authenticate the user and get a JSON Web Token to include in the header of future requests.
+    app.post('/auth/authenticate', passport.authenticate('local', {}), function (req, res) {
+        if (req.user)
+            res.json({success: true, user: req.user});
+        else
+            res.send({success: false, msg: 'Authentication failed.'});
+    });
 
+    // create a new user account (POST http://localhost:PORT/auth/new)
+    app.post('/auth/new', function (req, res) {
+        if (!req.body.username || !req.body.password) {
+            res.json({success: false, msg: 'Please pass username and password.'});
+        } else {
+            models.user.findAll({
+                where: {username: req.body.username}
+            }).then(function (exists_user) {
+                if (exists_user.length) {
+                    return res.json({success: false, msg: 'Username already exists.'});
+                } else {
+                    models.user.create({
+                        username: req.body.username,
+                        password: req.body.password,
+                        type: 'admin'
+                    }).then(function (user) {
+                        res.json({success: true, msg: 'Successful created new user.'});
+                    });
+                }
+            })
+        }
+    });
 
+    // =====================================
+    // LOGOUT ==============================
+    // =====================================
+    app.get('/auth/logout', function (req, res) {
+        req.logout();
+        res.status(200).json({success: true, msg: 'logout'});
+    });
 }
+
 // route middleware to make sure
-function isLoggedIn (req, res, next) {
-  // if user is authenticated in the session, call the next() to call the next request handler
-  // Passport adds this method to request object. A middleware is allowed to add properties to
-  // request and response objects
-  // if user is authenticated in the session, carry on
-  if (req.isAuthenticated())
-    return next()
-  res.redirect('/')
+
+function isLoggedIn(req, res, next) {
+    // if user is authenticated in the session, call the next() to call the next request handler
+    // Passport adds this method to request object. A middleware is allowed to add properties to
+    // request and response objects
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated())
+        return next()
+    res.send(401);
 }

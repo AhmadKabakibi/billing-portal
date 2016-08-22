@@ -21,7 +21,8 @@
       "password":"ku2rRpKb",
       "pass":"ku2rRpKb",
       "debug":false
-    }
+    },
+    "secret":"r-pacSecret"
   },
   "test": {
     "username": "portal",
@@ -42,7 +43,8 @@
       "password":"ku2rRpKb",
       "pass":"ku2rRpKb",
       "debug":true
-    }
+    },
+    "secret":"r-pacSecret"
   },
   "beta": {
     "username": "",
@@ -63,7 +65,8 @@
       "password":"ku2rRpKb",
       "pass":"ku2rRpKb",
       "debug":false
-    }
+    },
+    "secret":"r-pacSecret"
   },
   "production": {
     "username": "",
@@ -88,5 +91,6 @@
       "pass":"ku2rRpKb",
       "debug":false
     }
-  }
+  },
+  "secret":"r-pacSecret"
 }

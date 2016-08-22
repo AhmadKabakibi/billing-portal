@@ -4,26 +4,30 @@ var exportService = require('../services/export.js'),
     UsersService = require('../services/users.js'),
     FTPService = require('../services/ftpFetch.js'),
     ParserService = require('../services/parser.js'),
-    logger = require('../services/logger.js');
-
-var acl = require('acl');
-
-successHandler = function (res, result) {
-    res.json({success: true, data: result});
-},
+    logger = require('../services/logger.js'),
+    successHandler = function (res, result) {
+        res.json({success: true, data: result});
+    },
     errorHandler = function (res, error) {
         return res.status(400).json({success: false, error: "Something went wrong"});
     }
 
+var models = require('../models');
+var jwt = require('jwt-simple');
+//var bcrypt = require('bcrypt');
+var env = process.env.NODE_ENV || 'development';
+var config = require(__dirname + '/../config/tsconfig.json')[env];
+
 var path = require('path');
 var xss = require('xss');
 
+/*
+ FTPService.startFTP();
 
-FTPService.startFTP();
-
-FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
-    logger.info("onFTPConnected Emitt " + CheckingTime);
-});
+ FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
+ logger.info("onFTPConnected Emitt " + CheckingTime);
+ });
+ */
 
 //API
 module.exports = function (apiRouter) {
@@ -35,4 +39,10 @@ module.exports = function (apiRouter) {
             return errorHandler(res, error);
         });
     });
+
+
+    apiRouter.get('/auth', function (req, res) {
+        return res.json({success:true,user:req.user});
+    });
+
 }
