@@ -56,7 +56,7 @@
 
         // Order Information: This will include the PO header information.
         // for testing ngRepeat
-        $scope.columns = [{
+        $scope.columnsFiles = [{
             name: 'File name'
         }, {
             name: 'Date received'

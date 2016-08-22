@@ -27,7 +27,7 @@
            data-ng-model="selected" md-progress="promise">
         <thead md-head md-order="query.order">
         <tr md-row>
-            <th md-column ng-repeat="column in columns" md-numeric="column.numeric" md-order-by="{{column.orderBy}}">
+            <th md-column ng-repeat="column in columnsFiles" md-numeric="column.numeric" md-order-by="{{column.orderBy}}">
                 <span>{{column.name}}</span>
                 <span ng-if="column.unit">({{column.unit}})</span>
             </th>
