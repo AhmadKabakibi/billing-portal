@@ -48,6 +48,18 @@ module.exports = function (apiRouter) {
         });
     });
 
+/*
+
+    apiRouter.post('/po/:poNumber', function (req, res) {
+        //req.params.poNumber
+        return exportService.getPOs().then(function (result) {
+            return successHandler(res, result);
+        }).catch(function (error) {
+            return errorHandler(res, error);
+        });
+
+    });
+*/
 
     apiRouter.get('/auth', function (req, res) {
         return res.json({success:true,user:req.user});
