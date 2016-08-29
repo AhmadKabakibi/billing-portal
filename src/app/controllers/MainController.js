@@ -267,29 +267,24 @@
             }, 2000);
         };
 
-        /*2@2*/
+        /*Authorization*/
+
         $scope.currentUser = null;
         $scope.isAuthorized = AuthService.isAuthorized;
 
         $scope.setUser = function(user){
 
             var p = null;
-            if(user.role == 'superAdmin'){
+            if(user.type == 'admin'){
                 user.roleCode = USER_ROLES.superAdmin;
-                p = 'admin';
-            }else if(user.role == 'admin'){
-                user.roleCode = USER_ROLES.admin;
-                p = 'admin';
-            }else if(user.role == 'normal'){
+                p = 'dashboard';
+            }else if(user.role == 'user'){
                 user.roleCode = USER_ROLES.normal;
-                p = 'normal';
+                p = 'profile';
             }
 
             if(p !== null){
                 p = '/' + p;
-
-                user.id = parseInt(Math.random() * 1000);
-
                 $scope.currentUser = user;
                 $rootScope.currentUser = user;
                 AuthService.newSession(user);

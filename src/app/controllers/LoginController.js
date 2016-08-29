@@ -12,7 +12,6 @@
         $scope.user.role = 'superAdmin'
 
         $scope.login = function(user){
-
             loginFactory.login($scope.user).then(function(good){
                 $scope.setUser(good);
             });
