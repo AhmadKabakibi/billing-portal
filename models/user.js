@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function (sequelize, DataTypes) {
-    var User = sequelize.define('user', {
+    var User = sequelize.define('stream', {
         username: {type: DataTypes.STRING, allowNull: false},
         password: {type: DataTypes.STRING, allowNull: false},
         type: {
@@ -15,6 +15,5 @@ module.exports = function (sequelize, DataTypes) {
             { fields: ['deletedAt'] }
         ]
     });
-
     return User;
 };

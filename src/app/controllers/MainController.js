@@ -15,7 +15,8 @@
         vm.menuItems = [];
         vm.selectItem = selectItem;
         vm.toggleItemsList = toggleItemsList;
-        vm.title = $state.current.data.title;
+        //vm.title = $state.current.data.title;
+        vm.title;
         vm.toggleRightSidebar = toggleRightSidebar;
 
 

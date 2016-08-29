@@ -211,64 +211,67 @@ var service = module.exports = {
             fs.createReadStream(filename)
                 .pipe(csv.createStream(options))
                 .on('data', function (data) {
-                    i++;
-                    //console.log('Line: '+i++);
-                    //console.log(data);
-                    if (Object.keys(data).length >= 22) {
-                        ////check file structure if does match the sample file
-                        if (data.PONumber === '' || data.PartnerCode === '' || data.POERPStatus === '' || data.ItemCode === '' || data.QuantityOrdered === '') {
-                            //reject the PO don't insert to DB
-                            logger.BadPOs({
-                                "lineNo:": i,
-                                "FileName": filename.replace(/^.*[\\\/]/, ''),
-                                "PONumber": data.PONumber,
-                                "PartnerCode": data.PartnerCode,
-                                "POERPStatus": data.POERPStatus,
-                                "ItemCode": data.ItemCode,
-                                "QuantityOrdered": data.QuantityOrdered
-                            });
-                        } else {
-                            /*PO Status
-                             If the same PO number is received in the files received from ERP
-                             Check if the status in the PO =
-                             Open                O             ignore and do nothing
-                             Changed             C             replace existing PO if it is not invoiced yet
-                             BackOrdered         B             ignore and do nothing
-                             Completed           X             ignore and do nothing*/
-
-                            if (data.POERPStatus == 'c'||data.POERPStatus == 'C') {
-                                models.poinfo.findAll({
-                                    where: {PONumber: data.PONumber}
-                                }).then(function (pos) {
-                                    if (pos.length) {
-                                        //replace existing PO if it is not invoiced yet
-                                        //console.log('found: ' + pos.length);
-                                        models.poinfo.update(data, {where: {PONumber: data.PONumber}}).then(function(){
-                                            //console.log(data.PONumber+" status has been changed "+ data.POERPStatus)
-                                            logger.debug(data.PONumber+" status has been changed "+ data.POERPStatus)
-                                        });
-                                    } else {
-                                        //console.log('no pos found: ');
-                                        //ignore and do nothing
-                                        // create PO into database table POInfo
-                                        models.poinfo.create(data).then(function (PO) {
-                                            //logger
-                                        });
-                                    }
+                        i++;
+                        //console.log('Line: '+i++);
+                        //console.log(data);
+                        if (Object.keys(data).length >= 22) {
+                            ////check file structure if does match the sample file
+                            if (data.PONumber === '' || data.PartnerCode === '' || data.POERPStatus === '' || data.ItemCode === '' || data.QuantityOrdered === '') {
+                                //reject the PO don't insert to DB
+                                logger.BadPOs({
+                                    "lineNo:": i,
+                                    "FileName": filename.replace(/^.*[\\\/]/, ''),
+                                    "PONumber": data.PONumber,
+                                    "PartnerCode": data.PartnerCode,
+                                    "POERPStatus": data.POERPStatus,
+                                    "ItemCode": data.ItemCode,
+                                    "QuantityOrdered": data.QuantityOrdered
                                 });
+                            } else {
+                                /*PO Status
+                                 If the same PO number is received in the files received from ERP
+                                 Check if the status in the PO =
+                                 Open                O             ignore and do nothing
+                                 Changed             C             replace existing PO if it is not invoiced yet
+                                 BackOrdered         B             ignore and do nothing
+                                 Completed           X             ignore and do nothing*/
 
-                            } else if (data.POERPStatus == 'o'||data.POERPStatus == 'O') {
-                                // create PO into database table POInfo
-                                models.poinfo.create(data).then(function (PO) {
-                                    //logger
-                                });
+                                if (data.POERPStatus == 'c' || data.POERPStatus == 'C') {
+                                    models.poinfo.findAll({
+                                        where: {PONumber: data.PONumber}
+                                    }).then(function (pos) {
+                                        if (pos.length) {
+                                            //replace existing PO if it is not invoiced yet
+                                            //console.log('found: ' + pos.length);
+                                            models.poinfo.update(data, {where: {PONumber: data.PONumber}}).then(function () {
+                                                //console.log(data.PONumber+" status has been changed "+ data.POERPStatus)
+                                                logger.debug(data.PONumber + " status has been changed " + data.POERPStatus)
+                                            });
+                                        } else {
+                                            //console.log('no pos found: ');
+                                            //ignore and do nothing
+                                            // create PO into database table POInfo
+                                            models.poinfo.create(data).then(function (PO) {
+                                                //logger
+                                            });
+                                        }
+                                    });
+
+                                }
+                                if (data.POERPStatus == 'o' || data.POERPStatus == 'O') {
+                                    // create PO into database table POInfo
+                                    models.poinfo.create(data).then(function (PO) {
+                                        //logger
+                                    });
+                                }
                             }
                         }
-                    } else {
-                        //reject the file and archive it
-                        logger.BadFile(filename.replace(/^.*[\\\/]/, ''));
+                        else {
+                            //reject the file and archive it
+                            logger.BadFile(filename.replace(/^.*[\\\/]/, ''));
+                        }
                     }
-                })
+                )
                 .on('column', function (key, value) {
                     //console.log('#' + key +' = ' + value);
                 })
@@ -308,7 +311,9 @@ var service = module.exports = {
                         .finalize();
                 })
 
-        } catch (err) {
+        }
+        catch
+            (err) {
             // Handle the error here.
             logger.error(err);
         }

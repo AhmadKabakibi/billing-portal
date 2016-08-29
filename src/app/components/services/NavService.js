@@ -12,22 +12,22 @@
       {
         name: 'My POs',
         icon: 'assignment',
-        sref: '.dashboard'
+        sref: 'dashboard'
       },
       {
         name: 'Received',
         icon: 'import_export',
-        sref: '.received'
+        sref: 'received'
       },
       {
         name: 'Exported',
         icon: 'unarchive',
-        sref: '.exported'
+        sref: 'exported'
       },
       {
         name: 'Setup',
         icon: 'settings',
-        sref: '.settings'
+        sref: 'settings'
       }
     ];
 
