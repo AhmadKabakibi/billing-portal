@@ -33,7 +33,9 @@
 
             return deferred.promise;
         }
+
         ajsbsFactory.newUser = function (user) {
+            var deferred = $q.defer();
             $http({
                 method: 'POST',
                 url: appConf.baseURL+'/auth/new', data: {username: user.username, password: user.password}
@@ -41,7 +43,7 @@
             }).success(function (data) {
                 //debugger;
                 if(data.success){
-                    deferred.resolve(data.user);
+                    deferred.resolve(data.msg);
                 }else {
                     deferred.reject();
                 }

@@ -113,8 +113,8 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
         });
         $mdIconProvider.icon('user', 'assets/images/user.svg', 64);
     })
-
-    /* .run(['$rootScope', '$state', '$stateParams', 'authorization', 'principal',
+    /*
+     .run(['$rootScope', '$state', '$stateParams', 'authorization', 'principal',
      function ($rootScope, $state, $stateParams, authorization, principal) {
      $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
      $rootScope.toState = toState;
@@ -146,8 +146,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
 
     .run(function ($rootScope, $state, $http, AUTH_EVENTS, AuthService) {
 
-        $rootScope.$on('$stateChangeStart', function (event, next) {
-
+        $rootScope.$on('$stateChangeStart', function (event, next,nextParams){
             if (next.name !== 'login') {
                 var authorizedRoles = next.data.authorizedRoles;
 
@@ -161,11 +160,12 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                         $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
 
                     $state.go('login');
-                    alert('Access Denied');
-
+                    //alert('Access Denied');
                 }
-            } else if (next.name == 'admin' && AuthService.isAdmin())
-                $state.go('admin');
+            } else if (next.name == 'settings' && AuthService.isAdmin()) {
+                $state.go('settings');
+            }
+
         })
 
     })
@@ -182,10 +182,9 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
     .constant('USER_ROLES', {
         all: '*',
         superAdmin: 'superAdmin',
-        admin: 'admin',
         normal: 'normal'
     })
 
     .value('appConf', {
-      baseURL:'http://localhost:3000'
+        baseURL: 'http://localhost:3000'
     })

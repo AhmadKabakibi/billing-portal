@@ -1,8 +1,9 @@
 <md-content md-theme="light" class="md-padding" layout-xs="column" layout="row">
 
-    <md-card flex md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout="row" layout-wrap layout-padding>
+    <md-card flex md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout="row" layout-wrap
+             layout-padding>
         <div flex="30">
-            <md-select placeholder="Customer" ng-model="user" md-on-open="loadUsers()" style="min-width: 200px;">
+            <md-select placeholder="Partner" ng-model="user" md-on-open="loadUsers()" style="min-width: 200px;">
                 <md-option ng-value="user" ng-repeat="user in users">{{user.name}}</md-option>
             </md-select>
             <!--<p class="md-caption">selected customer: {{ user ? user.name : 'No one yet' }}</p>-->
@@ -12,15 +13,24 @@
                 <input ng-model="user.ponumber">
             </md-input-container>
 
-            <md-select placeholder="Status" ng-model="user" md-on-open="loadUsers()" style="min-width: 200px;">
-                <md-option ng-value="user" ng-repeat="user in users">{{user.name}}</md-option>
+            <md-select ng-model="status" placeholder="Status" style="min-width: 200px;">
+                <md-option value="0">Pending</md-option>
+                <md-option value="1">Accepted</md-option>
+                <md-option value="2">Invoiced</md-option>
+                <md-option value="3">Rejected</md-option>
+                <md-option value="4">Under Review</md-option>
+            </md-select>
+
+            <md-select ng-model="status" placeholder="Select PO Date range" style="min-width: 200px;">
+                <md-option value="0">Last 30 days</md-option>
+                <md-option value="1">Last 60 days</md-option>
+                <md-option value="2">This week</md-option>
+                <md-option value="3">Today</md-option>
             </md-select>
 
             <md-button class="md-raised">run</md-button>
-
         </div>
     </md-card>
-
     <md-card flex="30" md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout-margin>
         <md-card-title>
             <md-card-title-text>
