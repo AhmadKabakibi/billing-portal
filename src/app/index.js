@@ -5,7 +5,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
         'permission.ui'])
 
     .config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider,
-                      $mdIconProvider) {
+                      $mdIconProvider, USER_ROLES) {
         $stateProvider
             .state('site', {
                 abstract: true,
@@ -28,17 +28,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 controllerAs: 'vm',
                 data: {
                     title: 'dashboard',
-                    permissions: {
-                        only: ['AUTHORIZED'],
-                        redirectTo: function () {
-                            return {
-                                state: 'login',
-                                options: {
-                                    reload: true
-                                }
-                            };
-                        }
-                    }
+                    authorizedRoles: [USER_ROLES.superAdmin, USER_ROLES.admin, USER_ROLES.normal]
                 }
             })
             .state('settings', {
@@ -49,17 +39,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 controllerAs: 'vm',
                 data: {
                     title: 'settings',
-                    permissions: {
-                        only: ['AUTHORIZED'],
-                        redirectTo: function () {
-                            return {
-                                state: 'login',
-                                options: {
-                                    reload: true
-                                }
-                            };
-                        }
-                    }
+                    authorizedRoles: [USER_ROLES.superAdmin, USER_ROLES.admin, USER_ROLES.normal]
                 }
             })
             .state('exported', {
@@ -69,17 +49,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 templateUrl: 'app/views/exported.html',
                 data: {
                     title: 'exported',
-                    permissions: {
-                        only: ['AUTHORIZED'],
-                        redirectTo: function () {
-                            return {
-                                state: 'login',
-                                options: {
-                                    reload: true
-                                }
-                            };
-                        }
-                    }
+                    authorizedRoles: [USER_ROLES.superAdmin, USER_ROLES.admin, USER_ROLES.normal]
                 }
             })
 
@@ -90,24 +60,18 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 templateUrl: 'app/views/received.html',
                 data: {
                     title: 'received',
-                    permissions: {
-                        only: ['AUTHORIZED'],
-                        redirectTo: function () {
-                            return {
-                                state: 'login',
-                                options: {
-                                    reload: true
-                                }
-                            };
-                        }
-                    }
+                    authorizedRoles: [USER_ROLES.superAdmin, USER_ROLES.admin, USER_ROLES.normal]
                 }
             });
 
-        $urlRouterProvider.otherwise(function ($injector) {
-            var $state = $injector.get('$state');
-            $state.go('login');
-        });
+        $urlRouterProvider.otherwise('login');
+
+        /*
+         $urlRouterProvider.otherwise(function ($injector) {
+         var $state = $injector.get('$state');
+         $state.go('login');
+         });
+         */
 
         $mdThemingProvider
             .theme('default')
@@ -161,21 +125,63 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
      }
      ])*/
 
-    .run(function (PermRoleStore, appConf) {
-        PermRoleStore.defineRole('AUTHORIZED', function () {
-            return appConf.isAuthorized;
-        });
-        PermRoleStore.defineRole('ADMIN', function () {
-            return appConf.isAdmin;
-        });
-        PermRoleStore.defineRole('USER', function () {
-            return appConf.isUser;
-        });
+    /*.run(function (PermRoleStore, appConf) {
+     PermRoleStore.defineRole('AUTHORIZED', function () {
+     return appConf.isAuthorized;
+     });
+     PermRoleStore.defineRole('ADMIN', function () {
+     return appConf.isAdmin;
+     });
+     PermRoleStore.defineRole('USER', function () {
+     return appConf.isUser;
+     });
+     })
+
+
+     .value('appConf', {
+     isAuthorized: true,
+     isAdmin: true,
+     isUser: true
+     })*/
+
+    .run(function ($rootScope, $state, $http, AUTH_EVENTS, AuthService) {
+
+        $rootScope.$on('$stateChangeStart', function (event, next) {
+
+            if (next.name !== 'login') {
+                var authorizedRoles = next.data.authorizedRoles;
+
+                if (!AuthService.isAuthorized(authorizedRoles)) {
+
+                    event.preventDefault();
+
+                    if (AuthService.isAuthenticated())
+                        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+                    else
+                        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+
+                    $state.go('login');
+                    alert('Access Denied');
+
+                }
+            } else if (next.name == 'admin' && AuthService.isAdmin())
+                $state.go('admin');
+        })
+
     })
 
+    .constant('AUTH_EVENTS', {
+        loginSuccess: 'auth-login-success',
+        loginFailed: 'auth-login-failed',
+        logoutSuccess: 'auth-logout-success',
+        sessionTimeout: 'auth-session-timeout',
+        notAuthenticated: 'auth-not-authenticated',
+        notAuthorized: 'auth-not-authorized'
 
-    .value('appConf', {
-        isAuthorized: true,
-        isAdmin: true,
-        isUser: true
+    })
+    .constant('USER_ROLES', {
+        all: '*',
+        superAdmin: 'superAdmin',
+        admin: 'admin',
+        normal: 'normal'
     })

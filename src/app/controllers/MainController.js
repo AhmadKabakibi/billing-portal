@@ -3,11 +3,11 @@
     angular
         .module('app')
         .controller('MainController', [
-            'navService','POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal','$mdEditDialog', '$scope','$rootScope','$timeout',
+            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$mdEditDialog', '$scope', '$rootScope', '$timeout', '$location', 'USER_ROLES', 'AuthService',
             MainController
         ]);
 
-    function MainController(navService,POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $q, $scope,$rootScope, $timeout) {
+    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $scope, $rootScope, $timeout, $location, USER_ROLES, AuthService) {
         var vm = this;
 
         $scope.posHeader = null;
@@ -123,105 +123,108 @@
                     console.log($scope.status);
                 });
         }
+
         getAll();
 
-        $scope.pos = {
-            "count": 9,
-            "data": [
-                {
-                    "name": "Frozen yogurt",
-                    "type": "Ice cream",
-                    "calories": {"value": 159.0},
-                    "fat": {"value": 6.0},
-                    "carbs": {"value": 24.0},
-                    "protein": {"value": 4.0},
-                    "sodium": {"value": 87.0},
-                    "calcium": {"value": 14.0},
-                    "iron": {"value": 1.0},
-                    "comment": "Not as good as the real thing."
-                }, {
-                    "name": "Ice cream sandwich",
-                    "type": "Ice cream",
-                    "calories": {"value": 237.0},
-                    "fat": {"value": 9.0},
-                    "carbs": {"value": 37.0},
-                    "protein": {"value": 4.3},
-                    "sodium": {"value": 129.0},
-                    "calcium": {"value": 8.0},
-                    "iron": {"value": 1.0}
-                }, {
-                    "name": "Eclair",
-                    "type": "Pastry",
-                    "calories": {"value": 262.0},
-                    "fat": {"value": 16.0},
-                    "carbs": {"value": 24.0},
-                    "protein": {"value": 6.0},
-                    "sodium": {"value": 337.0},
-                    "calcium": {"value": 6.0},
-                    "iron": {"value": 7.0}
-                }, {
-                    "name": "Cupcake",
-                    "type": "Pastry",
-                    "calories": {"value": 305.0},
-                    "fat": {"value": 3.7},
-                    "carbs": {"value": 67.0},
-                    "protein": {"value": 4.3},
-                    "sodium": {"value": 413.0},
-                    "calcium": {"value": 3.0},
-                    "iron": {"value": 8.0}
-                }, {
-                    "name": "Jelly bean",
-                    "type": "Candy",
-                    "calories": {"value": 375.0},
-                    "fat": {"value": 0.0},
-                    "carbs": {"value": 94.0},
-                    "protein": {"value": 0.0},
-                    "sodium": {"value": 50.0},
-                    "calcium": {"value": 0.0},
-                    "iron": {"value": 0.0}
-                }, {
-                    "name": "Lollipop",
-                    "type": "Candy",
-                    "calories": {"value": 392.0},
-                    "fat": {"value": 0.2},
-                    "carbs": {"value": 98.0},
-                    "protein": {"value": 0.0},
-                    "sodium": {"value": 38.0},
-                    "calcium": {"value": 0.0},
-                    "iron": {"value": 2.0}
-                }, {
-                    "name": "Honeycomb",
-                    "type": "Other",
-                    "calories": {"value": 408.0},
-                    "fat": {"value": 3.2},
-                    "carbs": {"value": 87.0},
-                    "protein": {"value": 6.5},
-                    "sodium": {"value": 562.0},
-                    "calcium": {"value": 0.0},
-                    "iron": {"value": 45.0}
-                }, {
-                    "name": "Donut",
-                    "type": "Pastry",
-                    "calories": {"value": 452.0},
-                    "fat": {"value": 25.0},
-                    "carbs": {"value": 51.0},
-                    "protein": {"value": 4.9},
-                    "sodium": {"value": 326.0},
-                    "calcium": {"value": 2.0},
-                    "iron": {"value": 22.0}
-                }, {
-                    "name": "KitKat",
-                    "type": "Candy",
-                    "calories": {"value": 518.0},
-                    "fat": {"value": 26.0},
-                    "carbs": {"value": 65.0},
-                    "protein": {"value": 7.0},
-                    "sodium": {"value": 54.0},
-                    "calcium": {"value": 12.0},
-                    "iron": {"value": 6.0}
-                }
-            ]
-        }
+        /*
+         $scope.pos = {
+         "count": 9,
+         "data": [
+         {
+         "name": "Frozen yogurt",
+         "type": "Ice cream",
+         "calories": {"value": 159.0},
+         "fat": {"value": 6.0},
+         "carbs": {"value": 24.0},
+         "protein": {"value": 4.0},
+         "sodium": {"value": 87.0},
+         "calcium": {"value": 14.0},
+         "iron": {"value": 1.0},
+         "comment": "Not as good as the real thing."
+         }, {
+         "name": "Ice cream sandwich",
+         "type": "Ice cream",
+         "calories": {"value": 237.0},
+         "fat": {"value": 9.0},
+         "carbs": {"value": 37.0},
+         "protein": {"value": 4.3},
+         "sodium": {"value": 129.0},
+         "calcium": {"value": 8.0},
+         "iron": {"value": 1.0}
+         }, {
+         "name": "Eclair",
+         "type": "Pastry",
+         "calories": {"value": 262.0},
+         "fat": {"value": 16.0},
+         "carbs": {"value": 24.0},
+         "protein": {"value": 6.0},
+         "sodium": {"value": 337.0},
+         "calcium": {"value": 6.0},
+         "iron": {"value": 7.0}
+         }, {
+         "name": "Cupcake",
+         "type": "Pastry",
+         "calories": {"value": 305.0},
+         "fat": {"value": 3.7},
+         "carbs": {"value": 67.0},
+         "protein": {"value": 4.3},
+         "sodium": {"value": 413.0},
+         "calcium": {"value": 3.0},
+         "iron": {"value": 8.0}
+         }, {
+         "name": "Jelly bean",
+         "type": "Candy",
+         "calories": {"value": 375.0},
+         "fat": {"value": 0.0},
+         "carbs": {"value": 94.0},
+         "protein": {"value": 0.0},
+         "sodium": {"value": 50.0},
+         "calcium": {"value": 0.0},
+         "iron": {"value": 0.0}
+         }, {
+         "name": "Lollipop",
+         "type": "Candy",
+         "calories": {"value": 392.0},
+         "fat": {"value": 0.2},
+         "carbs": {"value": 98.0},
+         "protein": {"value": 0.0},
+         "sodium": {"value": 38.0},
+         "calcium": {"value": 0.0},
+         "iron": {"value": 2.0}
+         }, {
+         "name": "Honeycomb",
+         "type": "Other",
+         "calories": {"value": 408.0},
+         "fat": {"value": 3.2},
+         "carbs": {"value": 87.0},
+         "protein": {"value": 6.5},
+         "sodium": {"value": 562.0},
+         "calcium": {"value": 0.0},
+         "iron": {"value": 45.0}
+         }, {
+         "name": "Donut",
+         "type": "Pastry",
+         "calories": {"value": 452.0},
+         "fat": {"value": 25.0},
+         "carbs": {"value": 51.0},
+         "protein": {"value": 4.9},
+         "sodium": {"value": 326.0},
+         "calcium": {"value": 2.0},
+         "iron": {"value": 22.0}
+         }, {
+         "name": "KitKat",
+         "type": "Candy",
+         "calories": {"value": 518.0},
+         "fat": {"value": 26.0},
+         "carbs": {"value": 65.0},
+         "protein": {"value": 7.0},
+         "sodium": {"value": 54.0},
+         "calcium": {"value": 12.0},
+         "iron": {"value": 6.0}
+         }
+         ]
+         }
+         */
 
         $scope.toggleLimitOptions = function () {
             $scope.limitOptions = $scope.limitOptions ? undefined : [5, 10, 15];
@@ -264,6 +267,43 @@
             }, 2000);
         };
 
+        /*2@2*/
+        $scope.currentUser = null;
+        $scope.isAuthorized = AuthService.isAuthorized;
+
+        $scope.setUser = function(user){
+
+            var p = null;
+            if(user.role == 'superAdmin'){
+                user.roleCode = USER_ROLES.superAdmin;
+                p = 'admin';
+            }else if(user.role == 'admin'){
+                user.roleCode = USER_ROLES.admin;
+                p = 'admin';
+            }else if(user.role == 'normal'){
+                user.roleCode = USER_ROLES.normal;
+                p = 'normal';
+            }
+
+            if(p !== null){
+                p = '/' + p;
+
+                user.id = parseInt(Math.random() * 1000);
+
+                $scope.currentUser = user;
+                $rootScope.currentUser = user;
+                AuthService.newSession(user);
+
+                $location.path(p)
+
+
+            }else
+                alert('Unable to Log You In :(');
+
+        }
+
+
     }
+
 
 })();
