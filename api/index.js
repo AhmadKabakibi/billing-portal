@@ -21,16 +21,26 @@ var config = require(__dirname + '/../config/tsconfig.json')[env];
 var path = require('path');
 var xss = require('xss');
 
+/*
  FTPService.startFTP();
 
  FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
  logger.info("onFTPConnected Emitt " + CheckingTime);
- });
+ });*/
 
 //API
 module.exports = function (apiRouter) {
 
     apiRouter.get('/pos', function (req, res) {
+        return exportService.listPOs().then(function (result) {
+            return successHandler(res, result);
+        }).catch(function (error) {
+            return errorHandler(res, error);
+        });
+    });
+
+
+    apiRouter.get('/pos/all', function (req, res) {
         return exportService.listPOs().then(function (result) {
             return successHandler(res, result);
         }).catch(function (error) {

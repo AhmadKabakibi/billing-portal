@@ -17,8 +17,6 @@
         vm.toggleItemsList = toggleItemsList;
         //vm.title = $state.current.data.title;
         vm.title;
-        vm.toggleRightSidebar = toggleRightSidebar;
-
 
         navService
             .loadAllItems()
@@ -26,16 +24,8 @@
                 vm.menuItems = [].concat(menuItems);
             });
 
-        function toggleRightSidebar() {
-            $mdSidenav('right').toggle();
-        }
-
         function toggleItemsList() {
-            var pending = $mdBottomSheet.hide() || $q.when(true);
-
-            pending.then(function () {
-                $mdSidenav('left').toggle();
-            });
+            $mdSidenav('left').toggle();
         }
 
         function selectItem(item) {
@@ -272,18 +262,18 @@
         $scope.currentUser = null;
         $scope.isAuthorized = AuthService.isAuthorized;
 
-        $scope.setUser = function(user){
+        $scope.setUser = function (user) {
 
             var p = null;
-            if(user.type == 'admin'){
+            if (user.type == 'admin') {
                 user.roleCode = USER_ROLES.superAdmin;
                 p = 'dashboard';
-            }else if(user.role == 'user'){
+            } else if (user.role == 'user') {
                 user.roleCode = USER_ROLES.normal;
                 p = 'profile';
             }
 
-            if(p !== null){
+            if (p !== null) {
                 p = '/' + p;
                 $scope.currentUser = user;
                 $rootScope.currentUser = user;
@@ -292,7 +282,7 @@
                 $location.path(p)
 
 
-            }else
+            } else
                 alert('Unable to Log You In :(');
 
         }

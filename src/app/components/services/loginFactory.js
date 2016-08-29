@@ -2,11 +2,11 @@
     'use strict';
     angular.module('app')
         .factory('loginFactory', [
-            '$http', '$q',
+            '$http', '$q','appConf',
             login
         ]);
 
-    function login($http, $q) {
+    function login($http, $q,appConf) {
 
         var ajsbsFactory = {};
         $http.defaults.useXDomain = true;
@@ -18,7 +18,25 @@
 
             $http({
                 method: 'POST',
-                url: 'http://localhost:3000/auth/authenticate', data: {username: user.username, password: user.password}
+                url: appConf.baseURL+'/auth/authenticate', data: {username: user.username, password: user.password}
+
+            }).success(function (data) {
+                //debugger;
+                if(data.success){
+                    deferred.resolve(data.user);
+                }else {
+                    deferred.reject();
+                }
+            }).error(function (err) {
+                deferred.reject(err);
+            });
+
+            return deferred.promise;
+        }
+        ajsbsFactory.newUser = function (user) {
+            $http({
+                method: 'POST',
+                url: appConf.baseURL+'/auth/new', data: {username: user.username, password: user.password}
 
             }).success(function (data) {
                 //debugger;

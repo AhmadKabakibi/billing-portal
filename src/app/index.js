@@ -28,7 +28,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 controllerAs: 'vm',
                 data: {
                     title: 'dashboard',
-                    authorizedRoles: [USER_ROLES.superAdmin, USER_ROLES.admin, USER_ROLES.normal]
+                    authorizedRoles: [USER_ROLES.superAdmin]
                 }
             })
             .state('settings', {
@@ -39,7 +39,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 controllerAs: 'vm',
                 data: {
                     title: 'settings',
-                    authorizedRoles: [USER_ROLES.superAdmin, USER_ROLES.admin, USER_ROLES.normal]
+                    authorizedRoles: [USER_ROLES.superAdmin]
                 }
             })
             .state('exported', {
@@ -49,7 +49,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 templateUrl: 'app/views/exported.html',
                 data: {
                     title: 'exported',
-                    authorizedRoles: [USER_ROLES.superAdmin, USER_ROLES.admin, USER_ROLES.normal]
+                    authorizedRoles: [USER_ROLES.superAdmin]
                 }
             })
 
@@ -60,7 +60,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 templateUrl: 'app/views/received.html',
                 data: {
                     title: 'received',
-                    authorizedRoles: [USER_ROLES.superAdmin, USER_ROLES.admin, USER_ROLES.normal]
+                    authorizedRoles: [USER_ROLES.superAdmin]
                 }
             });
 
@@ -184,4 +184,8 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
         superAdmin: 'superAdmin',
         admin: 'admin',
         normal: 'normal'
+    })
+
+    .value('appConf', {
+      baseURL:'http://localhost:3000'
     })
