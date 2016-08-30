@@ -9,7 +9,7 @@ var exportService = require('../services/export.js'),
         res.json({success: true, data: result});
     },
     errorHandler = function (res, error) {
-        return res.status(400).json({success: false, error: "Something went wrong"});
+        return res.status(400).json({success: false, error: error});
     }
 
 var models = require('../models');
@@ -38,22 +38,8 @@ module.exports = function (apiRouter) {
         });
     });
 
-
-    apiRouter.get('/pos/all', function (req, res) {
-        return exportService.listPOs().then(function (result) {
-            return successHandler(res, result);
-        }).catch(function (error) {
-            return errorHandler(res, error);
-        });
-    });
-
     apiRouter.post('/po/:PONumber', function (req, res) {
-        if(req.body.dateRange)
-            console.log(":P: "+ req.body.dateRange)
-        else
-            console.log("NOt passed :D "+ req.body.dateRange)
-
-        return exportService.getPOs({PONumber:req.params.PONumber}).then(function (result) {
+        return exportService.getPOs({PONumber:req.params.PONumber,dateRange:req.body.dateRange}).then(function (result) {
             return successHandler(res, result);
         }).catch(function (error) {
             return errorHandler(res, error);
