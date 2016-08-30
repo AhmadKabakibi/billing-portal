@@ -10,7 +10,7 @@
 
             <md-input-container>
                 <label>PO Number</label>
-                <input ng-model="user.ponumber">
+                <input ng-model="user.PONumber">
             </md-input-container>
 
             <md-select ng-model="status" placeholder="Status" style="min-width: 200px;">
@@ -21,14 +21,12 @@
                 <md-option value="4">Under Review</md-option>
             </md-select>
 
-            <md-select ng-model="status" placeholder="Select PO Date range" style="min-width: 200px;">
-                <md-option value="0">Last 30 days</md-option>
-                <md-option value="1">Last 60 days</md-option>
-                <md-option value="2">This week</md-option>
-                <md-option value="3">Today</md-option>
+            <md-select ng-model="range" placeholder="Select PO Date range" style="min-width: 200px;">
+                <md-option ng-repeat="date in dateRange" value="{{date.val}}">{{date.str}}</md-option>
             </md-select>
 
-            <md-button class="md-raised">run</md-button>
+            <md-button class="md-raised" ng-click="getPOs({PONumber:user.PONumber,dateRange:range})">run
+            </md-button>
         </div>
     </md-card>
     <md-card flex="30" md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout-margin>

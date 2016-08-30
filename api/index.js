@@ -48,18 +48,20 @@ module.exports = function (apiRouter) {
         });
     });
 
-/*
+    apiRouter.post('/po/:PONumber', function (req, res) {
+        if(req.body.dateRange)
+            console.log(":P: "+ req.body.dateRange)
+        else
+            console.log("NOt passed :D "+ req.body.dateRange)
 
-    apiRouter.post('/po/:poNumber', function (req, res) {
-        //req.params.poNumber
-        return exportService.getPOs().then(function (result) {
+        return exportService.getPOs({PONumber:req.params.PONumber}).then(function (result) {
             return successHandler(res, result);
         }).catch(function (error) {
             return errorHandler(res, error);
         });
 
     });
-*/
+
 
     apiRouter.get('/auth', function (req, res) {
         return res.json({success:true,user:req.user});

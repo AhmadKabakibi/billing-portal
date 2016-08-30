@@ -11,8 +11,15 @@
         var vm = this;
 
         $scope.posHeader = null;
-
         vm.menuItems = [];
+
+        $scope.dateRange = [
+            {val: "30", str: "Last 30 days"},
+            {val: "60", str: "Last 60 days"},
+            {val: "7", str: "This week"},
+            {val: "1", str: "Today"}
+        ];
+
         vm.selectItem = selectItem;
         vm.toggleItemsList = toggleItemsList;
         //vm.title = $state.current.data.title;
@@ -115,6 +122,17 @@
         }
 
         getAll();
+
+        $scope.getPOs = function (params) {
+            console.log(params.PONumber + " @@ " + params.dateRange);
+            POsService.getPOs(params)
+                .then(function (response) {
+                    $scope.posHeader = response.data.data;
+                }, function (error) {
+                    $scope.status = 'Unable to load partner data: ' + error.message;
+                    console.log($scope.status);
+                });
+        }
 
         /*
          $scope.pos = {
