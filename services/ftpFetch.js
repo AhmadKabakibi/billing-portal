@@ -251,17 +251,30 @@ var service = module.exports = {
                                             //console.log('no pos found: ');
                                             //ignore and do nothing
                                             // create PO into database table POInfo
-                                            models.poinfo.create(data).then(function (PO) {
-                                                //logger
+
+                                            models.sequelize.transaction(function (t) {
+                                                return models.poinfo.create(
+                                                    data,
+                                                    {transaction: t}).then(function (po) {
+
+                                                });
                                             });
+
+
                                         }
                                     });
 
                                 }
                                 if (data.POERPStatus == 'o' || data.POERPStatus == 'O') {
                                     // create PO into database table POInfo
-                                    models.poinfo.create(data).then(function (PO) {
-                                        //logger
+                                    /*    models.poinfo.create(data).then(function (PO) {
+                                     //logger
+                                     });*/
+                                    models.sequelize.transaction(function (t) {
+                                        return models.poinfo.create(
+                                            data,
+                                            {transaction: t}).then(function (po) {
+                                        });
                                     });
                                 }
                             }
