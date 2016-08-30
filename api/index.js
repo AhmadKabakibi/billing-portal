@@ -21,12 +21,11 @@ var config = require(__dirname + '/../config/tsconfig.json')[env];
 var path = require('path');
 var xss = require('xss');
 
-/*
  FTPService.startFTP();
 
  FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
  logger.info("onFTPConnected Emitt " + CheckingTime);
- });*/
+ });
 
 //API
 module.exports = function (apiRouter) {
