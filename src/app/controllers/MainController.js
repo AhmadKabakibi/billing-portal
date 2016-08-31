@@ -27,9 +27,8 @@
             {val: "UnderReview", str: "Under Review"}
         ];
 
-
-        vm.selectItem = selectItem;
-        vm.toggleItemsList = toggleItemsList;
+        //vm.selectItem = selectItem;
+        //vm.toggleItemsList = toggleItemsList;
         //vm.title = $state.current.data.title;
         vm.title;
 
@@ -39,7 +38,7 @@
                 vm.menuItems = [].concat(menuItems);
             });
 
-        function toggleItemsList() {
+      /*  function toggleItemsList() {
             $mdSidenav('left').toggle();
         }
 
@@ -47,7 +46,7 @@
             vm.title = item.name;
             vm.toggleItemsList();
         }
-
+*/
         /*
          vm.signout = function() {
          principal.authenticate(null);
@@ -58,8 +57,8 @@
         // Assume we have a $nutrition service that provides an API for communicating with the server
         $scope.options = {
             rowSelection: true,
-            multiSelect:false,
-            autoSelect: false,
+            multiSelect: true,
+            autoSelect: true,
             decapitate: false,
             largeEditDialog: false,
             boundaryLinks: false,
@@ -67,7 +66,7 @@
             pageSelect: true
         };
 
-        $scope.selected = [];
+        $scope.selectedPO = null;
         $scope.limitOptions = [5, 10, 15, {
             label: 'All',
             value: function () {
@@ -76,7 +75,7 @@
         }];
 
         $scope.query = {
-            order: 'name',
+            order: 'PONumber',
             limit: 5,
             page: 1
         };
@@ -143,114 +142,6 @@
                 });
         }
 
-        /*
-         $scope.pos = {
-         "count": 9,
-         "data": [
-         {
-         "name": "Frozen yogurt",
-         "type": "Ice cream",
-         "calories": {"value": 159.0},
-         "fat": {"value": 6.0},
-         "carbs": {"value": 24.0},
-         "protein": {"value": 4.0},
-         "sodium": {"value": 87.0},
-         "calcium": {"value": 14.0},
-         "iron": {"value": 1.0},
-         "comment": "Not as good as the real thing."
-         }, {
-         "name": "Ice cream sandwich",
-         "type": "Ice cream",
-         "calories": {"value": 237.0},
-         "fat": {"value": 9.0},
-         "carbs": {"value": 37.0},
-         "protein": {"value": 4.3},
-         "sodium": {"value": 129.0},
-         "calcium": {"value": 8.0},
-         "iron": {"value": 1.0}
-         }, {
-         "name": "Eclair",
-         "type": "Pastry",
-         "calories": {"value": 262.0},
-         "fat": {"value": 16.0},
-         "carbs": {"value": 24.0},
-         "protein": {"value": 6.0},
-         "sodium": {"value": 337.0},
-         "calcium": {"value": 6.0},
-         "iron": {"value": 7.0}
-         }, {
-         "name": "Cupcake",
-         "type": "Pastry",
-         "calories": {"value": 305.0},
-         "fat": {"value": 3.7},
-         "carbs": {"value": 67.0},
-         "protein": {"value": 4.3},
-         "sodium": {"value": 413.0},
-         "calcium": {"value": 3.0},
-         "iron": {"value": 8.0}
-         }, {
-         "name": "Jelly bean",
-         "type": "Candy",
-         "calories": {"value": 375.0},
-         "fat": {"value": 0.0},
-         "carbs": {"value": 94.0},
-         "protein": {"value": 0.0},
-         "sodium": {"value": 50.0},
-         "calcium": {"value": 0.0},
-         "iron": {"value": 0.0}
-         }, {
-         "name": "Lollipop",
-         "type": "Candy",
-         "calories": {"value": 392.0},
-         "fat": {"value": 0.2},
-         "carbs": {"value": 98.0},
-         "protein": {"value": 0.0},
-         "sodium": {"value": 38.0},
-         "calcium": {"value": 0.0},
-         "iron": {"value": 2.0}
-         }, {
-         "name": "Honeycomb",
-         "type": "Other",
-         "calories": {"value": 408.0},
-         "fat": {"value": 3.2},
-         "carbs": {"value": 87.0},
-         "protein": {"value": 6.5},
-         "sodium": {"value": 562.0},
-         "calcium": {"value": 0.0},
-         "iron": {"value": 45.0}
-         }, {
-         "name": "Donut",
-         "type": "Pastry",
-         "calories": {"value": 452.0},
-         "fat": {"value": 25.0},
-         "carbs": {"value": 51.0},
-         "protein": {"value": 4.9},
-         "sodium": {"value": 326.0},
-         "calcium": {"value": 2.0},
-         "iron": {"value": 22.0}
-         }, {
-         "name": "KitKat",
-         "type": "Candy",
-         "calories": {"value": 518.0},
-         "fat": {"value": 26.0},
-         "carbs": {"value": 65.0},
-         "protein": {"value": 7.0},
-         "sodium": {"value": 54.0},
-         "calcium": {"value": 12.0},
-         "iron": {"value": 6.0}
-         }
-         ]
-         }
-         */
-
-        $scope.toggleLimitOptions = function () {
-            $scope.limitOptions = $scope.limitOptions ? undefined : [5, 10, 15];
-        };
-
-        $scope.getTypes = function () {
-            return ['Candy', 'Ice cream', 'Other', 'Pastry'];
-        };
-
         $scope.onPaginate = function (page, limit) {
             console.log('Scope Page: ' + $scope.query.page + ' Scope Limit: ' + $scope.query.limit);
             console.log('Page: ' + page + ' Limit: ' + limit);
@@ -259,31 +150,32 @@
 
             }, 2000);
         };
+        /**/
 
-        $scope.deselect = function (item) {
-            alert(item.PONumber, 'was deselected');
-        };
-
-        $scope.log = function (item) {
-            alert(item.PONumber, 'was selected');
+        $scope.toggleLimitOptions = function () {
+            $scope.limitOptions = $scope.limitOptions ? undefined : [5, 10, 15];
         };
 
         $scope.loadStuff = function () {
             $scope.promise = $timeout(function () {
-
+                // loading
             }, 2000);
+        }
+
+        $scope.logItem = function (item) {
+           // alert(item.PONumber, 'was selected');
+            $scope.selectedPO=item;
+            $state.go('details');
         };
 
-        $scope.onReorder = function (order) {
-
-            console.log('Scope Order: ' + $scope.query.order);
-            console.log('Order: ' + order);
-
-            $scope.promise = $timeout(function () {
-
-            }, 2000);
+        $scope.logOrder = function (order) {
+            console.log('order: ', order);
         };
 
+        $scope.logPagination = function (page, limit) {
+            console.log('page: ', page);
+            console.log('limit: ', limit);
+        }
         /*Authorization*/
 
         $scope.currentUser = null;

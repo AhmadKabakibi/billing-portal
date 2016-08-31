@@ -18,14 +18,14 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
+                        <td>{{selectedPO.PONumber}}</td>
+                        <td>{{selectedPO.PartnerName}}</td>
+                        <td>{{selectedPO.PODate | date:'yyyy-dd-MM'}}</td>
+                        <td>{{selectedPO.Division}}</td>
+                        <td>{{selectedPO.OrderType}}</td>
+                        <td>{{selectedPO.PartnerCode}}</td>
+                        <td>{{selectedPO.ShipToName}}</td>
+                        <td>{{selectedPO.POERPStatus}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -52,24 +52,23 @@
                         <th>Quantity backordered</th>
                         <th>Quantity invoiced</th>
                         <th>Unit Cost</th>
-                        <th>Unit Cost</th>
                         <th>Total</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
-                        <td>data.issue</td>
+                        <td>Line</td>
+                        <td>{{selectedPO.ItemCode}}</td>
+                        <td>{{selectedPO.Description}}</td>
+                        <td>{{selectedPO.WarehouseCode}}</td>
+                        <td>{{selectedPO.PartnerPONumber}}</td>
+                        <td>{{selectedPO.UnitofMeasure}}</td>
+                        <td>{{selectedPO.QuantityOrdered}}</td>
+                        <td>{{selectedPO.QuantityBackordered}}</td>
+                        <td>{{selectedPO.QuantityInvoiced}}</td>
+                        <td>{{selectedPO.UnitCost}}</td>
+                        <td>{{selectedPO.Total}}</td>
+
                     </tr>
                     </tbody>
                 </table>

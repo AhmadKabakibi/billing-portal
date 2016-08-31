@@ -36,44 +36,35 @@
 </md-content>
 
 
-<md-toolbar class="md-table-toolbar md-default" ng-show="!options.rowSelection || !selected.length">
+<md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
     <div class="md-toolbar-tools">
         <span>My POs</span>
-        <span flex></span>
+        <div flex></div>
         <md-button class="md-icon-button" ng-click="loadStuff()">
             <md-icon>refresh</md-icon>
         </md-button>
+
         <md-button class="md-icon-button" ui-sref="details">
             <md-icon>filter_list</md-icon>
         </md-button>
-        <md-button class="md-icon-button">
-            <md-icon>more_vert</md-icon>
-        </md-button>
-    </div>
-</md-toolbar>
 
-<md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length">
-    <div class="md-toolbar-tools">
-        <span>{{selected.length}} {{selected.length > 1 ? 'items' : 'item'}} selected</span>
-        <span flex></span>
     </div>
 </md-toolbar>
 
 <md-table-container>
-    <table data-md-table data-md-row-select="options.rowSelection" multiple="{{options.multiSelect}}"
-           data-ng-model="selected" md-progress="promise">
-        <thead md-head md-order="query.order">
-        <tr md-row>
-            <th md-column ng-repeat="column in columns">
-                <span>{{column.name}}</span>
-            </th>
-        </tr>
+    <table data-md-table data-md-row-select="options.rowSelection" multiple="{{options.multiSelect}}"  ng-model="selected" md-progress="promise">
+
+        <thead md-head md-order="query.order" md-on-reorder="logOrder">
+            <tr md-row>
+                <th md-column ng-repeat="column in columns">
+                    <span>{{column.name}}</span>
+                </th>
+            </tr>
         </thead>
 
         <tbody md-body>
-        <tr md-row md-select="item" md-select-id="name" data-md-on-select="log" md-on-deselect="deselect"
-            x-md-auto-select="options.autoSelect"
-            data-ng-repeat="item in posHeader| limitTo: query.limit : (query.page - 1) * query.limit">
+
+        <tr md-row md-select="item" md-on-select="logItem" md-auto-select="options.autoSelect" ng-repeat="item in posHeader| limitTo: query.limit : (query.page - 1) * query.limit">
             <td md-cell>{{item.PONumber}}</td>
             <td md-cell width="80%">{{item.PartnerName}}</td>
             <td md-cell width="100%">{{item.PODate | date:'yyyy-dd-MM'}}</td>
