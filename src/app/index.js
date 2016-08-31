@@ -53,6 +53,17 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                     authorizedRoles: [USER_ROLES.superAdmin]
                 }
             })
+            .state('details', {
+                parent: 'site',
+                url: '/details',
+                templateUrl: 'app/views/poDetails.html',
+                controller: 'POsController',
+                controllerAs: 'vm',
+                data: {
+                    title: 'details',
+                    authorizedRoles: [USER_ROLES.superAdmin]
+                }
+            })
             .state('exported', {
                 parent: 'site',
                 url: '/exported',

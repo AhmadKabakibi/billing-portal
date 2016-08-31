@@ -58,7 +58,8 @@
         // Assume we have a $nutrition service that provides an API for communicating with the server
         $scope.options = {
             rowSelection: true,
-            autoSelect: true,
+            multiSelect:false,
+            autoSelect: false,
             decapitate: false,
             largeEditDialog: false,
             boundaryLinks: false,
@@ -260,11 +261,11 @@
         };
 
         $scope.deselect = function (item) {
-            console.log(item.name, 'was deselected');
+            alert(item.PONumber, 'was deselected');
         };
 
         $scope.log = function (item) {
-            console.log(item.name, 'was selected');
+            alert(item.PONumber, 'was selected');
         };
 
         $scope.loadStuff = function () {

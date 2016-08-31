@@ -43,7 +43,7 @@
         <md-button class="md-icon-button" ng-click="loadStuff()">
             <md-icon>refresh</md-icon>
         </md-button>
-        <md-button class="md-icon-button">
+        <md-button class="md-icon-button" ui-sref="details">
             <md-icon>filter_list</md-icon>
         </md-button>
         <md-button class="md-icon-button">
@@ -73,7 +73,7 @@
         <tbody md-body>
         <tr md-row md-select="item" md-select-id="name" data-md-on-select="log" md-on-deselect="deselect"
             x-md-auto-select="options.autoSelect"
-            data-ng-repeat="item in posHeader | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page - 1) * query.limit">
+            data-ng-repeat="item in posHeader| limitTo: query.limit : (query.page - 1) * query.limit">
             <td md-cell>{{item.PONumber}}</td>
             <td md-cell width="80%">{{item.PartnerName}}</td>
             <td md-cell width="100%">{{item.PODate | date:'yyyy-dd-MM'}}</td>

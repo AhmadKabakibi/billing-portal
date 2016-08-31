@@ -19,18 +19,26 @@
                     <div hide-sm hide-md class="md-tile-content">
                         <i class="material-icons md-36 left">search</i>
                     </div>
+                    <md-tooltip>
+                        search for a user
+                    </md-tooltip>
                 </md-button>
                 <md-divider ng-style="{'background': '#E3E3E3'}"></md-divider>
                 <div class="md-actions" layout="row" layout-align="start center">
                     <md-button ui-sref-active="md-warn" ui-sref="user">
                         <div class="md-tile-content">New</div>
+                        <md-tooltip>
+                            create new user
+                        </md-tooltip>
                     </md-button>
 
                     <md-button ng-click="">
                         <div class="md-tile-content">Export</div>
+                        <md-tooltip>
+                            export to excel file
+                        </md-tooltip>
                     </md-button>
                 </div>
-
             </md-card-footer>
         </md-card>
     </div>
@@ -58,7 +66,7 @@
             <tbody md-body>
             <tr md-row md-select="item" md-select-id="name" data-md-on-select="log" md-on-deselect="deselect"
                 x-md-auto-select="options.autoSelect"
-                data-ng-repeat="item in posHeader | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page - 1) * query.limit">
+                data-ng-repeat="item in userLIST | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page - 1) * query.limit">
                 <td md-cell>{{item.PONumber}}</td>
                 <td md-cell width="80%">{{item.PartnerName}}</td>
                 <td md-cell width="100%">{{item.PODate | date:'yyyy-dd-MM'}}</td>
