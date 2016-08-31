@@ -42,6 +42,17 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                     authorizedRoles: [USER_ROLES.superAdmin]
                 }
             })
+            .state('user', {
+                parent: 'site',
+                url: '/newUser',
+                templateUrl: 'app/views/newUser.html',
+                controller: 'SettingsController',
+                controllerAs: 'vm',
+                data: {
+                    title: 'settings',
+                    authorizedRoles: [USER_ROLES.superAdmin]
+                }
+            })
             .state('exported', {
                 parent: 'site',
                 url: '/exported',

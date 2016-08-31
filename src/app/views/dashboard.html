@@ -14,11 +14,7 @@
             </md-input-container>
 
             <md-select ng-model="status" placeholder="Status" style="min-width: 200px;">
-                <md-option value="0">Pending</md-option>
-                <md-option value="1">Accepted</md-option>
-                <md-option value="2">Invoiced</md-option>
-                <md-option value="3">Rejected</md-option>
-                <md-option value="4">Under Review</md-option>
+                <md-option ng-repeat="st in POStatus" value="{{st.val}}">{{st.str}}</md-option>
             </md-select>
 
             <md-select ng-model="range" placeholder="Select PO Date range" style="min-width: 200px;">
@@ -33,11 +29,7 @@
         <md-card-title>
             <md-card-title-text>
                 <span class="md-headline">My PO Summary:</span>
-                <span class="md-subhead">New:</span>
-                <span class="md-subhead">Pending:</span>
-                <span class="md-subhead">Accepted:</span>
-                <span class="md-subhead">Rejected:</span>
-                <span class="md-subhead">Archived:</span>
+                <span class="md-subhead" ng-repeat="st in POStatus">{{st.str}}:</span>
             </md-card-title-text>
         </md-card-title>
     </md-card>

@@ -1,35 +1,80 @@
-<div layout="column" ng-cloak class="md-inline-form">
-    <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding>
-        <form name="form" role="form">
-            <div class="form-content">
-                <div class="form-group">
-                    <input type="text" name="username" required ng-model="user.username"
-                           class="form-control input-underline input-lg" placeholder="User Name">
-                    <div ng-show="form.$submitted || form.username.$touched">
-                        <div ng-show="form.username.$error.required">Please enter a user name</div>
+<md-content layout="column" layout-align="center">
+    <div class='md-padding' layout="row" layout-align="start center" flex-offset-sm="0" flex-offset-md="0"
+         flex-offset-lg="0" flex-offset-gt-lg="0" layout-wrap>
+        <md-card class="md-whiteframe-9dp" ng-style="{'border-radius': '6px'}" layout-padding>
+            <md-card-content>
+                <md-input-container>
+                    <label>User Name</label>
+                    <input ng-model="username">
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Partner</label>
+                    <input ng-model="partner">
+                </md-input-container>
+            </md-card-content>
+
+            <md-card-footer>
+                <md-button class="md-icon-button" ng-click="">
+                    <div hide-sm hide-md class="md-tile-content">
+                        <i class="material-icons md-36 left">search</i>
                     </div>
+                </md-button>
+                <md-divider ng-style="{'background': '#E3E3E3'}"></md-divider>
+                <div class="md-actions" layout="row" layout-align="start center">
+                    <md-button ui-sref-active="md-warn" ui-sref="user">
+                        <div class="md-tile-content">New</div>
+                    </md-button>
+
+                    <md-button ng-click="">
+                        <div class="md-tile-content">Export</div>
+                    </md-button>
                 </div>
-                <div class="form-group">
-                    <input type="password" name="password" required ng-model="user.password"
-                           class="form-control input-underline input-lg" placeholder="Password">
-                    <div ng-show="form.$submitted || form.password.$touched">
-                        <div ng-show="form.password.$error.required">Please enter a password</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="singleSelect"> Role: </label><br>
-                    <select name="roleSelect" ng-model="user.type" class="form-control input-underline input-lg">
-                        <option value="admin">Admin</option>
-                        <option value="user">Partner</option>
-                    </select><br>
-                </div>
-            </div>
-            <button ng-disabled="form.$invalid" class="btn btn-white btn-outline btn-lg btn-rounded"
-                    ng-click="newUser(form)">
-  <span class="content">
-  <span>create user</span>
-  </span>
-            </button>
-            &nbsp;</form>
-    </md-content>
-</div>
+
+            </md-card-footer>
+        </md-card>
+    </div>
+
+
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!options.rowSelection || !selected.length">
+        <div class="md-toolbar-tools">
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="loadStuff()">
+                <md-icon>refresh</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container>
+        <table data-md-table data-ng-model="selected" md-progress="promise">
+            <thead md-head md-order="query.order">
+            <tr md-row>
+                <th md-column ng-repeat="column in gridUsers">
+                    <span>{{column.name}}</span>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody md-body>
+            <tr md-row md-select="item" md-select-id="name" data-md-on-select="log" md-on-deselect="deselect"
+                x-md-auto-select="options.autoSelect"
+                data-ng-repeat="item in posHeader | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page - 1) * query.limit">
+                <td md-cell>{{item.PONumber}}</td>
+                <td md-cell width="80%">{{item.PartnerName}}</td>
+                <td md-cell width="100%">{{item.PODate | date:'yyyy-dd-MM'}}</td>
+                <td md-cell>{{item.Division}}</td>
+                <td md-cell>{{item.OrderType}}</td>
+                <td md-cell>{{item.PartnerCode}}</td>
+                <td md-cell width="100%">{{item.ShipToName}}</td>
+                <td md-cell>{{item.POERPStatus}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <data-md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                              md-total="{{posHeader.length}}" md-on-paginate="onPaginate"
+                              md-page-select="options.pageSelect"
+                              md-boundary-links="options.boundaryLinks"></data-md-table-pagination>
+
+</md-content>

@@ -19,6 +19,14 @@
             {val: "7", str: "This week"},
             {val: "1", str: "Today"}
         ];
+        $scope.POStatus = [
+            {val: "Pending", str: "Pending"},
+            {val: "Accepted", str: "Accepted"},
+            {val: "Invoiced", str: "Invoiced"},
+            {val: "Rejected", str: "Rejected"},
+            {val: "UnderReview", str: "Under Review"}
+        ];
+
 
         vm.selectItem = selectItem;
         vm.toggleItemsList = toggleItemsList;
@@ -121,7 +129,7 @@
                 });
         }
 
-        getAll();
+        //getAll();
 
         $scope.getPOs = function (params) {
             console.log(params.PONumber + " @@ " + params.dateRange);
