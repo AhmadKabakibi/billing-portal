@@ -214,6 +214,8 @@ var service = module.exports = {
                         i++;
                         //console.log('Line: '+i++);
                         //console.log(data);
+                    logger.debug(data.PONumber + " times: " + i);
+
                         if (Object.keys(data).length >= 22) {
                             ////check file structure if does match the sample file
                             if (data.PONumber === '' || data.PartnerCode === '' || data.POERPStatus === '' || data.ItemCode === '' || data.QuantityOrdered === '') {
