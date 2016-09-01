@@ -66,15 +66,14 @@
             <tbody md-body>
             <tr md-row md-select="item" md-select-id="name" data-md-on-select="log" md-on-deselect="deselect"
                 x-md-auto-select="options.autoSelect"
-                data-ng-repeat="item in userLIST | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page - 1) * query.limit">
-                <td md-cell>{{item.PONumber}}</td>
-                <td md-cell width="80%">{{item.PartnerName}}</td>
-                <td md-cell width="100%">{{item.PODate | date:'yyyy-dd-MM'}}</td>
-                <td md-cell>{{item.Division}}</td>
-                <td md-cell>{{item.OrderType}}</td>
-                <td md-cell>{{item.PartnerCode}}</td>
-                <td md-cell width="100%">{{item.ShipToName}}</td>
-                <td md-cell>{{item.POERPStatus}}</td>
+                data-ng-repeat="item in userList | limitTo: query.limit : (query.page - 1) * query.limit">
+                <td md-cell>{{item.username}}</td>
+                <td md-cell>{{item.code}}</td>
+                <td md-cell>{{item.email}}</td>
+                <td md-cell>{{item.type}}</td>
+                <td md-cell>
+                    <md-button ng-click="">edit</md-button>
+                </td>
             </tr>
             </tbody>
         </table>

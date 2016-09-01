@@ -38,7 +38,7 @@
             var deferred = $q.defer();
             $http({
                 method: 'POST',
-                url: appConf.baseURL+'/auth/new', data: {username: user.username, password: user.password}
+                url: appConf.baseURL+'/auth/new', data: {username: user.username, password: user.password,type:user.type,code:user.code,email:user.email}
 
             }).success(function (data) {
                 //debugger;
@@ -53,7 +53,11 @@
 
             return deferred.promise;
         }
+        ajsbsFactory.loadAllUsers= function(){
+            return $http.get('http://localhost:3000/api/users');
+        }
         return ajsbsFactory;
     }
+
 })();
 

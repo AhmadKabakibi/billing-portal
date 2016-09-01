@@ -5,9 +5,11 @@ module.exports = function (sequelize, DataTypes) {
         password: {type: DataTypes.STRING, allowNull: false},
         type: {
             type: DataTypes.ENUM,
-            values: ['user', 'admin'],
+            values: ['normal', 'admin'],
             allowNull: false
-        }
+        },
+        code: {type: DataTypes.STRING, allowNull: false},
+        email:{type: DataTypes.STRING, allowNull: false}
     }, {
         timestamps: true,
         paranoid: true,

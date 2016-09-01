@@ -1,7 +1,7 @@
 //Sanitize untrusted HTML (to prevent XSS) with a configuration specified by a Whitelist
 
 var exportService = require('../services/export.js'),
-    UsersService = require('../services/users.js'),
+    usersService = require('../services/users.js'),
     FTPService = require('../services/ftpFetch.js'),
     ParserService = require('../services/parser.js'),
     logger = require('../services/logger.js'),
@@ -45,6 +45,15 @@ module.exports = function (apiRouter) {
             return errorHandler(res, error);
         });
 
+    });
+
+
+    apiRouter.get('/users', function (req, res) {
+        return usersService.listUsers().then(function (result) {
+            return successHandler(res, result);
+        }).catch(function (error) {
+            return errorHandler(res, error);
+        });
     });
 
 

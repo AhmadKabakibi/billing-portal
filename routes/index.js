@@ -56,7 +56,9 @@ module.exports = function (app, passport) {
                     models.user.create({
                         username: req.body.username,
                         password: req.body.password,
-                        type: 'admin'
+                        type: req.body.type,
+                        code:req.body.code,
+                        email:req.body.email
                     }).then(function (user) {
                         res.json({success: true, msg: 'Successful created new user.'});
                     });

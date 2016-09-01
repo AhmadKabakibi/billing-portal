@@ -10,6 +10,7 @@
     function SettingsController($scope, loginFactory) {
 
         $scope.user = {};
+        $scope.userList=null;
         /*
          Grid:
          Username
@@ -30,11 +31,24 @@
             name: 'Action'
         }];
 
-        $scope.newUser = function (user) {
-            loginFactory.newUser($scope.user).then(function (good) {
+        $scope.createUser = function (user) {
+            loginFactory.newUser(user).then(function (good) {
                 alert(good);
             });
         }
+
+        function getAllUsers() {
+            loginFactory.loadAllUsers()
+                .then(function (response) {
+                    $scope.userList = response.data.data;
+                    //alert(JSON.stringify($scope.posHeader));
+                }, function (error) {
+                    $scope.status = 'Unable to load customer data: ' + error.message;
+                    console.log($scope.status);
+                });
+        }
+
+        getAllUsers();
 
     }
 

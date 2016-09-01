@@ -5,16 +5,16 @@
             <div layout="row">
                 <md-input-container flex="50">
                     <label>User Name</label>
-                    <input required name="userName" ng-model="newUser.userName">
-                    <div ng-messages="newUserForm.userName.$error">
+                    <input required name="username" ng-model="newUser.username">
+                    <div ng-messages="newUserForm.username.$error">
                         <div ng-message="required">This is required.</div>
                     </div>
 
                 </md-input-container>
                 <md-input-container flex="50">
                     <label>Partner</label>
-                    <input required name="partner" ng-model="newUser.Partner">
-                    <div ng-messages="newUserForm.partner.$error">
+                    <input required name="code" ng-model="newUser.code">
+                    <div ng-messages="newUserForm.code.$error">
                         <div ng-message="required">This is required.</div>
                     </div>
                 </md-input-container>
@@ -23,14 +23,14 @@
             <div layout="row">
                 <md-input-container flex="50">
                     <label>Password</label>
-                    <input required type="password" name="userPassword" ng-model="newUser.userPassword">
-                    <div ng-messages="newUserForm.userPassword.$error">
+                    <input required type="password" name="password" ng-model="newUser.password">
+                    <div ng-messages="newUserForm.password.$error">
                         <div ng-message="required">This is required.</div>
                     </div>
                 </md-input-container>
                 <md-input-container flex="50">
                     <label>Role</label>
-                    <md-select name="type" ng-model="newUser.Type" required>
+                    <md-select name="type" ng-model="newUser.type" required>
                         <md-option value="admin">R-pac Admin</md-option>
                         <md-option value="normal">Partner</md-option>
                     </md-select>
@@ -39,9 +39,9 @@
 
             <md-input-container class="md-block">
                 <label>User Email</label>
-                <input required type="email" name="userEmail" ng-model="newUser.userEmail"
+                <input required type="email" name="email" ng-model="newUser.email"
                        minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/"/>
-                <div ng-messages="newUserForm.userEmail.$error" role="alert">
+                <div ng-messages="newUserForm.email.$error" role="alert">
                     <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
                         email must be between 10 and 100 characters long and look like an e-mail address.
                     </div>
@@ -50,7 +50,7 @@
 
 
             <div>
-                <md-button  ng-click="" aria-label=" Create New User">
+                <md-button  ng-click="createUser(newUser)" aria-label=" Create New User">
                     <md-tooltip>
                         Create New User
                     </md-tooltip>
