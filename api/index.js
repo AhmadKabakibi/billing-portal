@@ -18,6 +18,7 @@ var jwt = require('jwt-simple');
 var env = process.env.NODE_ENV || 'development';
 var config = require(__dirname + '/../config/tsconfig.json')[env];
 
+var Promise = require('bluebird');
 var path = require('path');
 var xss = require('xss');
 
@@ -40,33 +41,30 @@ module.exports = function (apiRouter) {
 
     apiRouter.post('/po/:PONumber', function (req, res) {
         if (req.user.type == 'admin') {
-
-            return exportService.getPOs({
+            return exportService.getAllPos({
                 PONumber: req.params.PONumber,
-           //     dateRange: req.body.dateRange
+                //     dateRange: req.body.dateRange
             }).then(function (result) {
                 return successHandler(res, result);
             }).catch(function (error) {
                 return errorHandler(res, error);
             });
 
-        }else if (req.user.type == 'normal') {
-            var codes=[];
-            var cd= req.user.code;
-            var code = cd.split(";");
-            for (var i =0; i<code.length;i++){
-                codes.push(code[i]);
-            }
+        } else if (req.user.type == 'normal') {
 
-            return exportService.getPOs({
-                PONumber: req.params.PONumber,
-              //  dateRange: req.body.dateRange,
-                PartnerCode:codes
-            }).then(function (result) {
-                return successHandler(res, result);
-            }).catch(function (error) {
-                return errorHandler(res, error);
-            });
+            parseCode(req.user.code,function(codes){
+                console.log(":P "+codes);
+                return exportService.getPOs({
+                    PONumber: req.params.PONumber,
+                    //  dateRange: req.body.dateRange,
+                    PartnerCode: codes
+                }).then(function (result) {
+                    return successHandler(res, result);
+                }).catch(function (error) {
+                    return errorHandler(res, error);
+                });
+
+            })
         }
     });
 
@@ -78,7 +76,7 @@ module.exports = function (apiRouter) {
             }).catch(function (error) {
                 return errorHandler(res, error);
             });
-        }else  {
+        } else {
             return errorHandler(res, "access denied not authorized");
         }
     });
@@ -109,4 +107,13 @@ module.exports = function (apiRouter) {
         });
     });
 
+}
+
+function parseCode (cd,callback){
+    var codes = [];
+    var code = cd.split(";");
+    for (var i = 0; i < code.length; i++) {
+        codes.push(code[i]);
+    }
+    return callback(codes)
 }
