@@ -17,7 +17,12 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 parent: 'site',
                 url: '/login',
                 templateUrl: 'app/views/login.html',
-                controller: "LoginController"
+                controller: "LoginController",
+                data: {
+                    title: 'dashboard',
+                    authorizedRolesAdmin: false,
+                    authorizedRoles: true
+                }
             })
 
             .state('dashboard', {
@@ -28,7 +33,8 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 controllerAs: 'vm',
                 data: {
                     title: 'dashboard',
-                    authorizedRoles: [USER_ROLES.superAdmin]
+                    authorizedRolesAdmin: false,
+                    authorizedRoles: true
                 }
             })
             .state('settings', {
@@ -39,7 +45,8 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 controllerAs: 'vm',
                 data: {
                     title: 'settings',
-                    authorizedRoles: [USER_ROLES.superAdmin]
+                    authorizedRolesAdmin: true,
+                    authorizedRoles: true
                 }
             })
             .state('user', {
@@ -50,7 +57,8 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 controllerAs: 'vm',
                 data: {
                     title: 'settings',
-                    authorizedRoles: [USER_ROLES.superAdmin]
+                    authorizedRolesAdmin: true,
+                    authorizedRoles: true
                 }
             })
             .state('details', {
@@ -61,7 +69,8 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 controllerAs: 'vm',
                 data: {
                     title: 'details',
-                    authorizedRoles: [USER_ROLES.superAdmin]
+                    authorizedRolesAdmin: false,
+                    authorizedRoles: true
                 }
             })
             .state('exported', {
@@ -71,7 +80,8 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 templateUrl: 'app/views/exported.html',
                 data: {
                     title: 'exported',
-                    authorizedRoles: [USER_ROLES.superAdmin]
+                    authorizedRolesAdmin: false,
+                    authorizedRoles: true
                 }
             })
 
@@ -82,7 +92,8 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 templateUrl: 'app/views/received.html',
                 data: {
                     title: 'received',
-                    authorizedRoles: [USER_ROLES.superAdmin]
+                    authorizedRolesAdmin: false,
+                    authorizedRoles: true
                 }
             });
 
@@ -166,28 +177,36 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
      isUser: true
      })*/
 
-    .run(function ($rootScope, $state, $http, AUTH_EVENTS, AuthService) {
+    .run(function ($rootScope, $state, $http, AUTH_EVENTS, AuthService, appConf) {
 
-        $rootScope.$on('$stateChangeStart', function (event, next,nextParams){
+        $rootScope.$on('$stateChangeStart', function (event, next, nextParams) {
+            var authorizedRoles = next.data.authorizedRoles;
+            var authorizedRolesAdmin = next.data.authorizedRolesAdmin;
+
             if (next.name !== 'login') {
-                var authorizedRoles = next.data.authorizedRoles;
-
-                if (!AuthService.isAuthorized(authorizedRoles)) {
-
-                    event.preventDefault();
-
-                    if (AuthService.isAuthenticated())
-                        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-                    else
-                        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-
-                    $state.go('login');
-                    //alert('Access Denied');
-                }
+                $http({
+                    method: 'GET',
+                    url: appConf.baseURL + '/api/auth'
+                }).success(function (status) {
+                    if (status.isAuth) {
+                        // user is authenticated need ti check roles to access
+                        /*
+                         authorizedRolesAdmin: true/false,
+                         authorizedRoles: true/false
+                         */
+                        if (authorizedRolesAdmin && status.user.type != "admin") {
+                            event.preventDefault();
+                            alert('Access Denied');
+                            $state.go('login');
+                        }
+                    } else {
+                        $state.go('login');
+                    }
+                }).error(function (err) {
+                });
             } else if (next.name == 'settings' && AuthService.isAdmin()) {
                 $state.go('settings');
             }
-
         })
 
     })
@@ -203,7 +222,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
     })
     .constant('USER_ROLES', {
         all: '*',
-        superAdmin: 'superAdmin',
+        superAdmin: 'admin',
         normal: 'normal'
     })
 

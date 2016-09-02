@@ -8,10 +8,10 @@
 
     function login($http, $q,appConf) {
 
-        var ajsbsFactory = {};
+        var loginFctry = {};
         $http.defaults.useXDomain = true;
 
-        ajsbsFactory.login = function (user) {
+        loginFctry.login = function (user) {
             var deferred = $q.defer();
             /*
              deferred.resolve(user);*/
@@ -19,7 +19,6 @@
             $http({
                 method: 'POST',
                 url: appConf.baseURL+'/auth/authenticate', data: {username: user.username, password: user.password}
-
             }).success(function (data) {
                 //debugger;
                 if(data.success){
@@ -34,7 +33,7 @@
             return deferred.promise;
         }
 
-        ajsbsFactory.newUser = function (user) {
+        loginFctry.newUser = function (user) {
             var deferred = $q.defer();
             $http({
                 method: 'POST',
@@ -53,10 +52,11 @@
 
             return deferred.promise;
         }
-        ajsbsFactory.loadAllUsers= function(){
+
+        loginFctry.loadAllUsers= function(){
             return $http.get('http://localhost:3000/api/users');
         }
-        return ajsbsFactory;
+        return loginFctry;
     }
 
 })();

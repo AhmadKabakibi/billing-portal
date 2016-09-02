@@ -16,8 +16,8 @@ var path = require('path'),
 
 module.exports = function (app, passport) {
 
-    //app.use('/api',isLoggedIn, apiRouter);
-    app.use('/api', apiRouter);
+    app.use('/api',isLoggedIn, apiRouter);
+    //app.use('/api', apiRouter);
     app.use('/', router);
 
     // API routes
@@ -37,7 +37,7 @@ module.exports = function (app, passport) {
     // Authenticate the user and get a JSON Web Token to include in the header of future requests.
     app.post('/auth/authenticate', passport.authenticate('local', {}), function (req, res) {
         if (req.user)
-            res.json({success: true, user: req.user});
+            res.json({success: true, user: req.user,isAuthenticated:req.isAuthenticated()});
         else
             res.send({success: false, msg: 'Authentication failed.'});
     });

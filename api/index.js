@@ -21,11 +21,11 @@ var config = require(__dirname + '/../config/tsconfig.json')[env];
 var path = require('path');
 var xss = require('xss');
 
- FTPService.startFTP();
+FTPService.startFTP();
 
- FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
- logger.info("onFTPConnected Emitt " + CheckingTime);
- });
+FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
+    logger.info("onFTPConnected Emitt " + CheckingTime);
+});
 
 //API
 module.exports = function (apiRouter) {
@@ -39,17 +39,55 @@ module.exports = function (apiRouter) {
     });
 
     apiRouter.post('/po/:PONumber', function (req, res) {
-        return exportService.getPOs({PONumber:req.params.PONumber,dateRange:req.body.dateRange}).then(function (result) {
-            return successHandler(res, result);
-        }).catch(function (error) {
-            return errorHandler(res, error);
-        });
+        if (req.user.type == 'admin') {
 
+            return exportService.getPOs({
+                PONumber: req.params.PONumber,
+           //     dateRange: req.body.dateRange
+            }).then(function (result) {
+                return successHandler(res, result);
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            });
+
+        }else if (req.user.type == 'normal') {
+            var codes=[];
+            var cd= req.user.code;
+            var code = cd.split(";");
+            for (var i =0; i<code.length;i++){
+                codes.push(code[i]);
+            }
+
+            return exportService.getPOs({
+                PONumber: req.params.PONumber,
+              //  dateRange: req.body.dateRange,
+                PartnerCode:codes
+            }).then(function (result) {
+                return successHandler(res, result);
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            });
+        }
     });
 
 
     apiRouter.get('/users', function (req, res) {
-        return usersService.listUsers().then(function (result) {
+        if (req.user.type == 'admin') {
+            return usersService.listUsers().then(function (result) {
+                return successHandler(res, result);
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            });
+        }else  {
+            return errorHandler(res, "access denied not authorized");
+        }
+    });
+
+    apiRouter.post('/findUsers', function (req, res) {
+        return usersService.findUsers({
+            username: req.params.username,
+            code: req.body.code
+        }).then(function (result) {
             return successHandler(res, result);
         }).catch(function (error) {
             return errorHandler(res, error);
@@ -58,7 +96,17 @@ module.exports = function (apiRouter) {
 
 
     apiRouter.get('/auth', function (req, res) {
-        return res.json({success:true,user:req.user});
+        return res.json({
+            success: true,
+            user: {
+                id: req.user.id,
+                username: req.user.username,
+                type: req.user.type,
+                code: req.user.code,
+                email: req.user.email
+            },
+            isAuth: req.isAuthenticated()
+        });
     });
 
 }

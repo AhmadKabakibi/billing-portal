@@ -2,11 +2,11 @@
     'use strict';
     angular.module('app')
         .factory('AuthService', [
-            '$http', 'Session',
+            '$http', 'Session','appConf',
             authorization
         ]);
 
-    function authorization($http, Session) {
+    function authorization($http, Session,appConf) {
         var authService = {};
 
         authService.redirect = true;
@@ -18,30 +18,60 @@
 
         authService.logout = function () {
             Session.destroy();
-
-             $http({
-             method: 'GET',
-             url:'http://localhost:3000/auth/logout'
-             });
+            $http({
+                method: 'GET',
+                url:  appConf.baseURL +'/auth/logout'
+            });
         }
 
         authService.isAdmin = function () {
-            console.log(Session.id+' :@: '+Session.roleCode)
-            return !!Session.id && (Session.roleCode === USER_ROLES.superAdmin);
+
+            $http({
+                method: 'GET',
+                url: appConf.baseURL + '/api/auth'
+            }).success(function (status) {
+                if (status.user.type == 'admin')
+                    return true
+                else
+                    return false
+            }).error(function (err) {
+            });
+
         }
 
         authService.isAuthenticated = function () {
-            return !!Session.id;
+            $http({
+                method: 'GET',
+                url: appConf.baseURL + '/api/auth'
+            }).success(function (status) {
+                alert("status.isAuth:"+status.isAuth)
+                if (status.isAuth){
+                    return true
+                } else{
+                    return false
+                }
+            }).error(function (err) {
+            });
         }
 
         authService.isAuthorized = function (authorizedRoles) {
-
             if (!angular.isArray(authorizedRoles)) {
                 authorizedRoles = [authorizedRoles];
             }
+            $http({
+                method: 'GET',
+                url: appConf.baseURL + '/api/auth'
+            }).success(function (status) {
+                if (status.user.type == authorizedRoles[0] || status.user.type == authorizedRoles[1]) {
+                    return true
+                }
+                else {
+                    return false
+                }
+            }).error(function (err) {
+                return false
+            });
 
-
-            return (authService.isAuthenticated() && authorizedRoles.indexOf(Session.roleCode) !== -1);
         };
 
         return authService;

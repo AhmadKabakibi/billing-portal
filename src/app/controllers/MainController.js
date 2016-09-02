@@ -183,27 +183,27 @@
 
         $scope.setUser = function (user) {
 
-            var p = null;
+            $scope.currentUser = user;
+            $rootScope.currentUser = user;
+
+            $location.path('/dashboard')
+
+           /* var p = null;
             if (user.type == 'admin') {
                 user.roleCode = USER_ROLES.superAdmin;
                 p = 'dashboard';
-            } else if (user.role == 'user') {
+            } else if (user.role == 'normal') {
                 user.roleCode = USER_ROLES.normal;
-                p = 'profile';
+                p = 'dashboard';
             }
-
             if (p !== null) {
                 p = '/' + p;
                 $scope.currentUser = user;
                 $rootScope.currentUser = user;
-                AuthService.newSession(user);
-
+               // AuthService.newSession(user);
                 $location.path(p)
-
-
             } else
-                alert('Unable to Log You In :(');
-
+                alert('Unable to Log You In :(');*/
         }
 
 
