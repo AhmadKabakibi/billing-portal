@@ -57,18 +57,18 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>Line</td>
-                        <td>{{selectedPO.ItemCode}}</td>
-                        <td>{{selectedPO.Description}}</td>
-                        <td>{{selectedPO.WarehouseCode}}</td>
-                        <td>{{selectedPO.PartnerPONumber}}</td>
-                        <td>{{selectedPO.UnitofMeasure}}</td>
-                        <td>{{selectedPO.QuantityOrdered}}</td>
-                        <td>{{selectedPO.QuantityBackordered}}</td>
-                        <td>{{selectedPO.QuantityInvoiced}}</td>
-                        <td>{{selectedPO.UnitCost}}</td>
-                        <td>{{selectedPO.Total}}</td>
-
+                    <tr ng-repeat="po in posHeader">
+                        <td>{{po.podetails[0].poheaderId}}</td>
+                        <td>{{po.podetails[0].ItemCode}}</td>
+                        <td>{{po.podetails[0].Description}}</td>
+                        <td>{{po.podetails[0].WarehouseCode}}</td>
+                        <td>{{po.podetails[0].PartnerPONumber}}</td>
+                        <td>{{po.podetails[0].UnitofMeasure}}</td>
+                        <td>{{po.podetails[0].QuantityOrdered}}</td>
+                        <td>{{po.podetails[0].QuantityBackordered}}</td>
+                        <td>{{po.podetails[0].QuantityInvoiced}}</td>
+                        <td>{{po.podetails[0].UnitCost}}</td>
+                        <td>{{po.podetails[0].Total}}</td>
                     </tr>
                     </tbody>
                 </table>

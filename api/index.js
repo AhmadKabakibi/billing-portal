@@ -52,8 +52,37 @@ module.exports = function (apiRouter) {
 
         } else if (req.user.type == 'normal') {
 
-            parseCode(req.user.code,function(codes){
-                console.log(":P "+codes);
+            parseCode(req.user.code, function (codes) {
+                console.log(":P " + codes);
+                return exportService.getPOs({
+                    PONumber: req.params.PONumber,
+                    //  dateRange: req.body.dateRange,
+                    PartnerCode: codes
+                }).then(function (result) {
+                    return successHandler(res, result);
+                }).catch(function (error) {
+                    return errorHandler(res, error);
+                });
+
+            })
+        }
+    });
+
+    apiRouter.post('/po/details/:PONumber', function (req, res) {
+        if (req.user.type == 'admin') {
+            return exportService.getPOHeader({
+                PONumber: req.params.PONumber,
+                //     dateRange: req.body.dateRange
+            }).then(function (result) {
+                return successHandler(res, result);
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            });
+
+        } else if (req.user.type == 'normal') {
+
+            parseCode(req.user.code, function (codes) {
+                console.log(":P " + codes);
                 return exportService.getPOs({
                     PONumber: req.params.PONumber,
                     //  dateRange: req.body.dateRange,
@@ -109,7 +138,7 @@ module.exports = function (apiRouter) {
 
 }
 
-function parseCode (cd,callback){
+function parseCode(cd, callback) {
     var codes = [];
     var code = cd.split(";");
     for (var i = 0; i < code.length; i++) {

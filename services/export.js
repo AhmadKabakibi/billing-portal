@@ -4,9 +4,11 @@ var moment = require('moment') //timing utulity module
 
 var service = module.exports = {
     listPOs: function () {
-        return models.poinfo.findAll();
+        return models.poheader.findAll({
+            include: [{model: models.podetails}]
+        });
     },
-    getAllPos:function(params){
+    getAllPos: function (params) {
         var DATE_RANGE;
         var now = moment().format("YYYY-MM-DD HH:mm:ss.SSSSSSS");
 
@@ -14,7 +16,7 @@ var service = module.exports = {
             DATE_RANGE = moment().subtract(30, 'days').format("YYYY-MM-DD HH:mm:ss.SSSSSSS");
             console.log('GTe 30: ' + DATE_RANGE)
 
-            return models.poinfo.findAll({
+            return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {
                     PONumber: params.PONumber,
@@ -22,12 +24,13 @@ var service = module.exports = {
                         $lt: now,
                         $gt: DATE_RANGE
                     }
-                }
+                },
+                include: [{model: models.podetails}]
             });
         } else if (params.dateRange == 60) {
             DATE_RANGE = moment().subtract(60, 'days').format("YYYY-MM-DD HH:mm:ss.SSSSSSS");
             console.log('GTe 60: ' + DATE_RANGE)
-            return models.poinfo.findAll({
+            return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {
                     PONumber: params.PONumber,
@@ -35,13 +38,14 @@ var service = module.exports = {
                         $lt: now,
                         $gt: DATE_RANGE
                     }
-                }
+                },
+                include: [{model: models.podetails}]
             });
         } else if (params.dateRange == 7) {
 
             DATE_RANGE = moment().subtract(7, 'days').format("YYYY-MM-DD HH:mm:ss.SSSSSSS");
             console.log('GTe 7: ' + DATE_RANGE)
-            return models.poinfo.findAll({
+            return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {
                     PONumber: params.PONumber,
@@ -49,14 +53,15 @@ var service = module.exports = {
                         $lt: now,
                         $gt: DATE_RANGE
                     }
-                }
+                },
+                include: [{model: models.podetails}]
             });
         } else if (params.dateRange == 1) {
 
             DATE_RANGE = moment().format("YYYY-MM-DD HH:mm:ss.SSSSSSS");
             console.log(new Date() + ' GTe 1: ' + DATE_RANGE)
 
-            return models.poinfo.findAll({
+            return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {
                     PONumber: params.PONumber,
@@ -64,14 +69,17 @@ var service = module.exports = {
                         $lt: now,
                         $gt: DATE_RANGE
                     }
-                }
+                },
+                include: [{model: models.podetails}]
             });
         } else {
-            return models.poinfo.findAll({
+            return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {
                     PONumber: params.PONumber
-                }
+                },
+                include: [{model: models.podetails}],
+
             });
         }
 
@@ -84,72 +92,84 @@ var service = module.exports = {
             DATE_RANGE = moment().subtract(30, 'days').format("YYYY-MM-DD HH:mm:ss.SSSSSSS");
             console.log('GTe 30: ' + DATE_RANGE)
 
-            return models.poinfo.findAll({
+            return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {
                     PONumber: params.PONumber,
                     PODate: {
                         $lt: now,
                         $gt: DATE_RANGE
-                    },
-                    PartnerCode: params.PartnerCode
-                }
+                    }
+                },
+                include: [{model: models.podetails}]
             });
         } else if (params.dateRange == 60) {
             DATE_RANGE = moment().subtract(60, 'days').format("YYYY-MM-DD HH:mm:ss.SSSSSSS");
             console.log('GTe 60: ' + DATE_RANGE)
-            return models.poinfo.findAll({
+            return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {
                     PONumber: params.PONumber,
                     PODate: {
                         $lt: now,
                         $gt: DATE_RANGE
-                    },
-                    PartnerCode: params.PartnerCode
-                }
+                    }
+                },
+                include: [{model: models.podetails}]
             });
         } else if (params.dateRange == 7) {
 
             DATE_RANGE = moment().subtract(7, 'days').format("YYYY-MM-DD HH:mm:ss.SSSSSSS");
             console.log('GTe 7: ' + DATE_RANGE)
-            return models.poinfo.findAll({
+            return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {
                     PONumber: params.PONumber,
                     PODate: {
                         $lt: now,
                         $gt: DATE_RANGE
-                    },
-                    PartnerCode: params.PartnerCode
-                }
+                    }
+                },
+                include: [{model: models.podetails}]
             });
         } else if (params.dateRange == 1) {
 
             DATE_RANGE = moment().format("YYYY-MM-DD HH:mm:ss.SSSSSSS");
             console.log(new Date() + ' GTe 1: ' + DATE_RANGE)
 
-            return models.poinfo.findAll({
+            return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {
                     PONumber: params.PONumber,
                     PODate: {
                         $lt: now,
                         $gt: DATE_RANGE
-                    },
-                    PartnerCode: params.PartnerCode
-                }
+                    }
+                },
+                include: [{model: models.podetails}]
             });
         } else {
 
-            return models.poinfo.findAll({
+            return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {
                     PONumber: params.PONumber,
                     PartnerCode: params.PartnerCode
-                }
+                },
+                include: [{model: models.podetails}]
             });
         }
+    },
+    getPOHeader:function(params){
+        return models.poheader.findAll({
+            //PODate:params.dateRange
+            where: {
+                PONumber: params.PONumber,
+                PartnerCode: params.PartnerCode
+            },
+            include: [{model: models.podetails}],
+            group: ['poheader.PONumber']
+        });
     }
 
 }

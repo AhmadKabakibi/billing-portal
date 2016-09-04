@@ -38,15 +38,15 @@
                 vm.menuItems = [].concat(menuItems);
             });
 
-      /*  function toggleItemsList() {
-            $mdSidenav('left').toggle();
-        }
+        /*  function toggleItemsList() {
+         $mdSidenav('left').toggle();
+         }
 
-        function selectItem(item) {
-            vm.title = item.name;
-            vm.toggleItemsList();
-        }
-*/
+         function selectItem(item) {
+         vm.title = item.name;
+         vm.toggleItemsList();
+         }
+         */
         /*
          vm.signout = function() {
          principal.authenticate(null);
@@ -142,6 +142,41 @@
                 });
         }
 
+
+        /* // function that takes an array of objects
+         // and returns an array of unique valued in the object
+         // array for a given key.
+         // this really belongs in a service, not the global window scope
+         var unique = function (data, key) {
+         var result = [];
+         if(data.length){
+         for (var i = 0; i < data.length; i++) {
+         var value = data[i][key];
+         if (result.indexOf(value) == -1) {
+         result.push(value);
+         }
+         }
+         return result;
+         }
+         return null;
+         };
+
+         // create a deferred object to be resolved later
+         var PODeferred = $q.defer();
+
+         // return a promise. The promise says, "I promise that I'll give you your
+         // data as soon as I have it (which is when I am resolved)".
+         $scope.posss = PODeferred.promise;
+
+         // create a list of unique POs
+         var uniquePO = unique($scope.posHeader, 'PONumber');
+
+         // resolve the deferred object with the unique POs
+         // this will trigger an update on the view
+         PODeferred.resolve(uniquePO);
+         */
+        /**/
+
         $scope.onPaginate = function (page, limit) {
             console.log('Scope Page: ' + $scope.query.page + ' Scope Limit: ' + $scope.query.limit);
             console.log('Page: ' + page + ' Limit: ' + limit);
@@ -163,8 +198,8 @@
         }
 
         $scope.logItem = function (item) {
-           // alert(item.PONumber, 'was selected');
-            $scope.selectedPO=item;
+            // alert(item.PONumber, 'was selected');
+            $scope.selectedPO = item;
             $state.go('details');
         };
 
@@ -188,22 +223,22 @@
 
             $location.path('/dashboard')
 
-           /* var p = null;
-            if (user.type == 'admin') {
-                user.roleCode = USER_ROLES.superAdmin;
-                p = 'dashboard';
-            } else if (user.role == 'normal') {
-                user.roleCode = USER_ROLES.normal;
-                p = 'dashboard';
-            }
-            if (p !== null) {
-                p = '/' + p;
-                $scope.currentUser = user;
-                $rootScope.currentUser = user;
-               // AuthService.newSession(user);
-                $location.path(p)
-            } else
-                alert('Unable to Log You In :(');*/
+            /* var p = null;
+             if (user.type == 'admin') {
+             user.roleCode = USER_ROLES.superAdmin;
+             p = 'dashboard';
+             } else if (user.role == 'normal') {
+             user.roleCode = USER_ROLES.normal;
+             p = 'dashboard';
+             }
+             if (p !== null) {
+             p = '/' + p;
+             $scope.currentUser = user;
+             $rootScope.currentUser = user;
+             // AuthService.newSession(user);
+             $location.path(p)
+             } else
+             alert('Unable to Log You In :(');*/
         }
 
 
