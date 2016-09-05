@@ -149,7 +149,6 @@ var service = module.exports = {
                 include: [{model: models.podetails}]
             });
         } else {
-
             return models.poheader.findAll({
                 //PODate:params.dateRange
                 where: {

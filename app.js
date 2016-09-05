@@ -56,11 +56,12 @@ app.use(express.static('./dist')); 		// set the static files location /public/im
 app.use(session({
     name: 'oe_session',
     secret: 'zomaareenstukjetekstDatjenietzomaarbedenkt',
-    maxAge: new Date(Date.now() + 3600000),
-    //maxAge: new Date(Date.now() + 900000),
+    maxAge: new Date(Date.now() + 300000),
+    //maxAge: new Date(Date.now() + 3600000),
     store: new sessionStore({db: models.sequelize, table: 'session'}),
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    unset: 'destroy'
 }));
 
 app.use(passport.initialize());

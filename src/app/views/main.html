@@ -1,4 +1,4 @@
-<md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left"
+<md-sidenav ng-show="currentUser.isAuth" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left"
             class="md-whiteframe-z2 md-sidenav-left">
     <md-button ng-repeat-start="item in vm.menuItems" layout="column" layout-align="center center"
                flex class="capitalize" ng-click="vm.selectItem(item)"
@@ -11,12 +11,44 @@
         </div>
     </md-button>
     <md-divider ng-repeat-end></md-divider>
+
+    <md-button ng-show=" currentUser.type=='admin' " layout="column" layout-align="center center"
+               flex class="capitalize" ng-click="vm.selectItem(item)"
+               ui-sref-active="md-warn" ui-sref="settings">
+        <div hide-sm hide-md class="md-tile-content">
+            <i class="material-icons md-36">settings</i>
+        </div>
+        <div class="md-tile-content">
+            Setup
+        </div>
+    </md-button>
+    <md-divider></md-divider>
+
 </md-sidenav>
 
 <div layout="column" flex>
-    <md-toolbar layout="row" layout-align="start center">
+<!--    <md-toolbar layout="row" layout-align="start center">
         <section layout-margin >
             <h1>Billing Portal</h1>
+        </section>
+        <section layout-align="end center">
+            <md-button class="toolbar-button" aria-label="logout">
+                <i class="material-icons">logout</i>
+            </md-button>
+        </section>
+    </md-toolbar>-->
+
+    <md-toolbar layout="row" layout-align="center center">
+        <section layout-align="start center" layout-fill flex layout-margin>
+            <h1>Billing Portal</h1>
+          <!--  <md-button hide-gt-sm ng-click="vm.toggleItemsList()" aria-label="Menu">
+                <i class="material-icons">menu</i>
+            </md-button>-->
+        </section>
+        <section ng-show="currentUser.isAuth" layout-align="end center">
+            <md-button class="toolbar-button" aria-label="Logout" ng-click="logout()">
+                <i class="material-icons">settings_power</i>
+            </md-button>
         </section>
     </md-toolbar>
 

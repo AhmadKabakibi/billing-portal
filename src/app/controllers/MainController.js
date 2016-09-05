@@ -3,11 +3,11 @@
     angular
         .module('app')
         .controller('MainController', [
-            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$mdEditDialog', '$scope', '$rootScope', '$timeout', '$location', 'USER_ROLES', 'AuthService',
+            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$mdEditDialog', '$scope', '$rootScope', '$timeout', '$location','loginFactory',
             MainController
         ]);
 
-    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $scope, $rootScope, $timeout, $location, USER_ROLES, AuthService) {
+    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $scope, $rootScope, $timeout, $location,loginFactory) {
         var vm = this;
 
         $scope.posHeader = null;
@@ -47,11 +47,6 @@
          vm.toggleItemsList();
          }
          */
-        /*
-         vm.signout = function() {
-         principal.authenticate(null);
-         $state.go('login');
-         }*/
 
         //PosService
         // Assume we have a $nutrition service that provides an API for communicating with the server
@@ -214,7 +209,7 @@
         /*Authorization*/
 
         $scope.currentUser = null;
-        $scope.isAuthorized = AuthService.isAuthorized;
+       // $scope.isAuthorized = AuthService.isAuthorized;
 
         $scope.setUser = function (user) {
 
@@ -239,6 +234,13 @@
              $location.path(p)
              } else
              alert('Unable to Log You In :(');*/
+        }
+        $scope.logout = function () {
+            loginFactory.logout().then(function(res){
+                $scope.currentUser=null;
+                $rootScope.currentUser=null;
+                $state.go('login');
+            });
         }
 
 

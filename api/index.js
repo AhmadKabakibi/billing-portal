@@ -68,36 +68,6 @@ module.exports = function (apiRouter) {
         }
     });
 
-    apiRouter.post('/po/details/:PONumber', function (req, res) {
-        if (req.user.type == 'admin') {
-            return exportService.getPOHeader({
-                PONumber: req.params.PONumber,
-                //     dateRange: req.body.dateRange
-            }).then(function (result) {
-                return successHandler(res, result);
-            }).catch(function (error) {
-                return errorHandler(res, error);
-            });
-
-        } else if (req.user.type == 'normal') {
-
-            parseCode(req.user.code, function (codes) {
-                console.log(":P " + codes);
-                return exportService.getPOs({
-                    PONumber: req.params.PONumber,
-                    //  dateRange: req.body.dateRange,
-                    PartnerCode: codes
-                }).then(function (result) {
-                    return successHandler(res, result);
-                }).catch(function (error) {
-                    return errorHandler(res, error);
-                });
-
-            })
-        }
-    });
-
-
     apiRouter.get('/users', function (req, res) {
         if (req.user.type == 'admin') {
             return usersService.listUsers().then(function (result) {
@@ -134,6 +104,16 @@ module.exports = function (apiRouter) {
             },
             isAuth: req.isAuthenticated()
         });
+    });
+
+    // =====================================
+    // LOGOUT ==============================
+    // =====================================
+    apiRouter.get('/logout', function (req, res) {
+        //req.session.destroy();
+        req.logout();
+        req.session = null;
+        res.json({success: true, msg: 'logout'});
     });
 
 }

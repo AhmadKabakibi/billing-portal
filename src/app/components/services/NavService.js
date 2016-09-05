@@ -23,11 +23,6 @@
         name: 'Exported',
         icon: 'unarchive',
         sref: 'exported'
-      },
-      {
-        name: 'Setup',
-        icon: 'settings',
-        sref: 'settings'
       }
     ];
 

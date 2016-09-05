@@ -66,14 +66,6 @@ module.exports = function (app, passport) {
             })
         }
     });
-
-    // =====================================
-    // LOGOUT ==============================
-    // =====================================
-    app.get('/auth/logout', function (req, res) {
-        req.logout();
-        res.status(200).json({success: true, msg: 'logout'});
-    });
 }
 
 // route middleware to make sure

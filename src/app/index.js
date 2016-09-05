@@ -183,6 +183,8 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
             var authorizedRoles = next.data.authorizedRoles;
             var authorizedRolesAdmin = next.data.authorizedRolesAdmin;
 
+            console.log($rootScope.currentUser);
+
             if (next.name !== 'login') {
                 $http({
                     method: 'GET',
@@ -200,6 +202,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                             $state.go('login');
                         }
                     } else {
+                        alert('Unauthorized');
                         $state.go('login');
                     }
                 }).error(function (err) {

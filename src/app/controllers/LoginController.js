@@ -11,8 +11,8 @@
         $scope.user = {};
 
         $scope.login = function(user){
-            loginFactory.login($scope.user).then(function(good){
-                $scope.setUser(good);
+            loginFactory.login($scope.user).then(function(user){
+                $scope.setUser({id:user.id,username:user.username,type:user.type,code:user.code,email:user.email,isAuth:true});
             });
         }
 
