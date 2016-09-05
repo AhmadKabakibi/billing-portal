@@ -179,7 +179,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
 
     .run(function ($rootScope, $state, $http, AUTH_EVENTS, AuthService, appConf) {
 
-        $rootScope.$on('$stateChangeStart', function (event, next, nextParams) {
+        $rootScope.$on('$stateChangeStart', function (event, next, nextParams,previous, fromParams) {
             var authorizedRoles = next.data.authorizedRoles;
             var authorizedRolesAdmin = next.data.authorizedRolesAdmin;
 
@@ -211,6 +211,39 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 $state.go('settings');
             }
         })
+
+        $rootScope.$on('$stateChangeSuccess', function (event, next, toParams, fromState, fromParams) {
+            var authorizedRoles = next.data.authorizedRoles;
+            var authorizedRolesAdmin = next.data.authorizedRolesAdmin;
+
+            console.log($rootScope.currentUser);
+
+            if (next.name !== 'login') {
+                $http({
+                    method: 'GET',
+                    url: appConf.baseURL + '/api/auth'
+                }).success(function (status) {
+                    if (status.isAuth) {
+                        // user is authenticated need ti check roles to access
+                        /*
+                         authorizedRolesAdmin: true/false,
+                         authorizedRoles: true/false
+                         */
+                        if (authorizedRolesAdmin && status.user.type != "admin") {
+                            event.preventDefault();
+                            alert('Access Denied');
+                            $state.go('login');
+                        }
+                    } else {
+                        alert('Unauthorized');
+                        $state.go('login');
+                    }
+                }).error(function (err) {
+                });
+            } else if (next.name == 'settings' && AuthService.isAdmin()) {
+                $state.go('settings');
+            }
+        });
 
     })
 

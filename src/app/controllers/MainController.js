@@ -10,6 +10,15 @@
     function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $scope, $rootScope, $timeout, $location,loginFactory) {
         var vm = this;
 
+
+        $scope.$watch(function() { return $location.path(); }, function(newValue, oldValue){
+            if ($scope.currentUser.isAuth && newValue != '/login'){
+                //$location.path('/login');
+            }else {
+                $location.path('/login');
+            }
+        });
+
         $scope.posHeader = null;
         vm.menuItems = [];
 
