@@ -207,7 +207,29 @@
             }, 2000);
         };
 
+        function removeDuplicate(arr, prop) {
+            var new_arr = [];
+            var lookup = {};
+            for (var i in arr) {
+                lookup[arr[i][prop]] = arr[i];
+            }
+            for (i in lookup) {
+                new_arr.push(lookup[i]);
+            }
+            return new_arr;
+        }
 
+        /* function loadPOs(){
+
+         POsService.loadAllItems()
+         .then(function (response) {
+         $scope.posHeader = response.data.data;
+         }, function (error) {
+         $scope.status = 'Unable to load partne  r data: ' + error.message;
+         console.log($scope.status);
+         });
+         }
+         loadPOs();*/
 
 
     }

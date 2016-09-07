@@ -213,105 +213,163 @@ var service = module.exports = {
             fs.createReadStream(filename)
                 .pipe(csv.createStream(options))
                 .on('data', function (data) {
-                        i++;
-                        //console.log('Line: '+i++);
-                        //console.log(data);
-                        logger.debug(data.PONumber + " times: " + i);
+                    return new Promise(function(_resolve, _reject) {
 
-                        if (Object.keys(data).length >= 22) {
-                            ////check file structure if does match the sample file
-                            if (data.PONumber === '' || data.PartnerCode === '' || data.POERPStatus === '' || data.ItemCode === '' || data.QuantityOrdered === '') {
-                                //reject the PO don't insert to DB
-                                logger.BadPOs({
-                                    "lineNo:": i,
-                                    "FileName": filename.replace(/^.*[\\\/]/, ''),
-                                    "PONumber": data.PONumber,
-                                    "PartnerCode": data.PartnerCode,
-                                    "POERPStatus": data.POERPStatus,
-                                    "ItemCode": data.ItemCode,
-                                    "QuantityOrdered": data.QuantityOrdered
-                                });
-                            } else {
-                                /*PO Status
-                                 If the same PO number is received in the files received from ERP
-                                 Check if the status in the PO =
-                                 Open                O             ignore and do nothing
-                                 Changed             C             replace existing PO if it is not invoiced yet
-                                 BackOrdered         B             ignore and do nothing
-                                 Completed           X             ignore and do nothing*/
+                            i++;
+                            //console.log('Line: '+i++);
+                            //console.log(data);
+                            //logger.debug(data.PONumber + " times: " + i);
 
-                                if (data.POERPStatus == 'c' || data.POERPStatus == 'C') {
-                                    models.poinfo.findAll({
-                                        where: {PONumber: data.PONumber}
-                                    }).then(function (pos) {
-                                        if (pos.length) {
-                                            //replace existing PO if it is not invoiced yet
-                                            //console.log('found: ' + pos.length);
-                                            /*
-                                             models.poinfo.update(data, {where: {PONumber: data.PONumber}}).then(function () {
-                                             //console.log(data.PONumber+" status has been changed "+ data.POERPStatus)
-                                             logger.debug(data.PONumber + " status has been changed " + data.POERPStatus)
-                                             });
-                                             */
-                                            models.sequelize.transaction(function (t) {
-                                                return models.poheader.update(
-                                                    {
-                                                        PONumber: data.PONumber,
-                                                        PODate: data.PODate,
-                                                        OrderType: data.OrderType,
-                                                        Division: data.Division,
-                                                        PartnerCode: data.PartnerCode,
-                                                        PartnerName: data.PartnerName,
-                                                        ShipToCode: data.ShipToCode,
-                                                        ShipToName: data.ShipToName,
-                                                        POERPStatus: data.POERPStatus
-                                                    }, {where: {PONumber: data.PONumber}},
-                                                    {transaction: t}).then(function (po) {
-                                                    return models.podetails.create(
+                            if (Object.keys(data).length >= 22) {
+                                ////check file structure if does match the sample file
+                                if (data.PONumber === '' || data.PartnerCode === '' || data.POERPStatus === '' || data.ItemCode === '' || data.QuantityOrdered === '') {
+                                    //reject the PO don't insert to DB
+                                    logger.BadPOs({
+                                        "lineNo:": i,
+                                        "FileName": filename.replace(/^.*[\\\/]/, ''),
+                                        "PONumber": data.PONumber,
+                                        "PartnerCode": data.PartnerCode,
+                                        "POERPStatus": data.POERPStatus,
+                                        "ItemCode": data.ItemCode,
+                                        "QuantityOrdered": data.QuantityOrdered
+                                    });
+                                } else {
+                                    /*PO Status
+                                     If the same PO number is received in the files received from ERP
+                                     Check if the status in the PO =
+                                     Open                O             ignore and do nothing
+                                     Changed             C             replace existing PO if it is not invoiced yet
+                                     BackOrdered         B             ignore and do nothing
+                                     Completed           X             ignore and do nothing*/
+
+                                    if (data.POERPStatus == 'c' || data.POERPStatus == 'C') {
+                                        models.poheader.findAll({
+                                            where: {PONumber: data.PONumber}
+                                        }).then(function (pos) {
+                                            logger.debug(data.PONumber + " :POSS: " + pos.length);
+                                            if (pos.length !== 0) {
+                                                logger.debug(data.PONumber + " :condition: " + pos.length);
+                                                //replace existing PO if it is not invoiced yet
+                                                models.sequelize.transaction(function (t) {
+                                                    return models.poheader.update(
                                                         {
-                                                            CustomerNumber: data.CustomerNumber,
-                                                            FreightAmount: data.FreightAmount,
-                                                            ItemCode: data.ItemCode,
-                                                            Description: data.Description,
-                                                            WarehouseCode: data.WarehouseCode,
-                                                            PartnerPONumber: data.PartnerPONumber,
-                                                            UnitofMeasure: data.UnitofMeasure,
-                                                            QuantityOrdered: data.QuantityOrdered,
-                                                            QuantityBackordered: data.QuantityBackordered,
-                                                            QuantityInvoiced: data.QuantityInvoiced,
-                                                            UnitCost: data.UnitCost,
-                                                            Total: data.Total,
-                                                            poheaderId: po.id
-                                                        }, {where: {poheaderId: data.PONumber}}
-                                                        , {transaction: t}).then(function () {
-                                                        logger.debug(data.PONumber + " status has been changed " + data.POERPStatus)
-                                                    })
+                                                            PONumber: data.PONumber,
+                                                            PODate: data.PODate,
+                                                            OrderType: data.OrderType,
+                                                            Division: data.Division,
+                                                            PartnerCode: data.PartnerCode,
+                                                            PartnerName: data.PartnerName,
+                                                            ShipToCode: data.ShipToCode,
+                                                            ShipToName: data.ShipToName,
+                                                            POERPStatus: data.POERPStatus
+                                                        }, {where: {PONumber: data.PONumber}},
+                                                        {transaction: t}).then(function (po) {
+                                                        return models.podetails.create(
+                                                            {
+                                                                CustomerNumber: data.CustomerNumber,
+                                                                FreightAmount: data.FreightAmount,
+                                                                ItemCode: data.ItemCode,
+                                                                Description: data.Description,
+                                                                WarehouseCode: data.WarehouseCode,
+                                                                PartnerPONumber: data.PartnerPONumber,
+                                                                UnitofMeasure: data.UnitofMeasure,
+                                                                QuantityOrdered: data.QuantityOrdered,
+                                                                QuantityBackordered: data.QuantityBackordered,
+                                                                QuantityInvoiced: data.QuantityInvoiced,
+                                                                UnitCost: data.UnitCost,
+                                                                Total: data.Total,
+                                                                poheaderId: po.id
+                                                            }, {where: {poheaderId: data.PONumber}}
+                                                            , {transaction: t}).then(function () {
+                                                            logger.debug(data.PONumber + " status has been changed " + data.POERPStatus)
+                                                        })
+                                                    });
                                                 });
-                                            });
-                                        } else {
-                                            //console.log('no pos found: ');
-                                            //ignore and do nothing
-                                            // create PO into database table POInfo
-
-                                            models.sequelize.transaction(function (t) {
-
+                                            } else {
+                                                //console.log('no pos found: ');
+                                                //ignore and do nothing
+                                                // create PO into database table POInfo
                                                 //if(PONumber[data.PONumber]) return {po: {id: PONumber[data.PONumber]}};
+                                                models.poheader.findAll({
+                                                    where: {PONumber: data.PONumber}
+                                                }).then(function (pos) {
+                                                    logger.debug(data.PONumber + " :POSS: " + pos.length);
+                                                    if (pos.length !== 0) {
+                                                        logger.debug(data.PONumber + " :condition: " + pos.length);
+                                                        models.sequelize.transaction(function (t) {
+                                                            return models.podetails.create(
+                                                                {
+                                                                    CustomerNumber: data.CustomerNumber,
+                                                                    FreightAmount: data.FreightAmount,
+                                                                    ItemCode: data.ItemCode,
+                                                                    Description: data.Description,
+                                                                    WarehouseCode: data.WarehouseCode,
+                                                                    PartnerPONumber: data.PartnerPONumber,
+                                                                    UnitofMeasure: data.UnitofMeasure,
+                                                                    QuantityOrdered: data.QuantityOrdered,
+                                                                    QuantityBackordered: data.QuantityBackordered,
+                                                                    QuantityInvoiced: data.QuantityInvoiced,
+                                                                    UnitCost: data.UnitCost,
+                                                                    Total: data.Total,
+                                                                    poheaderId: pos.id
+                                                                }, {transaction: t}).then(function () {
+                                                            })
+                                                        });
 
+                                                    } else {
+                                                        //POHeader not exists we should insert it
 
-                                                return models.poheader.create(
-                                                    {
-                                                        PONumber: data.PONumber,
-                                                        PODate: data.PODate,
-                                                        OrderType: data.OrderType,
-                                                        Division: data.Division,
-                                                        PartnerCode: data.PartnerCode,
-                                                        PartnerName: data.PartnerName,
-                                                        ShipToCode: data.ShipToCode,
-                                                        ShipToName: data.ShipToName,
-                                                        POERPStatus: data.POERPStatus
-                                                    },
-                                                    {transaction: t}).then(function (po) {
-                                                   // if(!PONumber[data.PONumber]) PONumber[data.PONumber] = data.id;
+                                                        models.sequelize.transaction(function (t) {
+                                                            return models.poheader.create(
+                                                                {
+                                                                    PONumber: data.PONumber,
+                                                                    PODate: data.PODate,
+                                                                    OrderType: data.OrderType,
+                                                                    Division: data.Division,
+                                                                    PartnerCode: data.PartnerCode,
+                                                                    PartnerName: data.PartnerName,
+                                                                    ShipToCode: data.ShipToCode,
+                                                                    ShipToName: data.ShipToName,
+                                                                    POERPStatus: data.POERPStatus
+                                                                },
+                                                                {transaction: t}).then(function (po) {
+                                                                // if(!PONumber[data.PONumber]) PONumber[data.PONumber] = data.id;
+                                                                return models.podetails.create(
+                                                                    {
+                                                                        CustomerNumber: data.CustomerNumber,
+                                                                        FreightAmount: data.FreightAmount,
+                                                                        ItemCode: data.ItemCode,
+                                                                        Description: data.Description,
+                                                                        WarehouseCode: data.WarehouseCode,
+                                                                        PartnerPONumber: data.PartnerPONumber,
+                                                                        UnitofMeasure: data.UnitofMeasure,
+                                                                        QuantityOrdered: data.QuantityOrdered,
+                                                                        QuantityBackordered: data.QuantityBackordered,
+                                                                        QuantityInvoiced: data.QuantityInvoiced,
+                                                                        UnitCost: data.UnitCost,
+                                                                        Total: data.Total,
+                                                                        poheaderId: po.id
+                                                                    }, {transaction: t}).then(function () {
+
+                                                                })
+                                                            });
+                                                        });
+                                                    }
+
+                                                })
+                                            }
+                                        });
+
+                                    }
+                                    if (data.POERPStatus == 'o' || data.POERPStatus == 'O') {
+                                        // create PO into database table
+                                        models.poheader.findAll({
+                                            where: {PONumber: data.PONumber}
+                                        }).then(function (pos) {
+                                            logger.debug(data.PONumber + " :POSS: " + pos.length);
+                                            if (pos.length !== 0) {
+                                                logger.debug(data.PONumber + " :condition: " + pos.length);
+                                                models.sequelize.transaction(function (t) {
                                                     return models.podetails.create(
                                                         {
                                                             CustomerNumber: data.CustomerNumber,
@@ -326,72 +384,65 @@ var service = module.exports = {
                                                             QuantityInvoiced: data.QuantityInvoiced,
                                                             UnitCost: data.UnitCost,
                                                             Total: data.Total,
-                                                            poheaderId: po.id
+                                                            poheaderId: pos.id
                                                         }, {transaction: t}).then(function () {
-
+                                                        _resolve();
                                                     })
                                                 });
-                                            });
 
+                                            } else {
+                                                //POHeader not exists we should insert it
+                                                logger.debug(data.PONumber + " :NEW PO Header: " + pos.length);
+                                                models.sequelize.transaction(function (t) {
+                                                    return models.poheader.create(
+                                                        {
+                                                            PONumber: data.PONumber,
+                                                            PODate: data.PODate,
+                                                            OrderType: data.OrderType,
+                                                            Division: data.Division,
+                                                            PartnerCode: data.PartnerCode,
+                                                            PartnerName: data.PartnerName,
+                                                            ShipToCode: data.ShipToCode,
+                                                            ShipToName: data.ShipToName,
+                                                            POERPStatus: data.POERPStatus
+                                                        },
+                                                        {transaction: t}).then(function (po) {
+                                                        // if(!PONumber[data.PONumber]) PONumber[data.PONumber] = data.id;
+                                                        return models.podetails.create(
+                                                            {
+                                                                CustomerNumber: data.CustomerNumber,
+                                                                FreightAmount: data.FreightAmount,
+                                                                ItemCode: data.ItemCode,
+                                                                Description: data.Description,
+                                                                WarehouseCode: data.WarehouseCode,
+                                                                PartnerPONumber: data.PartnerPONumber,
+                                                                UnitofMeasure: data.UnitofMeasure,
+                                                                QuantityOrdered: data.QuantityOrdered,
+                                                                QuantityBackordered: data.QuantityBackordered,
+                                                                QuantityInvoiced: data.QuantityInvoiced,
+                                                                UnitCost: data.UnitCost,
+                                                                Total: data.Total,
+                                                                poheaderId: po.id
+                                                            }, {transaction: t}).then(function () {
+                                                            _resolve();
+                                                        })
+                                                    });
+                                                }).catch(function (err) {
+                                                    // Transaction has been rolled back
+                                                    // err is whatever rejected the promise chain returned to the transaction callback
+                                                    _reject();
+                                                });
+                                            }
+                                        })
 
-                                        }
-                                    });
-
-                                }
-                                if (data.POERPStatus == 'o' || data.POERPStatus == 'O') {
-                                    // create PO into database table POInfo
-                                    /*    models.poinfo.create(data).then(function (PO) {
-                                     //logger
-                                     });*/
-                                    /*  models.sequelize.transaction(function (t) {
-                                     return models.poinfo.create(
-                                     data,
-                                     {transaction: t}).then(function (po) {
-                                     });
-                                     });*/
-
-                                    models.sequelize.transaction(function (t) {
-                                        return models.poheader.create(
-                                            {
-                                                PONumber: data.PONumber,
-                                                PODate: data.PODate,
-                                                OrderType: data.OrderType,
-                                                Division: data.Division,
-                                                PartnerCode: data.PartnerCode,
-                                                PartnerName: data.PartnerName,
-                                                ShipToCode: data.ShipToCode,
-                                                ShipToName: data.ShipToName,
-                                                POERPStatus: data.POERPStatus
-                                            },
-                                            {transaction: t}).then(function (po) {
-                                            return models.podetails.create(
-                                                {
-                                                    CustomerNumber: data.CustomerNumber,
-                                                    FreightAmount: data.FreightAmount,
-                                                    ItemCode: data.ItemCode,
-                                                    Description: data.Description,
-                                                    WarehouseCode: data.WarehouseCode,
-                                                    PartnerPONumber: data.PartnerPONumber,
-                                                    UnitofMeasure: data.UnitofMeasure,
-                                                    QuantityOrdered: data.QuantityOrdered,
-                                                    QuantityBackordered: data.QuantityBackordered,
-                                                    QuantityInvoiced: data.QuantityInvoiced,
-                                                    UnitCost: data.UnitCost,
-                                                    Total: data.Total,
-                                                    poheaderId: po.id
-                                                }, {transaction: t}).then(function () {
-
-                                            })
-                                        });
-                                    });
-
+                                    }
                                 }
                             }
-                        }
-                        else {
-                            //reject the file and archive it
-                            logger.BadFile(filename.replace(/^.*[\\\/]/, ''));
-                        }
+                            else {
+                                //reject the file and archive it
+                                logger.BadFile(filename.replace(/^.*[\\\/]/, ''));
+                            }
+                        })
                     }
                 )
                 .on('column', function (key, value) {

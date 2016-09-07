@@ -32,11 +32,53 @@ FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
 module.exports = function (apiRouter) {
 
     apiRouter.get('/pos', function (req, res) {
-        return exportService.listPOs().then(function (result) {
-            return successHandler(res, result);
-        }).catch(function (error) {
-            return errorHandler(res, error);
-        });
+        if (req.user.type == 'admin') {
+            return exportService.listPOs().then(function (result) {
+                var unq = removeDuplicate(result, 'PONumber');
+                return successHandler(res, unq);
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            })
+        } else if (req.user.type == 'normal') {
+            parseCode(req.user.code, function (codes) {
+                return exportService.listPOsCode({PartnerCode: codes}).then(function (result) {
+                    var unq = removeDuplicate(result, 'PONumber');
+                    return successHandler(res, unq);
+                }).catch(function (error) {
+                    return errorHandler(res, error);
+                })
+            })
+
+
+        }
+    });
+
+    apiRouter.get('/pos/:PONumber', function (req, res) {
+        if (req.user.type == 'admin') {
+            console.log(eq.user.type)
+            return exportService.getPOHeader({
+                PONumber: req.params.PONumber
+            }).then(function (result) {
+                var unq = removeDuplicate(result, 'PONumber');
+                return successHandler(res, unq);
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            })
+        } else if (req.user.type == 'normal') {
+            parseCode(req.user.code, function (codes) {
+                return exportService.getPOHeaderCode({
+                    PONumber: req.params.PONumber,
+                    PartnerCode: codes
+                }).then(function (result) {
+                    var unq = removeDuplicate(result, 'PONumber');
+                    return successHandler(res, unq);
+                }).catch(function (error) {
+                    return errorHandler(res, error);
+                })
+            })
+
+
+        }
     });
 
     apiRouter.post('/po/:PONumber', function (req, res) {
@@ -45,6 +87,7 @@ module.exports = function (apiRouter) {
                 PONumber: req.params.PONumber,
                 //     dateRange: req.body.dateRange
             }).then(function (result) {
+                var unq = removeDuplicate(result, 'PONumber');
                 return successHandler(res, result);
             }).catch(function (error) {
                 return errorHandler(res, error);
@@ -59,6 +102,7 @@ module.exports = function (apiRouter) {
                     //  dateRange: req.body.dateRange,
                     PartnerCode: codes
                 }).then(function (result) {
+                    var unq = removeDuplicate(result, 'PONumber');
                     return successHandler(res, result);
                 }).catch(function (error) {
                     return errorHandler(res, error);
@@ -125,4 +169,16 @@ function parseCode(cd, callback) {
         codes.push(code[i]);
     }
     return callback(codes)
+}
+
+function removeDuplicate(arr, prop) {
+    var new_arr = [];
+    var lookup = {};
+    for (var i in arr) {
+        lookup[arr[i][prop]] = arr[i];
+    }
+    for (i in lookup) {
+        new_arr.push(lookup[i]);
+    }
+    return new_arr;
 }

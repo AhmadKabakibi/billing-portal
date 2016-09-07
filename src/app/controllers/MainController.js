@@ -11,13 +11,13 @@
         var vm = this;
 
 
-        $scope.$watch(function() { return $location.path(); }, function(newValue, oldValue){
+       /* $scope.$watch(function() { return $location.path(); }, function(newValue, oldValue){
             if ($scope.currentUser.isAuth && newValue != '/login'){
                 //$location.path('/login');
             }else {
                 $location.path('/login');
             }
-        });
+        });*/
 
         $scope.posHeader = null;
         vm.menuItems = [];
@@ -122,31 +122,6 @@
             name: 'Status data'
         }];
 
-        function getAll() {
-            POsService.loadAllItems()
-                .then(function (response) {
-                    $scope.posHeader = response.data.data;
-                    //alert(JSON.stringify($scope.posHeader));
-                }, function (error) {
-                    $scope.status = 'Unable to load customer data: ' + error.message;
-                    console.log($scope.status);
-                });
-        }
-
-        //getAll();
-
-        $scope.getPOs = function (params) {
-            console.log(params.PONumber + " @@ " + params.dateRange);
-            POsService.getPOs(params)
-                .then(function (response) {
-                    $scope.posHeader = response.data.data;
-                }, function (error) {
-                    $scope.status = 'Unable to load partner data: ' + error.message;
-                    console.log($scope.status);
-                });
-        }
-
-
         /* // function that takes an array of objects
          // and returns an array of unique valued in the object
          // array for a given key.
@@ -198,13 +173,48 @@
         $scope.loadStuff = function () {
             $scope.promise = $timeout(function () {
                 // loading
+                getAll();
+            }, 2000);
+        }
+
+        function getAll() {
+            POsService.loadAllItems()
+                .then(function (response) {
+                    //$scope.posHeader = removeDuplicate(response.data.data, 'PONumber');
+                    $scope.posHeader = response.data.data;
+                    //alert(JSON.stringify($scope.posHeader));
+                }, function (error) {
+                    $scope.status = 'Unable to load customer data: ' + error.message;
+                    console.log($scope.status);
+                });
+        }
+        getAll();
+
+        $scope.loadPOHeader = function (params) {
+            $scope.promise = $timeout(function () {
+                // loading
+                POsService.loadPOHeader(params)
+                    .then(function (response) {
+                        $scope.posHeader = response.data.data;
+                    }, function (error) {
+                        $scope.status = 'Unable to load partner data: ' + error.message;
+                        console.log($scope.status);
+                    });
+
             }, 2000);
         }
 
         $scope.logItem = function (item) {
             // alert(item.PONumber, 'was selected');
-            $scope.selectedPO = item;
-            $state.go('details');
+            //getPOs({PONumber:user.PONumber,dateRange:range})
+            POsService.getPOs({PONumber:item.PONumber})
+                .then(function (response) {
+                    $scope.selectedPO = response.data.data;
+                    $state.go('details');
+                }, function (error) {
+                    $scope.status = 'Unable to load partner data: ' + error.message;
+                    console.log($scope.status);
+                });
         };
 
         $scope.logOrder = function (order) {

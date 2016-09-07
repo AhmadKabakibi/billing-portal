@@ -21,15 +21,23 @@
                 <md-option ng-repeat="date in dateRange" value="{{date.val}}">{{date.str}}</md-option>
             </md-select>
 
-            <md-button class="md-raised" ng-click="getPOs({PONumber:user.PONumber,dateRange:range})">run
+            <md-button class="md-raised" ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range})">run
             </md-button>
+
         </div>
     </md-card>
     <md-card flex="30" md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout-margin>
         <md-card-title>
             <md-card-title-text>
                 <span class="md-headline">My PO Summary:</span>
-                <span class="md-subhead" ng-repeat="st in POStatus">{{st.str}}:</span>
+                <span class="md-subhead">Pending: {{posHeader.length}} </span>
+                <span class="md-subhead">Accepted: 0</span>
+                <span class="md-subhead">Invoiced: 0</span>
+                <span class="md-subhead">Rejected: 0</span>
+                <span class="md-subhead">UnderReview: 0</span>
+
+                <!--
+                <span class="md-subhead" ng-repeat="st in POStatus">{{st.str}}:</span>-->
             </md-card-title-text>
         </md-card-title>
     </md-card>
@@ -51,7 +59,6 @@
     </div>
 </md-toolbar>
 
-
 <md-table-container>
     <table data-md-table data-md-row-select="options.rowSelection" multiple="{{options.multiSelect}}"
            ng-model="selected" md-progress="promise">
@@ -70,7 +77,7 @@
             ng-repeat="item in posHeader| limitTo: query.limit : (query.page - 1) * query.limit">
         -->
         <tr md-row md-select="item" md-on-select="logItem" md-auto-select="options.autoSelect"
-            ng-repeat="item in posHeader| limitTo: 1">
+            ng-repeat="item in posHeader | limitTo: query.limit : (query.page - 1) * query.limit ">
             <td md-cell>{{item.PONumber}}</td>
             <td md-cell width="80%">{{item.PartnerName}}</td>
             <td md-cell width="100%">{{item.PODate | date:'yyyy-dd-MM'}}</td>
@@ -80,7 +87,6 @@
             <td md-cell width="100%">{{item.ShipToName}}</td>
             <!--<td>{{item.POERPStatus}}</td>-->
             <td>Pending</td>
-
         </tr>
         </tbody>
     </table>

@@ -2,6 +2,7 @@
     <section flex class="md-whiteframe-1dp">
         <md-content class="md-padding" layout="row" layout="column">
             <div class="table-responsive-vertical">
+
                 <h2 class="md-title">Order Information:</h2>
                 <table id="table" class="table table-hover table-bordered">
                     <thead>
@@ -18,13 +19,13 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{selectedPO.PONumber}}</td>
-                        <td>{{selectedPO.PartnerName}}</td>
-                        <td>{{selectedPO.PODate | date:'yyyy-dd-MM'}}</td>
-                        <td>{{selectedPO.Division}}</td>
-                        <td>{{selectedPO.OrderType}}</td>
-                        <td>{{selectedPO.PartnerCode}}</td>
-                        <td>{{selectedPO.ShipToName}}</td>
+                        <td>{{selectedPO[0].PONumber}}</td>
+                        <td>{{selectedPO[0].PartnerName}}</td>
+                        <td>{{selectedPO[0].PODate | date:'yyyy-dd-MM'}}</td>
+                        <td>{{selectedPO[0].Division}}</td>
+                        <td>{{selectedPO[0].OrderType}}</td>
+                        <td>{{selectedPO[0].PartnerCode}}</td>
+                        <td>{{selectedPO[0].ShipToName}}</td>
                         <!--<td>{{selectedPO.POERPStatus}}</td>-->
                         <td>Pending</td>
                     </tr>
@@ -58,18 +59,18 @@
                     </thead>
                     <tbody>
                     <tr>
-                    <tr ng-repeat="po in posHeader">
-                        <td>{{po.podetails[0].poheaderId}}</td>
-                        <td>{{po.podetails[0].ItemCode}}</td>
-                        <td>{{po.podetails[0].Description}}</td>
-                        <td>{{po.podetails[0].WarehouseCode}}</td>
-                        <td>{{po.podetails[0].PartnerPONumber}}</td>
-                        <td>{{po.podetails[0].UnitofMeasure}}</td>
-                        <td>{{po.podetails[0].QuantityOrdered}}</td>
-                        <td>{{po.podetails[0].QuantityBackordered}}</td>
-                        <td>{{po.podetails[0].QuantityInvoiced}}</td>
-                        <td>{{po.podetails[0].UnitCost}}</td>
-                        <td>{{po.podetails[0].Total}}</td>
+                    <tr ng-repeat="PO_dt in selectedPO">
+                        <td>{{PO_dt.podetails[0].poheaderId}}</td>
+                        <td>{{PO_dt.podetails[0].ItemCode}}</td>
+                        <td>{{PO_dt.podetails[0].Description}}</td>
+                        <td>{{PO_dt.podetails[0].WarehouseCode}}</td>
+                        <td>{{PO_dt.podetails[0].PartnerPONumber}}</td>
+                        <td>{{PO_dt.podetails[0].UnitofMeasure}}</td>
+                        <td>{{PO_dt.podetails[0].QuantityOrdered}}</td>
+                        <td>{{PO_dt.podetails[0].QuantityBackordered}}</td>
+                        <td>{{PO_dt.podetails[0].QuantityInvoiced}}</td>
+                        <td>{{PO_dt.podetails[0].UnitCost}}</td>
+                        <td>{{PO_dt.podetails[0].Total}}</td>
                     </tr>
                     </tbody>
                 </table>

@@ -4,8 +4,28 @@ var moment = require('moment') //timing utulity module
 
 var service = module.exports = {
     listPOs: function () {
+        return models.poheader.findAll();
+    },
+    listPOsCode:function(params){
         return models.poheader.findAll({
-            include: [{model: models.podetails}]
+            where: {
+                PartnerCode: params.PartnerCode
+            }
+        });
+    },
+    getPOHeader:function(params){
+        return models.poheader.findAll({
+            where: {
+                PONumber: params.PONumber
+            }
+        });
+    },
+    getPOHeaderCode:function(params){
+        return models.poheader.findAll({
+            where: {
+                PONumber: params.PONumber,
+                PartnerCode: params.PartnerCode
+            }
         });
     },
     getAllPos: function (params) {
@@ -158,17 +178,6 @@ var service = module.exports = {
                 include: [{model: models.podetails}]
             });
         }
-    },
-    getPOHeader:function(params){
-        return models.poheader.findAll({
-            //PODate:params.dateRange
-            where: {
-                PONumber: params.PONumber,
-                PartnerCode: params.PartnerCode
-            },
-            include: [{model: models.podetails}],
-            group: ['poheader.PONumber']
-        });
     }
 
 }

@@ -18,6 +18,9 @@
             loadAllItems: function () {
                 return $http.get('http://localhost:3000/api/pos');
             },
+            loadPOHeader:function(params){
+                return $http.get('http://localhost:3000/api/pos/'+params.PONumber);
+            },
             getPOs: function (params) {
                 return $http.post('http://localhost:3000/api/po/' + params.PONumber,{dateRange:params.dateRange});
             }
