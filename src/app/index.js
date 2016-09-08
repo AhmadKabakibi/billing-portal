@@ -29,7 +29,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 parent: 'site',
                 url: '/dashboard',
                 templateUrl: 'app/views/dashboard.html',
-                controller: 'POsController',
+                controller: 'MainController',
                 controllerAs: 'vm',
                 data: {
                     title: 'dashboard',
@@ -179,16 +179,19 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
 
     .run(function ($rootScope, $state, $http, AUTH_EVENTS, AuthService, appConf) {
 
+       /* $rootScope.$on("$locationChangeStart", function(event, next, current,newState,oldState) {
+            // handle route changes
+            alert(newState+" : "+oldState +" $locationChangeStart:  "+next+" , "+current);
+        });*/
+
         $rootScope.$on('$stateChangeStart', function (event, next, nextParams,previous, fromParams) {
             var authorizedRoles = next.data.authorizedRoles;
             var authorizedRolesAdmin = next.data.authorizedRolesAdmin;
 
-            console.log($rootScope.currentUser);
-
             if (next.name !== 'login') {
                 $http({
                     method: 'GET',
-                    url: appConf.baseURL + '/api/auth'
+                    url: appConf.baseURL + '/api/user/auth'
                 }).success(function (status) {
                     if (status.isAuth) {
                         // user is authenticated need ti check roles to access
@@ -200,51 +203,22 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                             event.preventDefault();
                             alert('Access Denied');
                             $state.go('login');
+                            return;
                         }
                     } else {
+                        event.preventDefault();
                         alert('Unauthorized');
                         $state.go('login');
+                        return;
                     }
                 }).error(function (err) {
                 });
             } else if (next.name == 'settings' && AuthService.isAdmin()) {
+                event.preventDefault();
                 $state.go('settings');
+                return;
             }
         })
-
-        $rootScope.$on('$stateChangeSuccess', function (event, next, toParams, fromState, fromParams) {
-            var authorizedRoles = next.data.authorizedRoles;
-            var authorizedRolesAdmin = next.data.authorizedRolesAdmin;
-
-            console.log($rootScope.currentUser);
-
-            if (next.name !== 'login') {
-                $http({
-                    method: 'GET',
-                    url: appConf.baseURL + '/api/auth'
-                }).success(function (status) {
-                    if (status.isAuth) {
-                        // user is authenticated need ti check roles to access
-                        /*
-                         authorizedRolesAdmin: true/false,
-                         authorizedRoles: true/false
-                         */
-                        if (authorizedRolesAdmin && status.user.type != "admin") {
-                            event.preventDefault();
-                            alert('Access Denied');
-                            $state.go('login');
-                        }
-                    } else {
-                        alert('Unauthorized');
-                        $state.go('login');
-                    }
-                }).error(function (err) {
-                });
-            } else if (next.name == 'settings' && AuthService.isAdmin()) {
-                $state.go('settings');
-            }
-        });
-
     })
 
     .constant('AUTH_EVENTS', {

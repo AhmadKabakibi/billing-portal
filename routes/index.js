@@ -41,31 +41,6 @@ module.exports = function (app, passport) {
         else
             res.send({success: false, msg: 'Authentication failed.'});
     });
-
-    // create a new user account (POST http://localhost:PORT/auth/new)
-    app.post('/auth/new', function (req, res) {
-        if (!req.body.username || !req.body.password) {
-            res.json({success: false, msg: 'Please pass username and password.'});
-        } else {
-            models.user.findAll({
-                where: {username: req.body.username}
-            }).then(function (exists_user) {
-                if (exists_user.length) {
-                    return res.json({success: false, msg: 'Username already exists.'});
-                } else {
-                    models.user.create({
-                        username: req.body.username,
-                        password: req.body.password,
-                        type: req.body.type,
-                        code:req.body.code,
-                        email:req.body.email
-                    }).then(function (user) {
-                        res.json({success: true, msg: 'Successful created new user.'});
-                    });
-                }
-            })
-        }
-    });
 }
 
 // route middleware to make sure

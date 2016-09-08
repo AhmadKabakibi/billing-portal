@@ -27,27 +27,27 @@
 </md-sidenav>
 
 <div layout="column" flex>
-<!--    <md-toolbar layout="row" layout-align="start center">
-        <section layout-margin >
-            <h1>Billing Portal</h1>
-        </section>
-        <section layout-align="end center">
-            <md-button class="toolbar-button" aria-label="logout">
-                <i class="material-icons">logout</i>
-            </md-button>
-        </section>
-    </md-toolbar>-->
+    <!--    <md-toolbar layout="row" layout-align="start center">
+            <section layout-margin >
+                <h1>Billing Portal</h1>
+            </section>
+            <section layout-align="end center">
+                <md-button class="toolbar-button" aria-label="logout">
+                    <i class="material-icons">logout</i>
+                </md-button>
+            </section>
+        </md-toolbar>-->
 
-    <md-toolbar layout="row" layout-align="center center">
-        <section layout-align="start center" layout-fill flex layout-margin>
+    <md-toolbar layout="row" layout-align="center center" style="background-color: #183c6e;">
+        <section layout="row" layout-align="start center" flex layout-margin>
+            <img class="img-responsive img-responsive2" src="assets/images/r-pac_logo.jpg">
             <h1>Billing Portal</h1>
-          <!--  <md-button hide-gt-sm ng-click="vm.toggleItemsList()" aria-label="Menu">
-                <i class="material-icons">menu</i>
-            </md-button>-->
+            <h4 ng-show="currentUser.isAuth">Welcome {{currentUser.username}}</h4>
         </section>
         <section ng-show="currentUser.isAuth" layout-align="end center">
             <md-button class="toolbar-button" aria-label="Logout" ng-click="logout()">
-                <i class="material-icons">settings_power</i>
+                <h4>logout <span class="fa fa-sign-out"></span></h4>
+                <!--<i class="material-icons">settings_power</i>-->
             </md-button>
         </section>
     </md-toolbar>

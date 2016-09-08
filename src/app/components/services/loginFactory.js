@@ -37,7 +37,7 @@
             var deferred = $q.defer();
             $http({
                 method: 'POST',
-                url: appConf.baseURL + '/auth/new',
+                url: appConf.baseURL + '/api/user/new',
                 data: {
                     username: user.username,
                     password: user.password,

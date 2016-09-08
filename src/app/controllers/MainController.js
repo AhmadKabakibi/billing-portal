@@ -10,6 +10,7 @@
     function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $scope, $rootScope, $timeout, $location,loginFactory) {
         var vm = this;
 
+        vm.getAll=getAll
 
        /* $scope.$watch(function() { return $location.path(); }, function(newValue, oldValue){
             if ($scope.currentUser.isAuth && newValue != '/login'){
@@ -198,7 +199,6 @@
                         $scope.posHeader = response.data.data;
                     }, function (error) {
                         $scope.status = 'Unable to load partner data: ' + error.message;
-                        console.log($scope.status);
                     });
 
             }, 2000);
@@ -210,7 +210,7 @@
             POsService.getPOs({PONumber:item.PONumber})
                 .then(function (response) {
                     $scope.selectedPO = response.data.data;
-                    $state.go('details');
+                    $state.go('details')//, {}, {reload: true});
                 }, function (error) {
                     $scope.status = 'Unable to load partner data: ' + error.message;
                     console.log($scope.status);
@@ -235,7 +235,7 @@
             $scope.currentUser = user;
             $rootScope.currentUser = user;
 
-            $location.path('/dashboard')
+            $state.go('dashboard')//, {}, {reload: true});
 
             /* var p = null;
              if (user.type == 'admin') {
@@ -258,7 +258,11 @@
             loginFactory.logout().then(function(res){
                 $scope.currentUser=null;
                 $rootScope.currentUser=null;
-                $state.go('login');
+
+                $rootScope = $rootScope.$new(true);
+                $scope = $scope.$new(true);
+
+                $state.go('login', {}, {reload: true});
             });
         }
 
