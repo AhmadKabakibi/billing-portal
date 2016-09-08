@@ -55,7 +55,7 @@
 
     <md-table-container>
         <table data-md-table data-ng-model="selected" md-progress="promise">
-            <thead md-head md-order="query.order">
+            <thead md-head ng-class="disable-select-all" md-order="query.order">
             <tr md-row>
                 <th md-column ng-repeat="column in gridUsers">
                     <span>{{column.name}}</span>
@@ -72,7 +72,18 @@
                 <td md-cell>{{item.email}}</td>
                 <td md-cell>{{item.type}}</td>
                 <td md-cell>
-                    <md-button ng-click="">edit</md-button>
+
+                    <button class="md-icon-button md-button md-ink-ripple" type="button"
+                            ng-click="" aria-label="edit">
+                        <md-icon class="material-icons">mode_edit</md-icon>
+                        <div class="md-ripple-container"></div>
+                    </button>|
+                    <button class="md-icon-button md-button md-ink-ripple" type="button"
+                            ng-click="" aria-label="delete">
+                        <md-icon class="material-icons">delete</md-icon>
+                        <div class="md-ripple-container"></div>
+                    </button>
+
                 </td>
             </tr>
             </tbody>
@@ -80,7 +91,7 @@
     </md-table-container>
 
     <data-md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
-                              md-total="{{posHeader.length}}" md-on-paginate="onPaginate"
+                              md-total="{{userList.length}}" md-on-paginate="onPaginate"
                               md-page-select="options.pageSelect"
                               md-boundary-links="options.boundaryLinks"></data-md-table-pagination>
 

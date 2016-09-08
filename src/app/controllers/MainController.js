@@ -62,7 +62,7 @@
         // Assume we have a $nutrition service that provides an API for communicating with the server
         $scope.options = {
             rowSelection: true,
-            multiSelect: true,
+            multiSelect: false,
             autoSelect: true,
             decapitate: false,
             largeEditDialog: false,
@@ -72,6 +72,7 @@
         };
 
         $scope.selectedPO = null;
+        $scope.selected = [];
         $scope.limitOptions = [5, 10, 15, {
             label: 'All',
             value: function () {
@@ -217,6 +218,10 @@
                 });
         };
 
+        $scope.log = function (item) {
+            console.log(item.name, 'was selected');
+        };
+
         $scope.logOrder = function (order) {
             console.log('order: ', order);
         };
@@ -254,6 +259,17 @@
              } else
              alert('Unable to Log You In :(');*/
         }
+
+        $scope.onReorder = function (order) {
+
+            console.log('Scope Order: ' + $scope.query.order);
+            console.log('Order: ' + order);
+
+            $scope.promise = $timeout(function () {
+
+            }, 2000);
+        };
+
         $scope.logout = function () {
             loginFactory.logout().then(function(res){
                 $scope.currentUser=null;

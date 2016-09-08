@@ -20,13 +20,14 @@
                 method: 'POST',
                 url: appConf.baseURL + '/auth/authenticate', data: {username: user.username, password: user.password}
             }).success(function (data) {
-                //debugger;
                 if (data.success) {
                     deferred.resolve(data.user);
                 } else {
                     deferred.reject();
                 }
-            }).error(function (err) {
+            }).error(function (err, status, headers, config) {
+               // alert("authentication went wrong");
+                alert("authenticate field");
                 deferred.reject(err);
             });
 
