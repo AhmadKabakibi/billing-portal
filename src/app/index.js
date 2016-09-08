@@ -65,8 +65,6 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                 parent: 'site',
                 url: '/details',
                 templateUrl: 'app/views/poDetails.html',
-                controller: 'POsController',
-                controllerAs: 'vm',
                 data: {
                     title: 'details',
                     authorizedRolesAdmin: false,

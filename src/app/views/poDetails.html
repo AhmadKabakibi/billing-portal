@@ -2,7 +2,6 @@
     <section flex class="md-whiteframe-1dp">
         <md-content class="md-padding" layout="row" layout="column">
             <div class="table-responsive-vertical">
-
                 <h2 class="md-title">Order Information:</h2>
                 <table id="table" class="table table-hover table-bordered">
                     <thead>
@@ -19,14 +18,14 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{selectedPO[0].PONumber}}</td>
-                        <td>{{selectedPO[0].PartnerName}}</td>
-                        <td>{{selectedPO[0].PODate | date:'yyyy-dd-MM'}}</td>
-                        <td>{{selectedPO[0].Division}}</td>
-                        <td>{{selectedPO[0].OrderType}}</td>
-                        <td>{{selectedPO[0].PartnerCode}}</td>
-                        <td>{{selectedPO[0].ShipToName}}</td>
-                        <!--<td>{{selectedPO.POERPStatus}}</td>-->
+                        <td>{{POdetails[0].PONumber}}</td>
+                        <td>{{POdetails[0].PartnerName}}</td>
+                        <td>{{POdetails[0].PODate | date:'yyyy-dd-MM'}}</td>
+                        <td>{{POdetails[0].Division}}</td>
+                        <td>{{POdetails[0].OrderType}}</td>
+                        <td>{{POdetails[0].PartnerCode}}</td>
+                        <td>{{POdetails[0].ShipToName}}</td>
+                        <!--<td>{{POdetails.POERPStatus}}</td>-->
                         <td>Pending</td>
                     </tr>
                     </tbody>
@@ -59,7 +58,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                    <tr ng-repeat="PO_dt in selectedPO">
+                    <tr ng-repeat="PO_dt in POdetails">
                         <td>{{PO_dt.podetails[0].poheaderId}}</td>
                         <td>{{PO_dt.podetails[0].ItemCode}}</td>
                         <td>{{PO_dt.podetails[0].Description}}</td>

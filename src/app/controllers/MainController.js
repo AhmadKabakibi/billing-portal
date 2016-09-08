@@ -206,11 +206,12 @@
         }
 
         $scope.logItem = function (item) {
-            // alert(item.PONumber, 'was selected');
             //getPOs({PONumber:user.PONumber,dateRange:range})
             POsService.getPOs({PONumber:item.PONumber})
                 .then(function (response) {
                     $scope.selectedPO = response.data.data;
+                    $rootScope.POdetails=response.data.data;
+                    //alert(item.PONumber + 'was selected' + JSON.stringify($scope.selectedPO) );
                     $state.go('details')//, {}, {reload: true});
                 }, function (error) {
                     $scope.status = 'Unable to load partner data: ' + error.message;
