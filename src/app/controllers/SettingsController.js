@@ -65,7 +65,7 @@
             // Appending dialog to document.body to cover sidenav in docs app
             var confirm = $mdDialog.confirm()
                 .title('Confirmation')
-                .textContent('Modify user ' + JSON.stringify(newUser))
+                .textContent('Modify user ' + newUser.username)
                 .targetEvent(event)
                 .ok('modify')
                 .cancel('cancel');

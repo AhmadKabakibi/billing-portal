@@ -53,6 +53,26 @@ module.exports = function (apiRouter) {
         }
     });
 
+    apiRouter.get('/pos/partners', function (req, res) {
+        if (req.user.type == 'admin') {
+            return exportService.listPartners().then(function (result) {
+                var unq = removeDuplicate(result, 'PartnerCode');
+                return successHandler(res, unq);
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            })
+        } else if (req.user.type == 'normal') {
+            parseCode(req.user.code, function (codes) {
+                return exportService.listPartnersCodes({PartnerCode: codes}).then(function (result) {
+                    var unq = removeDuplicate(result, 'PartnerCode');
+                    return successHandler(res, unq);
+                }).catch(function (error) {
+                    return errorHandler(res, error);
+                })
+            })
+        }
+    });
+
     apiRouter.get('/pos/:PONumber', function (req, res) {
         if (req.user.type == 'admin') {
             return exportService.getPOHeader({
@@ -85,6 +105,7 @@ module.exports = function (apiRouter) {
             return exportService.getAllPos({
                 PONumber: req.params.PONumber,
                 //     dateRange: req.body.dateRange
+                PartnerCode: req.body.code
             }).then(function (result) {
                 var unq = removeDuplicate(result, 'PONumber');
                 return successHandler(res, result);
@@ -125,7 +146,7 @@ module.exports = function (apiRouter) {
 
     apiRouter.post('/user/find', function (req, res) {
         return usersService.findUsers({
-            id:req.params.id,
+            id: req.params.id,
             username: req.params.username,
             code: req.body.code
         }).then(function (result) {

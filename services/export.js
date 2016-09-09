@@ -6,6 +6,19 @@ var service = module.exports = {
     listPOs: function () {
         return models.poheader.findAll();
     },
+    listPartners:function(){
+        return models.poheader.findAll({
+            attributes: ['PartnerCode']
+        });
+    },
+    listPartnersCodes:function(params){
+        return models.poheader.findAll({
+            attributes: ['PartnerCode'],
+            where: {
+                PartnerCode: params.PartnerCode
+            }
+        });
+    },
     listPOsCode:function(params){
         return models.poheader.findAll({
             where: {
