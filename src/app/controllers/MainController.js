@@ -3,11 +3,10 @@
     angular
         .module('app')
         .controller('MainController', [
-            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$mdEditDialog', '$scope', '$rootScope', '$timeout', '$location','loginFactory',
+            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$mdEditDialog', '$scope', '$rootScope', '$timeout', '$location','loginFactory','$mdEditDialog', '$mdDialog', '$http','appConf',
             MainController
         ]);
-
-    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $scope, $rootScope, $timeout, $location,loginFactory) {
+    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $scope, $rootScope, $timeout, $location,loginFactory,$mdEditDialog, $mdDialog, $http, appConf) {
         var vm = this;
 
         vm.getAll=getAll
@@ -282,8 +281,6 @@
                 $state.go('login', {}, {reload: true});
             });
         }
-
-
     }
 
 

@@ -61,6 +61,18 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
                     authorizedRoles: true
                 }
             })
+            .state('modify', {
+                parent: 'site',
+                url: '/modify',
+                templateUrl: 'app/views/modifyUser.html',
+                controller: 'SettingsController',
+                controllerAs: 'vm',
+                data: {
+                    title: 'settings',
+                    authorizedRolesAdmin: true,
+                    authorizedRoles: true
+                }
+            })
             .state('details', {
                 parent: 'site',
                 url: '/details',

@@ -43,7 +43,6 @@
         </md-card>
     </div>
 
-
     <md-toolbar class="md-table-toolbar md-default" ng-show="!options.rowSelection || !selected.length">
         <div class="md-toolbar-tools">
             <span flex></span>
@@ -53,9 +52,19 @@
         </div>
     </md-toolbar>
 
+    <!-- <md-toolbar class="md-table-toolbar alternate" ng-show="_u_options.rowSelection && _u_selected.length"
+                 aria-hidden="false" style="">
+         <div class="md-toolbar-tools layout-align-space-between-stretch" layout-align="space-between">
+             <div class="md-toolbar-tools">{{_u_selected.length}} {{_u_selected.length > 1 ? 'users' : 'user'}}
+                 selected
+             </div>
+         </div>
+     </md-toolbar>-->
+
     <md-table-container>
-        <table data-md-table data-ng-model="selected" md-progress="promise">
-            <thead md-head ng-class="disable-select-all" md-order="query.order">
+        <table md-table md-row-select="_u_options.rowSelection" multiple="{{_u_options.multiSelect}}"
+               ng-model="_u_selected" md-progress="_u_promise">
+            <thead ng-if="!_u_options.decapitate" md-head md-order="_u_query.order" md-on-reorder="_u_logOrder">
             <tr md-row>
                 <th md-column ng-repeat="column in gridUsers">
                     <span>{{column.name}}</span>
@@ -64,35 +73,166 @@
             </thead>
 
             <tbody md-body>
-            <tr md-row md-select="item" md-select-id="name" data-md-on-select="log" md-on-deselect="deselect"
-                x-md-auto-select="options.autoSelect"
-                data-ng-repeat="item in userList | limitTo: query.limit : (query.page - 1) * query.limit">
+            <tr md-row md-select="item" md-on-select="_u_logItem" md-auto-select="_u_options.autoSelect"
+                ng-repeat="item in userList | limitTo: _u_query.limit : (_u_query.page -1) * _u_query.limit">
+
+                <!--  <tr md-row md-select="item" md-select-id="name" data-md-on-select="log" md-on-deselect="deselect"
+                      x-md-auto-select="options.autoSelect"
+                      data-ng-repeat="item in userList | limitTo: query.limit : (query.page - 1) * query.limit">
+                -->
                 <td md-cell>{{item.username}}</td>
                 <td md-cell>{{item.code}}</td>
                 <td md-cell>{{item.email}}</td>
                 <td md-cell>{{item.type}}</td>
-                <td md-cell>
-
+                <td md-cell ng-show="_u_options.rowSelection && _u_selected.length">
                     <button class="md-icon-button md-button md-ink-ripple" type="button"
-                            ng-click="" aria-label="edit">
+                            ui-sref="modify" aria-label="edit">
                         <md-icon class="material-icons">mode_edit</md-icon>
                         <div class="md-ripple-container"></div>
-                    </button>|
-                    <button class="md-icon-button md-button md-ink-ripple" type="button"
-                            ng-click="" aria-label="delete">
+                        <md-tooltip>
+                            modify
+                        </md-tooltip>
+                    </button>
+                </td>
+
+                <td md-cell ng-show="_u_options.rowSelection && _u_selected.length"
+                    ng-click="delete($event,_u_selected)" ng-class="{'md-placeholder': !dessert.comment}">
+                    <button
+                            class="md-icon-button md-button md-ink-ripple" type="button" aria-label="delete">
                         <md-icon class="material-icons">delete</md-icon>
                         <div class="md-ripple-container"></div>
+                        <md-tooltip>
+                            delete
+                        </md-tooltip>
                     </button>
-
                 </td>
             </tr>
             </tbody>
         </table>
     </md-table-container>
 
-    <data-md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
-                              md-total="{{userList.length}}" md-on-paginate="onPaginate"
-                              md-page-select="options.pageSelect"
-                              md-boundary-links="options.boundaryLinks"></data-md-table-pagination>
 
+    <md-table-pagination md-limit="_u_query.limit" md-limit-options="_u_limitOptions" md-page="_u_query.page"
+                         md-total="{{userList.length}}" md-page-select="_u_options.pageSelect"
+                         md-boundary-links="_u_options.boundaryLinks"
+                         md-on-paginate="_u_logPagination"></md-table-pagination>
+    <!---->
+    <!--
+        <md-content laout="column" flex>
+
+            <md-card>
+                <md-toolbar class="md-table-toolbar md-default" ng-hide="_u_options.rowSelection && selected.length">
+                    <div class="md-toolbar-tools">
+                        <div flex></div>
+                        <md-button class="md-icon-button" ng-click="loadStuff()">
+                            <md-icon>refresh</md-icon>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+
+                <md-toolbar class="md-table-toolbar alternate" ng-show="_u_options.rowSelection && _u_selected.length">
+                    <div class="md-toolbar-tools">
+                        <span>{{_u_selected.length}} {{_u_selected.length > 1 ? 'items' : 'item'}} selected</span>
+
+                        <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                ng-click="" aria-label="delete">
+                            <md-icon class="material-icons">delete</md-icon>
+                            <div class="md-ripple-container"></div>
+                        </button>
+                    </div>
+                    <button class="md-icon-button md-button md-ink-ripple" type="button"
+                            ng-click="" aria-label="delete">
+                        <md-icon class="material-icons">delete</md-icon>
+                        <div class="md-ripple-container"></div>
+                    </button>
+                </md-toolbar>
+
+                <md-table-container>
+                    <table md-table md-row-select="_u_options.rowSelection" multiple="{{_u_options.multiSelect}}"
+                           ng-model="_u_selected" md-progress="_u_promise">
+                        <thead ng-if="!_u_options.decapitate" md-head md-order="_u_query.order" md-on-reorder="_u_logOrder">
+                        <tr md-row>
+                            <th md-column ng-repeat="column in gridUsers">
+                                <span>{{column.name}}</span>
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody md-body>
+                        <tr md-row md-select="user" md-on-select="_u_logItem" md-auto-select="_u_options.autoSelect"
+                            ng-repeat="user in userList | limitTo: _u_query.limit : (_u_query.page -1) * _u_query.limit">
+
+                            <td md-cell ng-click=""
+                                ng-class="{'md-placeholder': !user.username}">
+                                {{user.username || 'new username'}}
+                                <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                        ng-click="" aria-label="edit">
+                                    <md-icon class="material-icons">mode_edit</md-icon>
+                                    <div class="md-ripple-container"></div>
+                                </button>
+                            </td>
+                            &lt;!&ndash;    <td md-cell>
+                                    <md-select ng-model="user.type" placeholder="Other">
+                                        <md-option ng-value="type" ng-repeat="type in _u_getTypes()">{{type}}</md-option>
+                                    </md-select>
+                                </td>&ndash;&gt;
+                            <td md-cell ng-click=""
+                                ng-class="{'md-placeholder': !user.code}">
+                                {{user.code || 'new Partner Code'}}
+                                <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                        ng-click="" aria-label="edit">
+                                    <md-icon class="material-icons">mode_edit</md-icon>
+                                    <div class="md-ripple-container"></div>
+                                </button>
+                            </td>
+
+                            <td md-cell ng-click=""
+                                ng-class="{'md-placeholder': !user.email}">
+                                {{user.email || 'new email address'}}
+                                <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                        ng-click="" aria-label="edit">
+                                    <md-icon class="material-icons">mode_edit</md-icon>
+                                    <div class="md-ripple-container"></div>
+                                </button>
+                            </td>
+                            <td md-cell>{{user.type}}</td>
+
+                            <td md-cell ng-click=""
+                                ng-class="{'md-placeholder': !user.type}">
+                                {{user.type || 'new user role'}}
+                                <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                        ng-click="" aria-label="edit">
+                                    <md-icon class="material-icons">mode_edit</md-icon>
+                                    <div class="md-ripple-container"></div>
+                                </button>
+                            </td>
+                            &lt;!&ndash; <td md-cell ng-click="edit($event, user)"
+                                 ng-class="{'md-placeholder': !user.email}">
+                                 {{user.email || 'new value'}}
+
+                                 <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                         ng-click="" aria-label="edit">
+                                     <md-icon class="material-icons">mode_edit</md-icon>
+                                     <div class="md-ripple-container"></div>
+                                 </button>
+                                    |
+                                    <button class="md-icon-button md-button md-ink-ripple" type="button"
+                                            ng-click="" aria-label="delete">
+                                        <md-icon class="material-icons">delete</md-icon>
+                                        <div class="md-ripple-container"></div>
+                                    </button>
+                             </td>&ndash;&gt;
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+
+                <md-table-pagination md-limit="_u_query.limit" md-limit-options="_u_limitOptions" md-page="_u_query.page"
+                                     md-total="{{userList.length}}" md-page-select="_u_options.pageSelect"
+                                     md-boundary-links="_u_options.boundaryLinks"
+                                     md-on-paginate="_u_logPagination"></md-table-pagination>
+            </md-card>
+        </md-content>-->
+
+    <!---->
 </md-content>

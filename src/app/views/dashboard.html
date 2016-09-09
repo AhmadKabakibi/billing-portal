@@ -65,7 +65,7 @@
 
         <thead md-head md-order="query.order" md-on-reorder="logOrder">
         <tr md-row>
-            <th md-column ng-repeat="column in columns">
+            <th md-column class="poHeader" ng-repeat="column in columns">
                 <span>{{column.name}}</span>
             </th>
         </tr>
@@ -76,7 +76,7 @@
         <!--<tr md-row md-select="item" md-on-select="logItem" md-auto-select="options.autoSelect"
             ng-repeat="item in posHeader| limitTo: query.limit : (query.page - 1) * query.limit">
         -->
-        <tr md-row md-select="item" md-on-select="logItem" md-auto-select="options.autoSelect"
+        <tr class="poCell" md-row md-select="item" md-on-select="logItem" md-auto-select="options.autoSelect"
             ng-repeat="item in posHeader | limitTo: query.limit : (query.page - 1) * query.limit ">
             <td md-cell>{{item.PONumber}}</td>
             <td md-cell width="80%">{{item.PartnerName}}</td>
@@ -86,7 +86,7 @@
             <td md-cell>{{item.PartnerCode}}</td>
             <td md-cell width="100%">{{item.ShipToName}}</td>
             <!--<td>{{item.POERPStatus}}</td>-->
-            <td>Pending</td>
+            <td class="poHeader" >Pending</td>
         </tr>
         </tbody>
     </table>

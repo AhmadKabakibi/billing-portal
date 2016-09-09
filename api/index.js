@@ -123,8 +123,9 @@ module.exports = function (apiRouter) {
         }
     });
 
-    apiRouter.post('/findUsers', function (req, res) {
+    apiRouter.post('/user/find', function (req, res) {
         return usersService.findUsers({
+            id:req.params.id,
             username: req.params.username,
             code: req.body.code
         }).then(function (result) {
