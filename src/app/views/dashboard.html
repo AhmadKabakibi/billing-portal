@@ -3,8 +3,8 @@
     <md-card flex md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout="row" layout-wrap
              layout-padding>
         <div flex="30">
-            <md-select placeholder="Partner" ng-model="user" md-on-open="loadUsers()" style="min-width: 200px;">
-                <md-option ng-value="user" ng-repeat="user in users">{{user.name}}</md-option>
+            <md-select ng-show=" currentUser.type=='admin' " placeholder="Partner" ng-model="partnerCode" style="min-width: 200px;">
+                <md-option ng-value="code" ng-repeat="code in Partners">{{code.PartnerCode}}</md-option>
             </md-select>
             <!--<p class="md-caption">selected customer: {{ user ? user.name : 'No one yet' }}</p>-->
 
@@ -21,7 +21,7 @@
                 <md-option ng-repeat="date in dateRange" value="{{date.val}}">{{date.str}}</md-option>
             </md-select>
 
-            <md-button class="md-raised" ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range})">run
+            <md-button class="md-raised" ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range,PartnerCode:partnerCode})">run
             </md-button>
 
         </div>
@@ -50,6 +50,10 @@
         <div flex></div>
         <md-button class="md-icon-button" ng-click="loadStuff()">
             <md-icon>refresh</md-icon>
+            <md-tooltip>
+                reload all POs
+            </md-tooltip>
+
         </md-button>
 
         <md-button class="md-icon-button" ui-sref="details">

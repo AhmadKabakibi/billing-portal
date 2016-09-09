@@ -3,21 +3,21 @@
     angular
         .module('app')
         .controller('MainController', [
-            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$mdEditDialog', '$scope', '$rootScope', '$timeout', '$location','loginFactory','$mdEditDialog', '$mdDialog', '$http','appConf',
+            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$mdEditDialog', '$scope', '$rootScope', '$timeout', '$location', 'loginFactory', '$mdEditDialog', '$mdDialog', '$http', 'appConf',
             MainController
         ]);
-    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $scope, $rootScope, $timeout, $location,loginFactory,$mdEditDialog, $mdDialog, $http, appConf) {
+    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $mdEditDialog, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf) {
         var vm = this;
 
-        vm.getAll=getAll
+        vm.getAll = getAll
 
-       /* $scope.$watch(function() { return $location.path(); }, function(newValue, oldValue){
-            if ($scope.currentUser.isAuth && newValue != '/login'){
-                //$location.path('/login');
-            }else {
-                $location.path('/login');
-            }
-        });*/
+        /* $scope.$watch(function() { return $location.path(); }, function(newValue, oldValue){
+         if ($scope.currentUser.isAuth && newValue != '/login'){
+         //$location.path('/login');
+         }else {
+         $location.path('/login');
+         }
+         });*/
 
         $scope.posHeader = null;
         vm.menuItems = [];
@@ -188,7 +188,18 @@
                     $scope.status = 'Unable to load customer data: ' + error.message;
                     console.log($scope.status);
                 });
+
+            POsService.getPartner()
+                .then(function (response) {
+                    //$scope.posHeader = removeDuplicate(response.data.data, 'PONumber');
+                    $scope.Partners = response.data.data;
+                    //alert(JSON.stringify($scope.posHeader));
+                }, function (error) {
+                    $scope.status = 'Unable to load customer Partners data: ' + error.message;
+                    console.log($scope.status);
+                });
         }
+
         getAll();
 
         $scope.loadPOHeader = function (params) {
@@ -206,10 +217,10 @@
 
         $scope.logItem = function (item) {
             //getPOs({PONumber:user.PONumber,dateRange:range})
-            POsService.getPOs({PONumber:item.PONumber})
+            POsService.getPOs({PONumber: item.PONumber})
                 .then(function (response) {
                     $scope.selectedPO = response.data.data;
-                    $rootScope.POdetails=response.data.data;
+                    $rootScope.POdetails = response.data.data;
                     //alert(item.PONumber + 'was selected' + JSON.stringify($scope.selectedPO) );
                     $state.go('details')//, {}, {reload: true});
                 }, function (error) {
@@ -232,8 +243,8 @@
         }
         /*Authorization*/
 
-        $scope.currentUser = null;
-       // $scope.isAuthorized = AuthService.isAuthorized;
+        //$scope.currentUser = null;
+        // $scope.isAuthorized = AuthService.isAuthorized;
 
         $scope.setUser = function (user) {
 
@@ -271,9 +282,9 @@
         };
 
         $scope.logout = function () {
-            loginFactory.logout().then(function(res){
-                $scope.currentUser=null;
-                $rootScope.currentUser=null;
+            loginFactory.logout().then(function (res) {
+                $scope.currentUser = null;
+                $rootScope.currentUser = null;
 
                 $rootScope = $rootScope.$new(true);
                 $scope = $scope.$new(true);

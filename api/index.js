@@ -73,10 +73,11 @@ module.exports = function (apiRouter) {
         }
     });
 
-    apiRouter.get('/pos/:PONumber', function (req, res) {
+    apiRouter.post('/pos', function (req, res) {
         if (req.user.type == 'admin') {
             return exportService.getPOHeader({
-                PONumber: req.params.PONumber
+                PONumber: req.body.PONumber,
+                PartnerCode: req.body.PartnerCode
             }).then(function (result) {
                 var unq = removeDuplicate(result, 'PONumber');
                 return successHandler(res, unq);
@@ -86,7 +87,7 @@ module.exports = function (apiRouter) {
         } else if (req.user.type == 'normal') {
             parseCode(req.user.code, function (codes) {
                 return exportService.getPOHeaderCode({
-                    PONumber: req.params.PONumber,
+                    PONumber: req.body.PONumber,
                     PartnerCode: codes
                 }).then(function (result) {
                     var unq = removeDuplicate(result, 'PONumber');
@@ -95,8 +96,6 @@ module.exports = function (apiRouter) {
                     return errorHandler(res, error);
                 })
             })
-
-
         }
     });
 
@@ -105,7 +104,6 @@ module.exports = function (apiRouter) {
             return exportService.getAllPos({
                 PONumber: req.params.PONumber,
                 //     dateRange: req.body.dateRange
-                PartnerCode: req.body.code
             }).then(function (result) {
                 var unq = removeDuplicate(result, 'PONumber');
                 return successHandler(res, result);

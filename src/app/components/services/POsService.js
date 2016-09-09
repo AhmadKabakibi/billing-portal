@@ -19,10 +19,17 @@
                 return $http.get('http://localhost:3000/api/pos');
             },
             loadPOHeader:function(params){
-                return $http.get('http://localhost:3000/api/pos/'+params.PONumber);
+                if(params.PartnerCode=="allCodes"){
+                    return $http.post('http://localhost:3000/api/pos',{PONumber:params.PONumber});
+                }
+                console.log("PONumber: "+params.PONumber + "PartnerCode: "+params.PartnerCode )
+                return $http.post('http://localhost:3000/api/pos',{PONumber:params.PONumber,PartnerCode:params.PartnerCode});
             },
             getPOs: function (params) {
                 return $http.post('http://localhost:3000/api/po/' + params.PONumber,{dateRange:params.dateRange});
+            },
+            getPartner:function(){
+                return $http.get('http://localhost:3000/api/pos/partners')
             }
         };
     }
