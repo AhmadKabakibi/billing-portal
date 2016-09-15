@@ -1,82 +1,98 @@
+<md-content layout="column" layout-align="center">
+    <div class='md-padding' layout="row" layout-align="start center" flex-offset-sm="0" flex-offset-md="0"
+         flex-offset-lg="0" flex-offset-gt-lg="0" layout-wrap>
+        <md-card class="md-whiteframe-9dp" ng-style="{'border-radius': '6px'}" layout-padding>
+            <md-card-content>
+                <md-input-container>
+                    <label>File Name</label>
+                    <input ng-model="fileName">
+                </md-input-container>
 
-<md-toolbar class="md-table-toolbar md-default" ng-show="!options.rowSelection || !selected.length">
-    <div class="md-toolbar-tools">
-        <span>Files received from ERP:</span>
-        <span flex></span>
-        <md-button class="md-icon-button" ng-click="loadStuff()">
-            <md-icon>refresh</md-icon>
-        </md-button>
-        <md-button class="md-icon-button">
-            <md-icon>filter_list</md-icon>
-        </md-button>
-        <md-button class="md-icon-button">
-            <md-icon>more_vert</md-icon>
-        </md-button>
-    </div>
-</md-toolbar>
+                <md-input-container>
+                    <label>PO Number</label>
+                    <input ng-model="PONumber">
+                </md-input-container>
 
-<md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length">
-    <div class="md-toolbar-tools">
-        <span>{{selected.length}} {{selected.length > 1 ? 'items' : 'item'}} selected</span>
-        <span flex></span>
-    </div>
-</md-toolbar>
-
-<md-table-container>
-    <table data-md-table data-md-row-select="options.rowSelection" multiple="{{options.multiSelect}}"
-           data-ng-model="selected" md-progress="promise">
-        <thead md-head md-order="query.order">
-        <tr md-row>
-            <th md-column ng-repeat="column in columnsFiles" md-numeric="column.numeric" md-order-by="{{column.orderBy}}">
-                <span>{{column.name}}</span>
-                <span ng-if="column.unit">({{column.unit}})</span>
-            </th>
-        </tr>
-        </thead>
-
-        <!-- <thead ng-if="!options.decapitate" md-head data-md-order="query.order" md-on-reorder="onReorder">
-         <tr md-row>
-             <th md-column md:order:by="name"><span>Dessert (100g serving)</span></th>
-             <th md-column md:order:by="type"><span>Type</span></th>
-             <th md-column data-md-numeric data-md-order-by="calories.value" data-md-desc><span>Calories</span></th>
-             <th md-column data-md-numeric data-md-order-by="fat.value"><span>Fat (g)</span></th>
-             &lt;!&ndash; <th md-column data-md-numeric data-md-order-by="carbs.value"><span>Carbs (g)</span></th> &ndash;&gt;
-             <th md-column data-md-numeric data-md-order-by="protein.value"><span>Protein (g)</span></th>
-             &lt;!&ndash; <th md-column data-md-numeric data-md-order-by="sodium.value"><span>Sodium (mg)</span></th> &ndash;&gt;
-             &lt;!&ndash; <th md-column data-md-numeric data-md-order-by="calcium.value"><span>Calcium (%)</span></th> &ndash;&gt;
-             <th md-column data-md-numeric data-md-order-by="iron.value" data-hide-sm><span>Iron (%)</span></th>
-             <th md-column data-md-order-by="comment">
-                 <md-icon>comments</md-icon>
-                 <span>Comments</span>
-             </th>
-         </tr>
-         </thead>-->
-
-        <tbody md-body>
-        <tr md-row md-select="dessert" md-select-id="name" data-md-on-select="log" md-on-deselect="deselect"
-            x-md-auto-select="options.autoSelect" ng-disabled="dessert.calories.value > 400"
-            data-ng-repeat="dessert in desserts.data | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page - 1) * query.limit">
-            <td md-cell>{{dessert.name}}</td>
-            <td md-cell>
-                <md-select ng-model="dessert.type" placeholder="Other">
-                    <md-option ng-value="type" ng-repeat="type in getTypes()">{{type}}</md-option>
+                <md-select ng-model="status" placeholder="Status" style="min-width: 200px;">
+                    <md-option value="succeed">Success</md-option>
+                    <md-option value="failed">Failed</md-option>
                 </md-select>
-            </td>
-            <td md-cell>{{dessert.calories.value}}</td>
-            <td md-cell>{{dessert.fat.value | number: 2}}</td>
-            <!-- <td md-cell>{{dessert.carbs.value}}</td> -->
-            <td md-cell>{{dessert.protein.value | number: 2}}</td>
-            <!-- <td md-cell>{{dessert.sodium.value}}</td> -->
-            <!-- <td md-cell>{{dessert.calcium.value}}%</td> -->
-            <td md-cell hide-sm>{{dessert.iron.value}}%</td>
-            <td md-cell ng-click="editComment($event, dessert)" ng-class="{'md-placeholder': !dessert.comment}">
-                {{dessert.comment || 'Add a comment'}}
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</md-table-container>
 
-<data-md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
-                          md-total="{{desserts.count}}" md-on-paginate="onPaginate" md-page-select="options.pageSelect"
-                          md-boundary-links="options.boundaryLinks"></data-md-table-pagination>
+            </md-card-content>
+
+            <md-card-footer>
+                <md-button class="md-icon-button" ng-click="">
+                    <div hide-sm hide-md class="md-tile-content">
+                        <i class="material-icons md-36 left">search</i>
+                    </div>
+                    <md-tooltip>
+                        search
+                    </md-tooltip>
+                </md-button>
+                <md-divider ng-style="{'background': '#E3E3E3'}"></md-divider>
+            </md-card-footer>
+        </md-card>
+    </div>
+
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Files received from ERP:</span>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="_f_loadStuff()">
+                <md-icon>refresh</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-toolbar class="md-table-toolbar alternate" ng-show="_f_options.rowSelection && _f_selected.length"
+                aria-hidden="false" style="">
+        <div class="md-toolbar-tools layout-align-space-between-stretch" layout-align="space-between">
+            <div class="md-toolbar-tools">{{_f_selected.length}} {{_f_selected.length > 1 ? 'users' : 'user'}}
+                selected
+            </div>
+        </div>
+    </md-toolbar>
+
+    <md-table-container>
+        <table md-table md-row-select="_f_options.rowSelection" multiple="{{_f_options.multiSelect}}"
+               ng-model="_f_selected" md-progress="_f_promise">
+            <thead ng-if="!_f_options.decapitate" md-head md-order="_f_query.order" md-on-reorder="_f_logOrder">
+            <tr md-row>
+                <th md-column ng-repeat="column in gridReceived">
+                    <span>{{column.name}}</span>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody md-body>
+            <tr md-row md-select="item" md-on-select="_f_logItem" md-auto-select="_f_options.autoSelect"
+                ng-repeat="item in receivedList | limitTo: _f_query.limit : (_f_query.page -1) * _f_query.limit">
+
+                <!--  <tr md-row md-select="item" md-select-id="name" data-md-on-select="log" md-on-deselect="deselect"
+                      x-md-auto-select="options.autoSelect"
+                      data-ng-repeat="item in receivedList | limitTo: query.limit : (query.page - 1) * query.limit">
+                -->
+                <td md-cell>{{item.FileName}}</td>
+                <td md-cell>{{item.createdAt | date:'yyyy-dd-MM'}}</td>
+                <td md-cell>{{item.Status}}</td>
+                <td md-cell>{{item.Status}}</td>
+                <td md-cell ng-click="downloadArchivedFile($event,item.FileNameArchived)">
+                    <button class="md-icon-button md-button md-ink-ripple" type="button" aria-label="delete">
+                        <md-icon class="material-icons">archive</md-icon>
+                        <div class="md-ripple-container"></div>
+                        <md-tooltip>
+                            download
+                        </md-tooltip>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+
+    <md-table-pagination md-limit="_f_query.limit" md-limit-options="_f_limitOptions" md-page="_f_query.page"
+                         md-total="{{receivedList.length}}" md-page-select="_f_options.pageSelect"
+                         md-boundary-links="_f_options.boundaryLinks"
+                         md-on-paginate="_f_logPagination"></md-table-pagination>
+</md-content>

@@ -98,7 +98,8 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
             .state('received', {
                 parent: 'site',
                 url: '/received',
-                controller: 'POsController',
+                controller: 'MainController',
+                controllerAs: 'vm',
                 templateUrl: 'app/views/received.html',
                 data: {
                     title: 'received',

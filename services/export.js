@@ -3,17 +3,24 @@ var Promise = require('bluebird');
 var moment = require('moment') //timing utulity module
 
 var service = module.exports = {
+
+    Receivedfiles:function(){
+        return models.fileslogs.findAll({
+            include: [{model: models.statuslogs}]
+        });
+    },
+
     listPOs: function () {
         return models.poheader.findAll();
     },
     listPartners:function(){
         return models.poheader.findAll({
-            attributes: ['PartnerCode']
+            attributes: ['PartnerCode','PartnerName']
         });
     },
     listPartnersCodes:function(params){
         return models.poheader.findAll({
-            attributes: ['PartnerCode'],
+            attributes: ['PartnerCode','PartnerName'],
             where: {
                 PartnerCode: params.PartnerCode
             }

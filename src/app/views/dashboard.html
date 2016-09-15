@@ -3,8 +3,9 @@
     <md-card flex md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout="row" layout-wrap
              layout-padding>
         <div flex="30">
-            <md-select ng-show=" currentUser.type=='admin' " placeholder="Partner" ng-model="partnerCode" style="min-width: 200px;">
-                <md-option ng-value="code" ng-repeat="code in Partners">{{code.PartnerCode}}</md-option>
+            <md-select ng-show=" currentUser.type=='admin' " placeholder="Partner" ng-model="partnerCode"
+                       ng-model-options="{trackBy: '$value.PartnerCode'}" style="min-width: 200px;">
+                <md-option ng-value="code" ng-repeat="code in Partners">{{code.PartnerName}}</md-option>
             </md-select>
             <!--<p class="md-caption">selected customer: {{ user ? user.name : 'No one yet' }}</p>-->
 
@@ -21,7 +22,8 @@
                 <md-option ng-repeat="date in dateRange" value="{{date.val}}">{{date.str}}</md-option>
             </md-select>
 
-            <md-button class="md-raised" ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range,PartnerCode:partnerCode})">run
+            <md-button class="md-raised"
+                       ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range,PartnerCode:partnerCode})">run
             </md-button>
 
         </div>
@@ -90,7 +92,7 @@
             <td md-cell>{{item.PartnerCode}}</td>
             <td md-cell width="100%">{{item.ShipToName}}</td>
             <!--<td>{{item.POERPStatus}}</td>-->
-            <td class="poHeader" >Pending</td>
+            <td class="poHeader">Pending</td>
         </tr>
         </tbody>
     </table>

@@ -53,6 +53,21 @@ module.exports = function (apiRouter) {
         }
     });
 
+
+    apiRouter.get('/pos/received', function (req, res) {
+        if (req.user.type == 'admin') {
+            return exportService.Receivedfiles().then(function (result) {
+                Receivedfiles(result, function (received_files) {
+                    return successHandler(res, received_files);
+                })
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            })
+        } else if (req.user.type == 'normal') {
+            return res.status(401).json({success: false, error: 'Not Authorized'});
+        }
+    });
+
     apiRouter.get('/pos/partners', function (req, res) {
         if (req.user.type == 'admin') {
             return exportService.listPartners().then(function (result) {
@@ -256,4 +271,40 @@ function removeDuplicate(arr, prop) {
         new_arr.push(lookup[i]);
     }
     return new_arr;
+}
+
+function Receivedfiles(files, callback) {
+
+    var files_report = []
+
+    for (var i = 0; i < files.length; i++) {
+        if (files[i].statuslogs.length == 0) {
+            files_report.push({
+                FileName: files[i].FileName,
+                FileNameArchived: files[i].FileNameArchived,
+                createdAt: files[i].createdAt,
+                Status: 'Succeed'
+            })
+        } else {
+            for (var j = 0; j < files[i].statuslogs.length; j++) {
+                if (files[i].statuslogs[j].status == 'bad-file') {
+                    files_report.push({
+                        FileName: files[i].FileName,
+                        FileNameArchived: files[i].FileNameArchived,
+                        createdAt: files[i].createdAt,
+                        Status: 'Incorrect file structure'
+                    })
+                } else if (files[i].statuslogs[j].status == 'bad-po') {
+                    files_report.push({
+                        FileName: files[i].FileName,
+                        FileNameArchived: files[i].FileNameArchived,
+                        createdAt: files[i].createdAt,
+                        Status: 'Bad Po Empty field'
+                    })
+                    break;
+                }
+            }
+        }
+    }
+    return callback(files_report);
 }
