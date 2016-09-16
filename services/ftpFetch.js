@@ -5,6 +5,7 @@ var moment = require('moment') //timing utulity module
 var env = process.env.NODE_ENV || 'development';
 var config = require(__dirname + '/../config/tsconfig.json')[env];
 var ftpLocal = path.join(__dirname, '../', config.ftp.local);
+var ftpDownload = path.join(__dirname, '../');
 var logger = require('./logger.js');
 
 //var PONumber = {};
@@ -34,7 +35,7 @@ ftp.unlink.raw = 'DELE';
 
 //Parser
 var csv = require('csv-stream');
-fs = require('fs');
+var fs = require('fs');
 var winston = require('winston');
 var archiver = require('archiver');
 var archive;
@@ -150,6 +151,11 @@ var service = module.exports = {
         });
         setTimeout(service.sweepFTP, config.ftp.interval);
     },
+    downloadArchive: function (remote_path_file, callback) {
+        ftp.save([path.join(config.ftp.archive, remote_path_file), path.join(ftpDownload, remote_path_file)], function (err, filename) {
+            return callback(err, filename);
+        });
+    },
     download: function (remote_path_file, local_path_file) {
         ftp.save([remote_path_file, local_path_file], function (err, filename) {
             if (err) {
@@ -195,7 +201,7 @@ var service = module.exports = {
                     logger.SuccessfulFiles(zipFile + ' :FTP status Code: ' + status);
                 });
             }).catch(function (err) {
-                logger.info("Create Logs record err: " + err);
+                logger.error("Create Logs record err: " + err);
             });
 
             fs.unlink(path.join(ftpLocal, zipFile), function (err) {
@@ -226,47 +232,46 @@ var service = module.exports = {
             fs.createReadStream(filename)
                 .pipe(csv.createStream(options))
                 .on('data', function (data) {
-                    i++;
-                    //console.log('Line: '+i++);
-                    //console.log(data);
-                    //logger.debug(data.PONumber + " times: " + i);
+                        i++;
+                        //console.log('Line: '+i++);
+                        //console.log(data);
+                        //logger.debug(data.PONumber + " times: " + i);
 
-                    if (Object.keys(data).length >= 22) {
-                        ////check file structure if does match the sample file
-                        if (data.PONumber === '' ||
-                            data.PartnerCode === '' ||
-                            data.POERPStatus === '' ||
-                            data.ItemCode === '' ||
-                            data.QuantityOrdered === '') {
+                        if (Object.keys(data).length >= 22) {
+                            ////check file structure if does match the sample file
+                            if (data.PONumber === '' ||
+                                data.PartnerCode === '' ||
+                                data.POERPStatus === '' ||
+                                data.ItemCode === '' ||
+                                data.QuantityOrdered === '') {
 
-                            var fileName = filename.replace(/^.*[\\\/]/, '')
-                            models.sequelize.transaction(function (t) {
-                                return models.statuslogs.create(
-                                    {
-                                        status: 'bad-po',
-                                        lineNo: i,
-                                        PONumber: data.PONumber,
-                                        FileName: fileName
-                                    },
-                                    {transaction: t}).then(function (log) {
+                                var fileName = filename.replace(/^.*[\\\/]/, '')
+                                models.sequelize.transaction(function (t) {
+                                    return models.statuslogs.create(
+                                        {
+                                            status: 'bad-po',
+                                            lineNo: i,
+                                            PONumber: data.PONumber,
+                                            FileName: fileName
+                                        },
+                                        {transaction: t}).then(function (log) {
 
-                                    //reject the PO don't insert to DB
-                                    logger.BadPOs({
-                                        "lineNo:": i,
-                                        "FileName": filename.replace(/^.*[\\\/]/, ''),
-                                        "PONumber": data.PONumber,
-                                        "PartnerCode": data.PartnerCode,
-                                        "POERPStatus": data.POERPStatus,
-                                        "ItemCode": data.ItemCode,
-                                        "QuantityOrdered": data.QuantityOrdered
+                                        //reject the PO don't insert to DB
+                                        logger.BadPOs({
+                                            "lineNo:": i,
+                                            "FileName": filename.replace(/^.*[\\\/]/, ''),
+                                            "PONumber": data.PONumber,
+                                            "PartnerCode": data.PartnerCode,
+                                            "POERPStatus": data.POERPStatus,
+                                            "ItemCode": data.ItemCode,
+                                            "QuantityOrdered": data.QuantityOrdered
+                                        })
                                     })
-                                })
-                            }).catch(function (err) {
-                                logger.info("Create Logs record err: " + err);
-                            });
-                        }
-                        else
-                            {
+                                }).catch(function (err) {
+                                    logger.error("Create Logs record err: " + err);
+                                });
+                            }
+                            else {
                                 /*PO Status
                                  If the same PO number is received in the files received from ERP
                                  Check if the status in the PO =
@@ -461,6 +466,7 @@ var service = module.exports = {
                                             }).catch(function (err) {
                                                 // Transaction has been rolled back
                                                 // err is whatever rejected the promise chain returned to the transaction callback
+                                                logger.error(err)
                                             });
                                         }
                                     })
@@ -483,49 +489,49 @@ var service = module.exports = {
                                     logger.BadFile(fileName);
                                 });
                             }).catch(function (err) {
-                                logger.info("Create Logs record err: " + err);
+                                logger.error("Create Logs record err: " + err);
                             });
                         }
                     }
-                    )
-                    .on('column', function (key, value) {
-                        //console.log('#' + key +' = ' + value);
-                    })
-                    .on('end', function () {
-                        console.log('ended');
-                    })
-                    .on('close', function () {
-                        // here parsing channel has been closed and start archive process and deleting local parsed file
-                        var fileName = filename.replace(/^.*[\\\/]/, '');
-                        archive = archiver('zip');
-                        now = new moment();
+                )
+                .on('column', function (key, value) {
+                    //console.log('#' + key +' = ' + value);
+                })
+                .on('end', function () {
+                    console.log('ended');
+                })
+                .on('close', function () {
+                    // here parsing channel has been closed and start archive process and deleting local parsed file
+                    var fileName = filename.replace(/^.*[\\\/]/, '');
+                    archive = archiver('zip');
+                    now = new moment();
 
-                        //logger.SuccessfulFiles(fileName);
-                        archiveFile = fs.createWriteStream(filename + '.' + now.format('YYYYMMDDhhmmss') + '.zip');
+                    //logger.SuccessfulFiles(fileName);
+                    archiveFile = fs.createWriteStream(filename + '.' + now.format('YYYYMMDDhhmmss') + '.zip');
 
-                        archiveFile.on('close', function () {
-                            logger.Archiver('archiver has been finalized and send ' + fileName + ' to FTP uploader, archive size ' + archive.pointer() / 1024 + ' total KB');
+                    archiveFile.on('close', function () {
+                        logger.Archiver('archiver has been finalized and send ' + fileName + ' to FTP uploader, archive size ' + archive.pointer() / 1024 + ' total KB');
 
 
-                            //delete local downloaded file from FTP it has been parsed and prepared to archive and send to FTP archive uploader
-                            fs.unlink(filename, function (err) {
-                                if (err) {
-                                    logger.error('error deleting ' + fileName + ' ' + err);
-                                }
-                                logger.info(fileName + ' deleted successfully from local disk');
-                            });
-
-                            //start service FTP archive uploader
-                            service.archive(fileName + '.' + now.format('YYYYMMDDhhmmss') + '.zip', fileName);
+                        //delete local downloaded file from FTP it has been parsed and prepared to archive and send to FTP archive uploader
+                        fs.unlink(filename, function (err) {
+                            if (err) {
+                                logger.error('error deleting ' + fileName + ' ' + err);
+                            }
+                            logger.info(fileName + ' deleted successfully from local disk');
                         });
-                        archive.on('error', function (err) {
-                            logger.error(err);
-                        });
-                        archive.pipe(archiveFile);
-                        archive
-                            .append(fs.createReadStream(filename), {name: fileName})
-                            .finalize();
-                    })
+
+                        //start service FTP archive uploader
+                        service.archive(fileName + '.' + now.format('YYYYMMDDhhmmss') + '.zip', fileName);
+                    });
+                    archive.on('error', function (err) {
+                        logger.error(err);
+                    });
+                    archive.pipe(archiveFile);
+                    archive
+                        .append(fs.createReadStream(filename), {name: fileName})
+                        .finalize();
+                })
 
         }
         catch

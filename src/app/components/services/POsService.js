@@ -36,6 +36,9 @@
             },
             receivedFiles: function () {
                 return $http.get('http://localhost:3000/api/pos/received')
+            },
+            DownloadArchiveFile: function (fileName) {
+                return $http.get('http://localhost:3000/api/ftp/'+fileName)
             }
         };
     }

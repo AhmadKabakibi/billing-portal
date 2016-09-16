@@ -17,7 +17,7 @@ var jwt = require('jwt-simple');
 //var bcrypt = require('bcrypt');
 var env = process.env.NODE_ENV || 'development';
 var config = require(__dirname + '/../config/tsconfig.json')[env];
-
+var fs = require('fs');
 var Promise = require('bluebird');
 var path = require('path');
 var xss = require('xss');
@@ -53,6 +53,30 @@ module.exports = function (apiRouter) {
         }
     });
 
+
+    apiRouter.get('/ftp/:FileName', function (req, res) {
+        FTPService.downloadArchive(req.params.FileName, function (err, localFile) {
+            console.log("FTP: "+localFile)
+            if(err){
+                return errorHandler(res, error);
+            }else {
+                res.download(localFile, function(err){
+                    if (err) {
+                        // Handle error, but keep in mind the response may be partially-sent
+                        // so check res.headersSent
+                        return errorHandler(res, error);
+                    } else {
+                        // decrement a download credit, etc.
+                        fs.unlink(localFile, function (err) {
+                            if (err) {
+                                logger.error('error deleting after download from ftp ' + localFile + ' ' + err);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
 
     apiRouter.get('/pos/received', function (req, res) {
         if (req.user.type == 'admin') {

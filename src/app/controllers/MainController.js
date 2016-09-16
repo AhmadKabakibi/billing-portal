@@ -343,7 +343,12 @@
         };
 
         $scope.downloadArchivedFile = function (event, selected_fileName) {
-          alert("download Archived File "+ selected_fileName);
+            POsService.DownloadArchiveFile(selected_fileName)
+                .then(function (response) {
+                }, function (error) {
+                    $scope.status = 'Unable to Download Archive File from FTP ' + error.message;
+                    console.log($scope.status);
+                });
             /*  var deferred = $q.defer();
             var promise = $mdEditDialog.large({
                 title: "Delete Selected User",

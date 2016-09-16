@@ -76,14 +76,14 @@
                 <td md-cell>{{item.createdAt | date:'yyyy-dd-MM'}}</td>
                 <td md-cell>{{item.Status}}</td>
                 <td md-cell>{{item.Status}}</td>
-                <td md-cell ng-click="downloadArchivedFile($event,item.FileNameArchived)">
-                    <button class="md-icon-button md-button md-ink-ripple" type="button" aria-label="delete">
+                <td md-cell>
+                    <md-button ng-href='/api/ftp/{{item.FileNameArchived}}'>
                         <md-icon class="material-icons">archive</md-icon>
                         <div class="md-ripple-container"></div>
                         <md-tooltip>
                             download
                         </md-tooltip>
-                    </button>
+                    </md-button>
                 </td>
             </tr>
             </tbody>
