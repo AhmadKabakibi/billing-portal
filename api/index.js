@@ -22,6 +22,8 @@ var Promise = require('bluebird');
 var path = require('path');
 var xss = require('xss');
 
+var JSFtp = require("jsftp");
+
 FTPService.startFTP();
 
 FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
@@ -55,27 +57,66 @@ module.exports = function (apiRouter) {
 
 
     apiRouter.get('/ftp/:FileName', function (req, res) {
-        FTPService.downloadArchive(req.params.FileName, function (err, localFile) {
-            console.log("FTP: "+localFile)
-            if(err){
+
+        var Ftp = new JSFtp({
+            host: config.ftp.host,
+            port: config.ftp.port,
+            user: config.ftp.user,
+            pass: config.ftp.password,
+            debugMode: false
+        });
+
+        Ftp.get(path.join(config.ftp.archive, req.params.FileName), path.join(__dirname, '../', req.params.FileName), function (error) {
+            if (error) {
                 return errorHandler(res, error);
-            }else {
-                res.download(localFile, function(err){
-                    if (err) {
-                        // Handle error, but keep in mind the response may be partially-sent
-                        // so check res.headersSent
-                        return errorHandler(res, error);
-                    } else {
-                        // decrement a download credit, etc.
-                        fs.unlink(localFile, function (err) {
-                            if (err) {
-                                logger.error('error deleting after download from ftp ' + localFile + ' ' + err);
-                            }
-                        });
+            }
+            else {
+                //console.log('File copied successfully!');
+                return res.sendFile(path.join(__dirname, '../', req.params.FileName), {
+                    dotfiles: 'deny',
+                    headers: {
+                        'Content-Disposition': 'attachment; filename="' + req.params.FileName + '"'
                     }
+                }, function (err) {
+                    if (err) {
+                        return errorHandler(res, error);
+                    }
+                    fs.unlink(path.join(__dirname, '../', req.params.FileName), function (err) {
+                        if (err) {
+                            logger.error('error deleting after download from ftp ' + localFile + ' ' + err);
+                        }
+                        Ftp.raw.quit(function(err, data) {
+                            if (err) return console.error(err);
+                            console.log("FTP disconnected after download file!");
+                        });
+                    });
                 });
+
             }
         });
+
+      /*  FTPService.downloadArchive(req.params.FileName, function (err, localFile) {
+            console.log("FTP: " + localFile)
+            if (err) {
+                return errorHandler(res, error);
+            } else {
+                return res.sendFile(localFile, {
+                    dotfiles: 'deny',
+                    headers: {
+                        'Content-Disposition': 'attachment; filename="' + req.params.FileName + '"'
+                    }
+                }, function (err) {
+                    if (err) {
+                        return errorHandler(res, error);
+                    }
+                    fs.unlink(localFile, function (err) {
+                        if (err) {
+                            logger.error('error deleting after download from ftp ' + localFile + ' ' + err);
+                        }
+                    });
+                });
+            }
+        });*/
     });
 
     apiRouter.get('/pos/received', function (req, res) {

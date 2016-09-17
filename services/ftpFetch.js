@@ -153,6 +153,7 @@ var service = module.exports = {
     },
     downloadArchive: function (remote_path_file, callback) {
         ftp.save([path.join(config.ftp.archive, remote_path_file), path.join(ftpDownload, remote_path_file)], function (err, filename) {
+            console.log("Done: " + filename);
             return callback(err, filename);
         });
     },
