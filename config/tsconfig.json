@@ -1,12 +1,12 @@
 {
   "development": {
     "username": "portal",
-    "password": "1q2w3e4r",
+    "password": "1q2w3e4r@Sa",
     "database": "portal_development",
     "host": "127.0.0.1",
     "dialect": "mssql",
     "dialectOptions": {
-      "instanceName": "SQLEXPRESS"
+	  "instanceName": "SQLEXPRESS"	  
     },
     "timezone": "Europe/Amsterdam",
     "ftp":{
