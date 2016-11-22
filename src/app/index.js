@@ -247,6 +247,6 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
         normal: 'normal'
     })
 
-    .value('appConf', {
+    .constant('appConf', {
         baseURL: 'http://localhost:3000'
     })

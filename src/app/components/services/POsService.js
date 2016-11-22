@@ -7,7 +7,7 @@
             POsService
         ]);
 
-    function POsService($http) {
+    function POsService($http){
 
         /*
          $http.get('/someUrl', config).then(successCallback, errorCallback);
@@ -32,14 +32,7 @@
                 return $http.post('http://localhost:3000/api/po/' + params.PONumber, {dateRange: params.dateRange});
             },
             acceptPO:function(params){
-
-                var PoList=[];
-                for (var j = 0; j < params.length; j++){
-                    PoList.push(params[j].PONumber)
-                    if(j>=params.length){
-                        return $http.put('http://localhost:3000/api/po/accept', {POList: PoList});
-                    }
-                }
+                return $http.put('http://localhost:3000/api/po/accept', {POList: params});
             },
             getPartner: function () {
                 return $http.get('http://localhost:3000/api/pos/partners')

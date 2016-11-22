@@ -250,7 +250,7 @@
 
         //Accept PO
         $scope.Accept = function (pos) {
-            POsService.acceptPO(pos)
+            POsService.acceptPO(pos.map(function(a) {return a.PONumber;}))
                 .then(function (response) {
                     $scope.loadStuff()
                 }, function (error) {
