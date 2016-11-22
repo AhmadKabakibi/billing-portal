@@ -38,11 +38,11 @@
             </section>
         </md-toolbar>-->
 
-    <md-toolbar layout="row" layout-align="center center" style="background-color: #183c6e;">
+    <md-toolbar layout="row" layout-align="center center" style="background-color: #183c6e;height:60px;">
         <section layout="row" layout-align="start center" flex layout-margin>
             <img class="img-responsive img-responsive2" src="assets/images/r-pac_logo.jpg">
             <h1>Billing Portal</h1>
-            <h4 ng-show="currentUser.isAuth">Welcome {{currentUser.username}}</h4>
+
         </section>
         <section ng-show="currentUser.isAuth" layout-align="end center">
             <md-button class="toolbar-button" aria-label="Logout" ng-click="logout()">
@@ -51,6 +51,12 @@
             </md-button>
         </section>
     </md-toolbar>
+
+    <md-toolbar ng-show="currentUser.isAuth" layout="row" layout-align="start center"
+                style="height:28px;min-height:28px;">
+        <h4 layout-margin>Welcome, <h4 style="color:#c9dde1">{{currentUser.username}}</h4></h4>
+    </md-toolbar>
+
 
     <md-content flex class="md-padding page-content">
         <div ui-view></div>

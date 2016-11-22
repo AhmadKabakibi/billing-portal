@@ -357,7 +357,6 @@ var service = module.exports = {
 
                                                 } else {
                                                     //POHeader not exists we should insert it
-
                                                     models.sequelize.transaction(function (t) {
                                                         return models.poheader.create(
                                                             {

@@ -1,10 +1,15 @@
 {
   "development": {
     "username": "portal",
+<<<<<<< HEAD
     "password": "1q2w3e4r@Sa",
+=======
+    "password": "1q2w3e4r@sa",
+>>>>>>> 2ab01811b97710bec0dbfdddc202f168bf622fa2
     "database": "portal_development",
     "host": "127.0.0.1",
     "dialect": "mssql",
+    "logging":false,
     "dialectOptions": {
 	  "instanceName": "SQLEXPRESS"	  
     },
@@ -29,6 +34,7 @@
     "password": "1q2w3e4r",
     "database": "portal_development",
     "host": "127.0.0.1",
+    "logging":false,
     "dialect": "postgres",
     "timezone": "Europe/Amsterdam",
     "ftp":{
@@ -51,6 +57,7 @@
     "password": "",
     "database": "portal_development",
     "host": "",
+    "logging":false,
     "dialect": "postgres",
     "timezone": "Europe/Amsterdam",
     "ftp":{
@@ -73,6 +80,7 @@
     "password": "",
     "database": "portal_development",
     "host": "",
+    "logging":false,
     "dialect": "mssql",
     "dialectOptions": {
       "instanceName": "SQLEXPRESS"
