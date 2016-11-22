@@ -11,6 +11,8 @@ var foldernames = {
     BadPOs: 'BadPOs',
     Archiver:'Archiver',
     System: 'System',
+    DB:'DB',
+    Errors:'Errors',
     Debugger: 'Debugger'
 }
 
@@ -19,6 +21,8 @@ var folderBadFile = path.join(logDir, foldernames.BadFile)
 var folderBadPOs = path.join(logDir, foldernames.BadPOs)
 var folderArchiver = path.join(logDir, foldernames.Archiver)
 var folderSystem = path.join(logDir, foldernames.System)
+var folderErrors = path.join(logDir, foldernames.Errors)
+var folderDB = path.join(logDir, foldernames.DB)
 var folderDebugger = path.join(logDir, foldernames.Debugger)
 
 
@@ -29,6 +33,8 @@ if (!fs.existsSync(folderBadFile))fs.mkdirSync(folderBadFile);
 if (!fs.existsSync(folderBadPOs))fs.mkdirSync(folderBadPOs);
 if (!fs.existsSync(folderArchiver))fs.mkdirSync(folderArchiver);
 if (!fs.existsSync(folderSystem))    fs.mkdirSync(folderSystem);
+if (!fs.existsSync(folderErrors))    fs.mkdirSync(folderErrors);
+if (!fs.existsSync(folderDB))    fs.mkdirSync(folderDB);
 if (!fs.existsSync(folderDebugger))    fs.mkdirSync(folderDebugger);
 
 var debug = new winston.Logger({
@@ -113,7 +119,7 @@ Error.configure({
                 return moment().format('YYYY-MM-DD HH:mm:ss');
             },
             filename: 'error',
-            dirname: folderSystem,
+            dirname: folderErrors,
             datePattern: 'yyyyMMdd.log',
             level: 'info',
             /*maxFiles: 2, maxsize: 10485760, colorize: true, tailable: true,
@@ -123,6 +129,35 @@ Error.configure({
     ]
 });
 
+var DB = new winston.Logger({
+    levels: {
+        info: 'error'
+    },
+    transports: [
+        new (winston.transports.Console)({
+            timestamp: function () {
+                return moment().format('YYYY-MM-DD HH:mm:ss');
+            }, level: 'info', colorize: true
+        })
+    ]
+});
+DB.configure({
+    level: 'verbose',
+    transports: [
+        new (require('winston-daily-rotate-file'))({
+            timestamp: function () {
+                return moment().format('YYYY-MM-DD HH:mm:ss');
+            },
+            filename: 'db_error',
+            dirname: folderDB,
+            datePattern: 'yyyyMMdd.log',
+            level: 'info',
+            /*maxFiles: 2, maxsize: 10485760, colorize: true, tailable: true,
+             json: true,*/
+            exitOnError: false
+        })
+    ]
+});
 var SuccessfulFiles = new winston.Logger({
     levels: {
         info: 'info'
@@ -259,6 +294,9 @@ var exports = {
     },
     error: function (msg) {
         Error.error(msg);
+    },
+    db: function (msg) {
+        DB.error(msg);
     },
     SuccessfulFiles: function (msg) {
         if (!global.blHasConsoleOutput && SuccessfulFiles.transports['console'] != null) SuccessfulFiles.remove(winston.transports.Console)

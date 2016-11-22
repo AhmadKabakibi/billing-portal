@@ -17,7 +17,8 @@
     "angular-mocks": "^1.5.0",
     "angular-permission": "^4.0.3",
     "angular-material-data-table": "^0.10.9",
-    "angular-filter": "^0.5.11"
+    "angular-filter": "^0.5.11",
+    "angular-resource": "^1.5.8"
   },
   "devDependencies": {}
 }

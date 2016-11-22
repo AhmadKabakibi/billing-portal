@@ -13,7 +13,7 @@
                         <th>Order Type</th>
                         <th>Partner Code</th>
                         <th>Ship to Name</th>
-                        <th>Status data</th>
+                        <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -25,8 +25,7 @@
                         <td>{{POdetails[0].OrderType}}</td>
                         <td>{{POdetails[0].PartnerCode}}</td>
                         <td>{{POdetails[0].ShipToName}}</td>
-                        <!--<td>{{POdetails.POERPStatus}}</td>-->
-                        <td>Pending</td>
+                        <td>{{POdetails[0].POStatus}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -58,18 +57,18 @@
                     </thead>
                     <tbody>
                     <tr>
-                    <tr ng-repeat="PO_dt in POdetails">
-                        <td>{{PO_dt.podetails[0].poheaderId}}</td>
-                        <td>{{PO_dt.podetails[0].ItemCode}}</td>
-                        <td>{{PO_dt.podetails[0].Description}}</td>
-                        <td>{{PO_dt.podetails[0].WarehouseCode}}</td>
-                        <td>{{PO_dt.podetails[0].PartnerPONumber}}</td>
-                        <td>{{PO_dt.podetails[0].UnitofMeasure}}</td>
-                        <td>{{PO_dt.podetails[0].QuantityOrdered}}</td>
-                        <td>{{PO_dt.podetails[0].QuantityBackordered}}</td>
-                        <td>{{PO_dt.podetails[0].QuantityInvoiced}}</td>
-                        <td>{{PO_dt.podetails[0].UnitCost}}</td>
-                        <td>{{PO_dt.podetails[0].Total}}</td>
+                    <tr ng-repeat="PO_dt in POdetails[0].podetails">
+                        <td>{{PO_dt.poheaderId}}</td>
+                        <td>{{PO_dt.ItemCode}}</td>
+                        <td>{{PO_dt.Description}}</td>
+                        <td>{{PO_dt.WarehouseCode}}</td>
+                        <td>{{PO_dt.PartnerPONumber}}</td>
+                        <td>{{PO_dt.UnitofMeasure}}</td>
+                        <td>{{PO_dt.QuantityOrdered}}</td>
+                        <td>{{PO_dt.QuantityBackordered}}</td>
+                        <td>{{PO_dt.QuantityInvoiced}}</td>
+                        <td>{{PO_dt.UnitCost}}</td>
+                        <td>{{PO_dt.Total}}</td>
                     </tr>
                     </tbody>
                 </table>

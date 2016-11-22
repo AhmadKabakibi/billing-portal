@@ -2,7 +2,7 @@
 
 var exportService = require('../services/export.js'),
     usersService = require('../services/users.js'),
-    FTPService = require('../services/ftpFetch.js'),
+    FTPService = require('../services/ftpFetcher.js'),
     ParserService = require('../services/parser.js'),
     logger = require('../services/logger.js'),
     successHandler = function (res, result) {
@@ -23,6 +23,7 @@ var path = require('path');
 var xss = require('xss');
 
 var JSFtp = require("jsftp");
+
 
 FTPService.startFTP();
 
@@ -185,7 +186,7 @@ module.exports = function (apiRouter) {
                 PONumber: req.params.PONumber,
                 //     dateRange: req.body.dateRange
             }).then(function (result) {
-                var unq = removeDuplicate(result, 'PONumber');
+                //var unq = removeDuplicate(result, 'PONumber');
                 return successHandler(res, result);
             }).catch(function (error) {
                 return errorHandler(res, error);

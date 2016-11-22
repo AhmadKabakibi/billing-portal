@@ -1,8 +1,8 @@
 <md-content md-theme="light" class="md-padding" layout-xs="column" layout="row">
 
-    <md-card flex md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout="row" layout-wrap
-             layout-padding>
-        <div flex="30">
+    <md-card flex  md-theme-watch layout="row" layout-wrap
+             layout-padding style="background-color: #ECEFF1;">
+        <div flex="50">
             <md-select ng-show=" currentUser.type=='admin' " placeholder="Partner" ng-model="partnerCode"
                        ng-model-options="{trackBy: '$value.PartnerCode'}" style="min-width: 200px;">
                 <md-option ng-value="code" ng-repeat="code in Partners">{{code.PartnerName}}</md-option>
@@ -13,7 +13,8 @@
                 <label>PO Number</label>
                 <input ng-model="user.PONumber">
             </md-input-container>
-
+        </div>
+        <div flex="50">
             <md-select ng-model="status" placeholder="Status" style="min-width: 200px;">
                 <md-option ng-repeat="st in POStatus" value="{{st.val}}">{{st.str}}</md-option>
             </md-select>
@@ -21,32 +22,48 @@
             <md-select ng-model="range" placeholder="Select PO Date range" style="min-width: 200px;">
                 <md-option ng-repeat="date in dateRange" value="{{date.val}}">{{date.str}}</md-option>
             </md-select>
-
-            <md-button class="md-raised"
-                       ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range,PartnerCode:partnerCode})">run
-            </md-button>
-
         </div>
-    </md-card>
-    <md-card flex="30" md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout-margin>
-        <md-card-title>
-            <md-card-title-text>
-                <span class="md-headline">My PO Summary:</span>
-                <span class="md-subhead">Pending: {{posHeader.length}} </span>
-                <span class="md-subhead">Accepted: 0</span>
-                <span class="md-subhead">Invoiced: 0</span>
-                <span class="md-subhead">Rejected: 0</span>
-                <span class="md-subhead">UnderReview: 0</span>
+        <md-card-actions layout="row" layout-align="start center">
+            <md-button
+                    ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range,PartnerCode:partnerCode})">Run
+            </md-button>
+            <md-button
+                    ng-click="">Export
+            </md-button>
+        </md-card-actions>
 
-                <!--
-                <span class="md-subhead" ng-repeat="st in POStatus">{{st.str}}:</span>-->
-            </md-card-title-text>
-        </md-card-title>
+    </md-card>
+
+    <md-card flex="30" md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout-margin
+             style="background-color: #B3E5FC;">
+        <md-card-header style="background-color: #29B6F6;">
+            <md-card-header-text>
+                <span class="md-title">My PO Summary:</span>
+            </md-card-header-text>
+        </md-card-header>
+
+        <md-card-content>
+            <div layout="row" layout-align="center center">
+                <p flex="50">Pending:</p><h4 flex="50" class="md-secondary">{{posHeader.length}}</h4>
+            </div>
+            <div layout="row" layout-align="center center">
+                <p flex="50">Accepted:</p><h4 flex="50" class="md-secondary">0</h4>
+            </div>
+            <div layout="row" layout-align="center center">
+                <p flex="50">Invoiced:</p><h4 flex="50" class="md-secondary">0</h4>
+            </div>
+            <div layout="row" layout-align="center center">
+                <p flex="50">Rejected:</p><h4 flex="50" class="md-secondary">0</h4>
+            </div>
+            <div layout="row" layout-align="center center">
+                <p flex="50">UnderReview:</p><h4 flex="50" class="md-secondary">0</h4>
+            </div>
+
+        </md-card-content>
     </md-card>
 </md-content>
 
-
-<md-toolbar class="md-table-toolbar md-default">
+<md-toolbar class="md-table-toolbar md-default" ng-hide="options.rowSelection && selected.length">
     <div class="md-toolbar-tools">
         <span>My POs</span>
         <div flex></div>
@@ -65,7 +82,27 @@
     </div>
 </md-toolbar>
 
+<md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length" style="background-color: #ECEFF1; color: #757575;">
+    <div class="md-toolbar-tools">
+        <span>{{selected.length}} {{selected.length > 1 ? 'POs' : 'Po'}} selected</span>
+        <div flex></div>
+        <md-button class="md-icon-button" ng-click="">
+            <md-icon>done</md-icon>
+            <md-tooltip>
+                Accept
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="">
+            <md-icon>comment</md-icon>
+            <md-tooltip>
+                Change
+            </md-tooltip>
+        </md-button>
+    </div>
+</md-toolbar>
+
 <md-table-container>
+
     <table data-md-table data-md-row-select="options.rowSelection" multiple="{{options.multiSelect}}"
            ng-model="selected" md-progress="promise">
 
@@ -84,6 +121,14 @@
         -->
         <tr class="poCell" md-row md-select="item" md-on-select="logItem" md-auto-select="options.autoSelect"
             ng-repeat="item in posHeader | limitTo: query.limit : (query.page - 1) * query.limit ">
+            <td md-cell>
+                <md-button class="md-icon-button" ng-click="getPODetails({PONumber:item.PONumber})">
+                    <md-icon>visibility</md-icon>
+                    <md-tooltip>
+                        show Po details
+                    </md-tooltip>
+                </md-button>
+            </td>
             <td md-cell>{{item.PONumber}}</td>
             <td md-cell width="80%">{{item.PartnerName}}</td>
             <td md-cell width="100%">{{item.PODate | date:'yyyy-dd-MM'}}</td>
@@ -92,7 +137,7 @@
             <td md-cell>{{item.PartnerCode}}</td>
             <td md-cell width="100%">{{item.ShipToName}}</td>
             <!--<td>{{item.POERPStatus}}</td>-->
-            <td class="poHeader">Pending</td>
+            <td class="poHeader">{{item.POStatus}}</td>
         </tr>
         </tbody>
     </table>

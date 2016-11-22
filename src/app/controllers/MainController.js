@@ -61,7 +61,7 @@
         // Assume we have a $nutrition service that provides an API for communicating with the server
         $scope.options = {
             rowSelection: true,
-            multiSelect: false,
+            multiSelect: true,
             autoSelect: true,
             decapitate: false,
             largeEditDialog: false,
@@ -105,23 +105,26 @@
 
         // Order Information: This will include the PO header information.
         // for testing ngRepeat
-        $scope.columns = [{
-            name: 'PO Number'
-        }, {
-            name: 'Partner'
-        }, {
-            name: 'Order Date'
-        }, {
-            name: 'Division data'
-        }, {
-            name: 'Order Type'
-        }, {
-            name: 'Partner Code'
-        }, {
-            name: 'Ship to Name'
-        }, {
-            name: 'Status data'
-        }];
+        $scope.columns = [
+            {
+                name: ''
+            }, {
+                name: 'PO Number'
+            }, {
+                name: 'Partner'
+            }, {
+                name: 'Order Date'
+            }, {
+                name: 'Division data'
+            }, {
+                name: 'Order Type'
+            }, {
+                name: 'Partner Code'
+            }, {
+                name: 'Ship to Name'
+            }, {
+                name: 'Status data'
+            }];
 
         /* // function that takes an array of objects
          // and returns an array of unique valued in the object
@@ -217,7 +220,22 @@
 
         $scope.logItem = function (item) {
             //getPOs({PONumber:user.PONumber,dateRange:range})
-            POsService.getPOs({PONumber: item.PONumber})
+
+            /*  POsService.getPOs({PONumber: item.PONumber})
+             .then(function (response) {
+             $scope.selectedPO = response.data.data;
+             $rootScope.POdetails = response.data.data;
+             //alert(item.PONumber + 'was selected' + JSON.stringify($scope.selectedPO) );
+             $state.go('details')//, {}, {reload: true});
+             }, function (error) {
+             $scope.status = 'Unable to load partner data: ' + error.message;
+             console.log($scope.status);
+             });*/
+
+        };
+
+        $scope.getPODetails = function (po) {
+            POsService.getPOs({PONumber: po.PONumber})
                 .then(function (response) {
                     $scope.selectedPO = response.data.data;
                     $rootScope.POdetails = response.data.data;
@@ -228,6 +246,7 @@
                     console.log($scope.status);
                 });
         };
+
 
         $scope.log = function (item) {
             console.log(item.name, 'was selected');
@@ -350,35 +369,35 @@
                     console.log($scope.status);
                 });
             /*  var deferred = $q.defer();
-            var promise = $mdEditDialog.large({
-                title: "Delete Selected User",
-                ok: "delete",
-                placeholder: 'reason (optional) ',
-                save: function (input) {
-                    $http({
-                        method: 'POST',
-                        url: appConf.baseURL + '/api/user/delete',
-                        data: {id: selected_user[0].id}
-                    }).success(function (data) {
-                        if (data.success) {
-                            deferred.resolve(data);
-                            getAllUsers();
-                            //$state.go('settings', {}, {reload: true});
-                        } else {
-                            deferred.reject();
-                        }
-                    }).error(function (err, status, headers, config) {
-                        deferred.reject(err);
-                    });
+             var promise = $mdEditDialog.large({
+             title: "Delete Selected User",
+             ok: "delete",
+             placeholder: 'reason (optional) ',
+             save: function (input) {
+             $http({
+             method: 'POST',
+             url: appConf.baseURL + '/api/user/delete',
+             data: {id: selected_user[0].id}
+             }).success(function (data) {
+             if (data.success) {
+             deferred.resolve(data);
+             getAllUsers();
+             //$state.go('settings', {}, {reload: true});
+             } else {
+             deferred.reject();
+             }
+             }).error(function (err, status, headers, config) {
+             deferred.reject(err);
+             });
 
 
-                },
-                targetEvent: event
-            });
-            promise.then(function (ctrl) {
+             },
+             targetEvent: event
+             });
+             promise.then(function (ctrl) {
 
-            });
-*/
+             });
+             */
         }
 
         $scope._f_toggleLimitOptions = function () {
