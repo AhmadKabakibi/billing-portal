@@ -72,13 +72,7 @@
             <md-tooltip>
                 reload all POs
             </md-tooltip>
-
         </md-button>
-
-        <md-button class="md-icon-button" ui-sref="details">
-            <md-icon>filter_list</md-icon>
-        </md-button>
-
     </div>
 </md-toolbar>
 
@@ -86,7 +80,7 @@
     <div class="md-toolbar-tools">
         <span>{{selected.length}} {{selected.length > 1 ? 'POs' : 'Po'}} selected</span>
         <div flex></div>
-        <md-button class="md-icon-button" ng-click="">
+        <md-button class="md-icon-button" ng-click="Accept(selected)">
             <md-icon>done</md-icon>
             <md-tooltip>
                 Accept

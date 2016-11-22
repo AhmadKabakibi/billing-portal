@@ -211,6 +211,22 @@ module.exports = function (apiRouter) {
         }
     });
 
+    //change the status of the PO from “Pending” to “Accepted”
+    //Admin Function
+    apiRouter.put('/po/accept', function (req, res) {
+        if (req.user.type == 'admin') {
+            return exportService.acceptPOslist(req.body.POList).then(function (result) {
+                return successHandler(res, result);
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            });
+        } else {
+            return errorHandler(res, "access denied not authorized");
+        }
+    });
+
+
+
     apiRouter.get('/users', function (req, res) {
         if (req.user.type == 'admin') {
             return usersService.listUsers().then(function (result) {

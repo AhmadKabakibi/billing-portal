@@ -4,7 +4,7 @@ var moment = require('moment') //timing utulity module
 
 var service = module.exports = {
 
-    Receivedfiles:function(){
+    Receivedfiles: function () {
         return models.fileslogs.findAll({
             include: [{model: models.statuslogs}]
         });
@@ -13,44 +13,44 @@ var service = module.exports = {
     listPOs: function () {
         return models.poheader.findAll();
     },
-    listPartners:function(){
+    listPartners: function () {
         return models.poheader.findAll({
-            attributes: ['PartnerCode','PartnerName']
+            attributes: ['PartnerCode', 'PartnerName']
         });
     },
-    listPartnersCodes:function(params){
+    listPartnersCodes: function (params) {
         return models.poheader.findAll({
-            attributes: ['PartnerCode','PartnerName'],
+            attributes: ['PartnerCode', 'PartnerName'],
             where: {
                 PartnerCode: params.PartnerCode
             }
         });
     },
-    listPOsCode:function(params){
+    listPOsCode: function (params) {
         return models.poheader.findAll({
             where: {
                 PartnerCode: params.PartnerCode
             }
         });
     },
-    getPOHeader:function(params){
-        if(typeof params.PONumber != "undefined" && typeof params.PartnerCode != "undefined"){
-            console.log("both "+ params.PONumber +" "+params.PartnerCode)
+    getPOHeader: function (params) {
+        if (typeof params.PONumber != "undefined" && typeof params.PartnerCode != "undefined") {
+            console.log("both " + params.PONumber + " " + params.PartnerCode)
             return models.poheader.findAll({
                 where: {
                     PONumber: params.PONumber,
                     PartnerCode: params.PartnerCode.PartnerCode
                 }
             });
-        } else if(typeof params.PONumber != "undefined" || typeof params.PartnerCode == "undefined"){
-            console.log("just PONumber "+ params.PONumber +" "+params.PartnerCode)
+        } else if (typeof params.PONumber != "undefined" || typeof params.PartnerCode == "undefined") {
+            console.log("just PONumber " + params.PONumber + " " + params.PartnerCode)
             return models.poheader.findAll({
                 where: {
                     PONumber: params.PONumber,
                 }
             });
-        } else if(typeof params.PONumber == "undefined" || typeof params.PartnerCode != "undefined"){
-            console.log("just PartnerCode "+ params.PONumber +" "+params.PartnerCode)
+        } else if (typeof params.PONumber == "undefined" || typeof params.PartnerCode != "undefined") {
+            console.log("just PartnerCode " + params.PONumber + " " + params.PartnerCode)
             return models.poheader.findAll({
                 where: {
                     PartnerCode: params.PartnerCode.PartnerCode
@@ -58,7 +58,7 @@ var service = module.exports = {
             });
         }
     },
-    getPOHeaderCode:function(params){
+    getPOHeaderCode: function (params) {
         return models.poheader.findAll({
             where: {
                 PONumber: params.PONumber,
@@ -216,6 +216,8 @@ var service = module.exports = {
                 include: [{model: models.podetails}]
             });
         }
+    },
+    acceptPOslist: function (pos) {
+        return models.poheader.update({POStatus: 'Accepted'},{where: {PONumber: pos}});
     }
-
 }

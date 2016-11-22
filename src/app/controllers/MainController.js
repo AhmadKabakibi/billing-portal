@@ -220,18 +220,6 @@
 
         $scope.logItem = function (item) {
             //getPOs({PONumber:user.PONumber,dateRange:range})
-
-            /*  POsService.getPOs({PONumber: item.PONumber})
-             .then(function (response) {
-             $scope.selectedPO = response.data.data;
-             $rootScope.POdetails = response.data.data;
-             //alert(item.PONumber + 'was selected' + JSON.stringify($scope.selectedPO) );
-             $state.go('details')//, {}, {reload: true});
-             }, function (error) {
-             $scope.status = 'Unable to load partner data: ' + error.message;
-             console.log($scope.status);
-             });*/
-
         };
 
         $scope.getPODetails = function (po) {
@@ -247,7 +235,6 @@
                 });
         };
 
-
         $scope.log = function (item) {
             console.log(item.name, 'was selected');
         };
@@ -260,6 +247,19 @@
             console.log('page: ', page);
             console.log('limit: ', limit);
         }
+
+        //Accept PO
+        $scope.Accept = function (pos) {
+            POsService.acceptPO(pos)
+                .then(function (response) {
+                    $scope.loadStuff()
+                }, function (error) {
+                    $scope.status = 'Unable to load partner data: ' + error.message;
+                    console.log($scope.status);
+                });
+
+        };
+
         /*Authorization*/
 
         //$scope.currentUser = null;
