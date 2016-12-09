@@ -25,6 +25,28 @@ var xss = require('xss');
 var JSFtp = require("jsftp");
 
 
+//SendGrid
+//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
+// using SendGrid's Node.js Library
+var sendgrid = require("sendgrid")("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");
+
+var NotificationEmail = new sendgrid.Email({
+    to: 'ahmadkbakibi@gmail.com',
+    from: 'noreply@r-pac.com',
+    subject: 'r-pac billing portal Notification',
+    html: '<h2>New Notification!</h2>'
+});
+NotificationEmail.setFilters({
+    "templates": {
+        "settings": {
+            "enabled": 1,
+            "template_id": "ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3"
+        }
+    }
+});
+NotificationEmail.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
+
+
 FTPService.startFTP();
 
 FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
@@ -86,7 +108,7 @@ module.exports = function (apiRouter) {
                         if (err) {
                             logger.error('error deleting after download from ftp ' + localFile + ' ' + err);
                         }
-                        Ftp.raw.quit(function(err, data) {
+                        Ftp.raw.quit(function (err, data) {
                             if (err) return console.error(err);
                             console.log("FTP disconnected after download file!");
                         });
@@ -96,28 +118,28 @@ module.exports = function (apiRouter) {
             }
         });
 
-      /*  FTPService.downloadArchive(req.params.FileName, function (err, localFile) {
-            console.log("FTP: " + localFile)
-            if (err) {
-                return errorHandler(res, error);
-            } else {
-                return res.sendFile(localFile, {
-                    dotfiles: 'deny',
-                    headers: {
-                        'Content-Disposition': 'attachment; filename="' + req.params.FileName + '"'
-                    }
-                }, function (err) {
-                    if (err) {
-                        return errorHandler(res, error);
-                    }
-                    fs.unlink(localFile, function (err) {
-                        if (err) {
-                            logger.error('error deleting after download from ftp ' + localFile + ' ' + err);
-                        }
-                    });
-                });
-            }
-        });*/
+        /*  FTPService.downloadArchive(req.params.FileName, function (err, localFile) {
+         console.log("FTP: " + localFile)
+         if (err) {
+         return errorHandler(res, error);
+         } else {
+         return res.sendFile(localFile, {
+         dotfiles: 'deny',
+         headers: {
+         'Content-Disposition': 'attachment; filename="' + req.params.FileName + '"'
+         }
+         }, function (err) {
+         if (err) {
+         return errorHandler(res, error);
+         }
+         fs.unlink(localFile, function (err) {
+         if (err) {
+         logger.error('error deleting after download from ftp ' + localFile + ' ' + err);
+         }
+         });
+         });
+         }
+         });*/
     });
 
     apiRouter.get('/pos/received', function (req, res) {
@@ -223,6 +245,57 @@ module.exports = function (apiRouter) {
         } else {
             return errorHandler(res, "access denied not authorized");
         }
+    });
+
+    //Change the status of the PO to “Rejected” & send an email to admin
+    //multiple Function permissions
+
+    apiRouter.put('/po/reject', function (req, res) {
+        return exportService.rejectedPO(req.body.PONumber).then(function (result) {
+
+            //todo send an email to admin using API SendGrid
+            //todo use partner name instead of the code
+
+            NotificationEmail.to =config.email;
+            NotificationEmail.subject = "PO: "+req.body.PONumber+" was rejected by "+ req.user.code;
+            NotificationEmail.html = req.body.comment;
+            sendgrid.send(NotificationEmail, function (err, json) {
+                if (err) {
+                    console.log("Notification Error Email: " + err);
+                } else {
+                    console.log('Notify Invitation! ');
+                }
+            })
+
+            return successHandler(res, result);
+        }).catch(function (error) {
+            return errorHandler(res, error);
+        });
+    });
+
+    //todo Create new invoice api
+
+    apiRouter.post('/po/invoice/create', function (req, res) {
+
+        return exportService.createInvocie({
+            InvoiceNumber: req.body.InvoiceNumber,
+            InvoiceDate: req.body.InvoiceDate,
+            PurchaseOrder: req.body.PurchaseOrder,
+            ContactEmail: req.body.ContactEmail,
+            QuantityInvoiced: req.body.QuantityInvoiced,
+            Total: req.body.Total,
+            poheaderPONumber: req.body.PONumber,
+            podetails:req.body.podetails // array of lines
+        }).then(function (result) {
+            if(!result){
+                return res.json({success: false, data: "cannot enter the same invoice number twice"});
+            }else {
+                return successHandler(res, result);
+            }
+        }).catch(function (error) {
+            return errorHandler(res, error);
+        })
+
     });
 
 

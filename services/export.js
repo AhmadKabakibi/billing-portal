@@ -218,6 +218,40 @@ var service = module.exports = {
         }
     },
     acceptPOslist: function (pos) {
-        return models.poheader.update({POStatus: 'Accepted'},{where: {PONumber: pos}});
+        return models.poheader.update({POStatus: 'Accepted'}, {where: {PONumber: pos}});
+    }
+    ,
+    rejectedPO: function (po) {
+        return models.poheader.update({POStatus: 'Rejected'}, {where: {PONumber: po}});
+    },
+    createInvocie: function (params) {
+
+      return  models.invoice.findAll({
+            where: {
+                InvoiceNumber: params.InvoiceNumber
+            }
+        }).then(function (rows) {
+            if (rows.length > 0) {
+                return false
+            } else {
+                return models.invoice.create(
+                    {
+                        InvoiceNumber: params.InvoiceNumber,
+                        InvoiceDate: params.InvoiceDate,
+                        PurchaseOrder: params.PurchaseOrder,
+                        ContactEmail: params.ContactEmail,
+                        QuantityInvoiced: params.QuantityInvoiced,
+                        Total: params.Total,
+                        poheaderPONumber: params.PONumber
+                    }).then(function (invoice) {
+
+                    //todo create invoice PO details line
+                    return models.podetails.bulkCreate(params.podetails)
+                })
+            }
+
+        }).catch(function (err) {
+            // err is whatever rejected the promise chain returned to the transaction callback
+        })
     }
 }

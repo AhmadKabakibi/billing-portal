@@ -1,6 +1,6 @@
 <md-content md-theme="light" class="md-padding" layout-xs="column" layout="row">
 
-    <md-card flex  md-theme-watch layout="row" layout-wrap
+    <md-card flex md-theme-watch layout="row" layout-wrap
              layout-padding style="background-color: #ECEFF1;">
         <div flex="50">
             <md-select ng-show=" currentUser.type=='admin' " placeholder="Partner" ng-model="partnerCode"
@@ -76,7 +76,8 @@
     </div>
 </md-toolbar>
 
-<md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length" style="background-color: #ECEFF1; color: #757575;">
+<md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length"
+            style="background-color: #ECEFF1; color: #757575;">
     <div class="md-toolbar-tools">
         <span>{{selected.length}} {{selected.length > 1 ? 'POs' : 'Po'}} selected</span>
         <div flex></div>
@@ -86,7 +87,7 @@
                 Accept
             </md-tooltip>
         </md-button>
-        <md-button class="md-icon-button" ng-click="">
+        <md-button class="md-icon-button" ng-click="Change($event,selected)">
             <md-icon>comment</md-icon>
             <md-tooltip>
                 Change

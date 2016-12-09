@@ -250,15 +250,69 @@
 
         //Accept PO
         $scope.Accept = function (pos) {
-            POsService.acceptPO(pos.map(function(a) {return a.PONumber;}))
+            POsService.acceptPO(pos.map(function (a) {
+                    return a.PONumber;
+                }))
                 .then(function (response) {
-                    $scope.loadStuff()
+                    $scope.loadStuff();
+                    $scope.selected = [];
                 }, function (error) {
                     $scope.status = 'Unable to load partner data: ' + error.message;
                     console.log($scope.status);
                 });
 
         };
+        //Change Po
+
+        /**/
+
+        $scope.Change = function (event, POSelected) {
+            // Appending dialog to document.body to cover sidenav in docs app
+
+            var confirm = $mdDialog.prompt()
+                .title('Enter your Comments')
+                .placeholder('1000 characters max')
+                .ariaLabel('comment')
+                .targetEvent(event)
+                .ok('Send')
+                .cancel('Discard');
+
+            var maxPo = $mdDialog.confirm()
+                .title('Warning')
+                .textContent('You can only select one PO at a time when requesting a change')
+                .targetEvent(event)
+                .ok('ok');
+
+
+            if ($scope.selected.length > 1) {
+                $mdDialog.show(maxPo).then(function () {
+
+                }, function () {
+
+                });
+            } else {
+
+                $mdDialog.show(confirm).then(function (comment) {
+
+                    //todo send email to admin r-pac
+
+                    POsService.rejectePO({PONumber: POSelected[0].PONumber, comment: comment})
+                        .then(function (response) {
+
+                            $scope.loadStuff();
+                            $scope.selected = [];
+
+                        }, function (error) {
+                            $scope.status = 'Unable to load partner data: ' + error.message;
+                            console.log($scope.status);
+                        });
+
+                }, function () {
+
+                });
+            }
+        };
+
 
         /*Authorization*/
 
@@ -428,6 +482,186 @@
             console.log('limit: ', limit);
         }
 
-        /**/
+        /*PODetails Grid*/
+        $scope.girdPoDetails = [{
+            name: 'Line'
+        }, {
+            name: 'Item Code'
+        }, {
+            name: 'Description'
+        }, {
+            name: 'Warehouse code'
+        }, {
+            name: 'Partner PO Number'
+        }, {
+            name: 'Unit of measure'
+        }, {
+            name: 'Quantity Ordered'
+        }, {
+            name: 'Quantity backordered'
+        }, {
+            name: 'Quantity invoiced'
+        }, {
+            name: 'Unit Cost'
+        }, {
+            name: 'Total'
+        }];
+
+        $scope._pd_limitOptions = [5, 10, 15];
+        $scope._pd_options = {
+            rowSelection: false,
+            multiSelect: false,
+            autoSelect: false,
+            decapitate: false,
+            largeEditDialog: true,
+            boundaryLinks: false,
+            limitSelect: true,
+            pageSelect: true
+        };
+
+        $scope._pd_query = {
+            order: 'name',
+            limit: 5,
+            page: 1
+        };
+
+        $scope._pd_toggleLimitOptions = function () {
+            $scope.limitOptions = $scope.limitOptions ? undefined : [5, 10, 15];
+        };
+
+        $scope._pd_getTypes = function () {
+            return ['Success', 'Failed'];
+        };
+
+        $scope._pd_loadStuff = function () {
+            $scope.promise = $timeout(function () {
+                // loading
+                getAllReceived();
+            }, 2000);
+        }
+
+        $scope._pd_logOrder = function (order) {
+            console.log('order: ', order);
+        };
+
+        $scope._pd_logPagination = function (page, limit) {
+            console.log('page: ', page);
+            console.log('limit: ', limit);
+        }
+
+        /*Acknowledge and invoice*/
+
+        /*
+         InvoiceNumber: req.body.InvoiceNumber,
+         InvoiceDate: req.body.InvoiceDate,
+         PurchaseOrder: req.body.PurchaseOrder,
+         ContactEmail: req.body.ContactEmail,
+         QuantityInvoiced: req.body.QuantityInvoiced,
+         Total: req.body.Total,
+         poheaderPONumber: req.body.PONumber,
+         podetails:req.body.podetails // array of lines
+         CustomerNumber: data.CustomerNumber,
+         FreightAmount: data.FreightAmount,
+         ItemCode: data.ItemCode,
+         Description: data.Description,
+         WarehouseCode: data.WarehouseCode,
+         PartnerPONumber: data.PartnerPONumber,
+         UnitofMeasure: data.UnitofMeasure,
+         QuantityOrdered: data.QuantityOrdered,
+         QuantityBackordered: data.QuantityBackordered,
+         QuantityInvoiced: data.QuantityInvoiced,
+         UnitCost: data.UnitCost,
+         Total: data.Total,
+         poheaderPONumber: data.PONumber
+         */
+        $scope.invoice = {
+            InvoiceNumber: '#####',
+            InvoiceDate: new Date(),
+            PurchaseOrder: '',
+            ContactEmail: '',
+            QuantityInvoiced: '',
+            Total: '',
+            poheaderPONumber: '',
+            podetails: []
+        };
+
+        //Handling charge
+        $scope.addHandling = function () {
+            $scope.invoice.podetails.push({
+                ItemCode: 'handling',
+                Description: 'handling',
+                UnitofMeasure: '',
+                QuantityOrdered: '1',
+                QuantityBackordered: '',
+                QuantityInvoiced: '1',
+                Total: ''
+            });
+        }
+        //Freight Charge
+        $scope.addFreight = function () {
+            $scope.invoice.podetails.push({
+                ItemCode: 'freight',
+                Description: 'handling',
+                UnitofMeasure: '',
+                QuantityOrdered: '1',
+                QuantityBackordered: '',
+                QuantityInvoiced: '1',
+                Total: ''
+            });
+        }
+        $scope.remove = function (index) {
+            $scope.invoice.podetails.splice(index, 1);
+        }
+
+        $scope.preview = function () {
+
+        }
+
+        $scope.total = function () {
+            var total = 0;
+            angular.forEach($scope.invoice.podetails, function (item) {
+                total += item.Total;
+            })
+            $scope.invoice.Total = total;
+            return total;
+        }
+
+        $scope.sendInvoice = function (POSelected) {
+            $scope.invoice.poheaderPONumber=POSelected.PONumber;
+            POsService.createInvocie($scope.invoice).then(function (response) {
+                //todo clear scopes
+                alert(response.success +" , "+JSON.toString(response.data));
+            }, function (error) {
+                $scope.status = 'Unable to create an Invocie data: ' + error.message;
+                console.log($scope.status);
+            });
+        }
+
+        $scope.discard = function () {
+            $mdDialog.hide()
+        }
+
+
+        $scope.AcknowledgeInvoice = function (evt) {
+            $mdDialog.show({
+                targetEvent: evt,
+                locals: {parent: $scope},
+                controller: angular.noop,
+                controllerAs: 'ctrl',
+                bindToController: true,
+                templateUrl: 'invoice.tmpl.html',
+                clickOutsideToClose: true
+                /*    template:
+                 '<md-dialog>' +
+                 '  <md-content>{{ctrl.parent.greeting}}, world !</md-content>' +
+                 '  <div class="md-actions">' +
+                 '    <md-button ng-click="ctrl.parent.dialogOpen=false;ctrl.parent.hideDialog()">' +
+                 '      Close' +
+                 '    </md-button>' +
+                 '  </div>' +
+                 '</md-dialog>'*/
+            });
+        };
+
     }
 })();

@@ -23,7 +23,8 @@
       "pass":"ku2rRpKb",
       "debug":false
     },
-    "secret":"r-pacSecret"
+    "secret":"r-pacSecret",
+    "email":"ahmadkbakibi@gmail.com"
   },
   "test": {
     "username": "portal",
@@ -46,7 +47,8 @@
       "pass":"ku2rRpKb",
       "debug":true
     },
-    "secret":"r-pacSecret"
+    "secret":"r-pacSecret",
+    "email":"ahmadkbakibi@gmail.com"
   },
   "beta": {
     "username": "",
@@ -69,7 +71,8 @@
       "pass":"ku2rRpKb",
       "debug":false
     },
-    "secret":"r-pacSecret"
+    "secret":"r-pacSecret",
+    "email":"ahmadkbakibi@gmail.com"
   },
   "production": {
     "username": "",
@@ -96,5 +99,6 @@
       "debug":false
     }
   },
-  "secret":"r-pacSecret"
+  "secret":"r-pacSecret",
+  "email":"ahmadkbakibi@gmail.com"
 }

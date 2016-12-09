@@ -34,7 +34,58 @@
     </section>
 
     <br>
+    <!---->
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>PO Details:</span>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="_pd_loadStuff()">
+                <md-icon>refresh</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
 
+    <md-table-container>
+        <table md-table md-row-select="_pd_options.rowSelection" multiple="{{_pd_options.multiSelect}}"
+               md-progress="_pd_promise">
+            <thead ng-if="!_pd_options.decapitate" md-head md-order="_pd_query.order" md-on-reorder="_pd_logOrder">
+            <tr md-row>
+                <th md-column ng-repeat="column in girdPoDetails">
+                    <span>{{column.name}}</span>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody md-body>
+            <tr md-row
+                ng-repeat="PO_dt in POdetails[0].podetails | limitTo: _pd_query.limit : (_pd_query.page -1) * _pd_query.limit">
+
+                <td md-cell>{{PO_dt.poheaderId}}</td>
+                <td md-cell>{{PO_dt.ItemCode}}</td>
+                <td md-cell>{{PO_dt.Description}}</td>
+                <td md-cell>{{PO_dt.WarehouseCode}}</td>
+                <td md-cell>{{PO_dt.PartnerPONumber}}</td>
+                <td md-cell>{{PO_dt.UnitofMeasure}}</td>
+                <td md-cell>{{PO_dt.QuantityOrdered}}</td>
+                <td md-cell>{{PO_dt.QuantityBackordered}}</td>
+                <td md-cell>{{PO_dt.QuantityInvoiced}}</td>
+                <td md-cell>{{PO_dt.UnitCost}}</td>
+                <td md-cell>{{PO_dt.Total}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+
+    <md-table-pagination md-limit="_pd_query.limit" md-limit-options="_pd_limitOptions" md-page="_pd_query.page"
+                         md-total="{{POdetails[0].podetails.length}}" md-page-select="_pd_options.pageSelect"
+                         md-boundary-links="_pd_options.boundaryLinks"
+                         md-on-paginate="_pd_logPagination"></md-table-pagination>
+
+
+    <!---->
+
+    <!--
     <section flex class="md-whiteframe-1dp">
         <md-content class="md-padding" layout="row" layout="column">
             <div class="table-responsive-vertical">
@@ -75,9 +126,11 @@
             </div>
         </md-content>
     </section>
+-->
 
     <div class="md-actions" layout="row" layout-align="start center">
-        <md-button class="md-warn" ng-click="">
+
+        <md-button class="md-warn" ng-click="AcknowledgeInvoice($event)">
             <div class="md-tile-content">Acknowledge</div>
             <md-tooltip>
                 Acknowledge and invoice
@@ -85,23 +138,155 @@
         </md-button>
 
         <md-button class="md-warn" ng-click="">
-            <div class="md-tile-content">Cancel</div>
-            <md-tooltip>
-                Request Cancellation
-            </md-tooltip>
-        </md-button>
-        <md-button class="md-warn" ng-click="">
-            <div class="md-tile-content">Change</div>
-            <md-tooltip>
-                Request Changes
-            </md-tooltip>
-        </md-button>
-        <md-button class="md-warn" ng-click="">
             <div class="md-tile-content">history</div>
             <md-tooltip>
                 View Change History
             </md-tooltip>
         </md-button>
     </div>
-
 </div>
+
+<script type="text/ng-template" id="invoice.tmpl.html">
+    <md-dialog aria-label="Acknowledge and invoice">
+        <form ng-cloak>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>invoice</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <md-card>
+                    <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding="">
+                        <md-content flex="70">
+                            <p>TO</p>
+                            <p>r-pac International Coraporation</p>
+                            <p>132 West 36th street</p>
+                            <p>New York,NY 10018</p>
+                            <p>USA</p>
+                        </md-content>
+
+                        <md-content flex="30" layout="column">
+                            <md-input-container>
+                                <label>Inovice number</label>
+                                <input ng-required="true" ng-model="ctrl.parent.invoice.InvoiceNumber" type="text">
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Invoice date</label>
+                                <md-datepicker ng-model="ctrl.parent.invoice.InvoiceDate"></md-datepicker>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Purchase Order</label>
+                                <input ng-model="ctrl.parent.invoice.PurchaseOrder" type="number">
+                            </md-input-container>
+                            <md-input-container>
+                                <label>contact(email)</label>
+                                <input ng-model="ctrl.parent.invoice.ContactEmail" type="email">
+                            </md-input-container>
+                        </md-content>
+                    </md-content>
+
+                </md-card>
+
+                <md-content layout-padding="">
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Item Code</th>
+                            <th>Description</th>
+                            <th>Unit of measure</th>
+                            <th>Quantity Ordered</th>
+                            <th>Quantity backordered</th>
+                            <th>Quantity invoiced</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr ng-repeat="item in ctrl.parent.invoice.podetails">
+
+                            <!--<td><input type="text" ng-model="item.ItemCode" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.Description" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.WarehouseCode" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.PartnerPONumber" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.UnitofMeasure" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.QuantityOrdered" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.QuantityBackordered" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.QuantityInvoiced" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.UnitCost" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.Total" class="form-control"/></td>
+                            -->
+                            <td>{{item.ItemCode}}</td>
+                            <td>{{item.Description}}</td>
+                            <td>{{item.UnitofMeasure}}</td>
+                            <td>{{item.QuantityOrdered}}</td>
+                            <td>{{item.QuantityBackordered}}</td>
+                            <td>{{item.QuantityInvoiced}}</td>
+                            <td>
+                                <input type="number" min="1" step="any" ng-model="item.Total" class="form-control"/>
+                            </td>
+
+                            <td>
+                                <button type="button" class="btn btn-danger" ng-click="ctrl.parent.remove($index)">
+                                    remove
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button type="button" class="btn btn-primary" ng-click="ctrl.parent.addHandling()">Add
+                                    Handling Charge
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary" ng-click="ctrl.parent.addFreight()">Add
+                                    Freight Charge
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <md-content layout="row" layout-align="space-around center">
+                        <choose-file flex="25" layout="row">
+                            <input id="fileInput" type="file" class="ng-hide">
+                            <md-input-container flex class="md-block">
+                                <input type="text" ng-model="fileName" disabled>
+                                <div style="position: absolute;left: 5px;right: auto; bottom: 0px; font-size: 14px;line-height: 14px;transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);color: grey; ">
+                                    Select your file
+                                </div>
+                            </md-input-container>
+                            <div>
+                                <md-button id="uploadButton" class="md-fab md-mini">
+                                    <md-icon class="material-icons">attach_file</md-icon>
+                                </md-button>
+                            </div>
+                        </choose-file>
+                        <div flex="40"></div>
+                        <div flex="35" layout="row" style="border-bottom: 1px solid black;  box-shadow: 0 1px 0 black;">
+                            <h3>Total USD: </h3>
+                            <h3 style="margin-left:5%">{{ctrl.parent.total()}}</h3>
+                        </div>
+                    </md-content>
+                </md-content>
+
+            </md-dialog-content>
+
+            <md-dialog-actions layout="row">
+                <md-button ng-click="ctrl.parent.discard()" md-autofocus>
+                    discard
+                </md-button>
+                <span flex></span>
+                <md-button ng-click="ctrl.parent.preview()">
+                    Preview
+                </md-button>
+                <md-button ng-click="ctrl.parent.sendInvoice(ctrl.parent.selected)">
+                    Send
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+     

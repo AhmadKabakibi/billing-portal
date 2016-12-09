@@ -7,7 +7,7 @@
             POsService
         ]);
 
-    function POsService($http){
+    function POsService($http) {
 
         /*
          $http.get('/someUrl', config).then(successCallback, errorCallback);
@@ -31,8 +31,14 @@
             getPOs: function (params) {
                 return $http.post('http://localhost:3000/api/po/' + params.PONumber, {dateRange: params.dateRange});
             },
-            acceptPO:function(params){
+            acceptPO: function (params) {
                 return $http.put('http://localhost:3000/api/po/accept', {POList: params});
+            },
+            rejectePO: function (params) {
+                return $http.put('http://localhost:3000/api/po/reject', {
+                    PONumber: params.PONumber,
+                    comment: params.comment
+                });
             },
             getPartner: function () {
                 return $http.get('http://localhost:3000/api/pos/partners')
@@ -41,7 +47,10 @@
                 return $http.get('http://localhost:3000/api/pos/received')
             },
             DownloadArchiveFile: function (fileName) {
-                return $http.get('http://localhost:3000/api/ftp/'+fileName)
+                return $http.get('http://localhost:3000/api/ftp/' + fileName)
+            },
+            createInvocie: function (params) {
+                return $http.post('http://localhost:3000/api/po/invoice/create', params);
             }
         };
     }

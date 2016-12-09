@@ -2,7 +2,7 @@
 
 angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
         'ngSanitize', 'ui.router', 'ngMaterial', 'nvd3', 'app', 'permission',
-        'permission.ui','angular.filter'])
+        'permission.ui', 'angular.filter', 'ngMessages'])
 
     .config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider,
                       $mdIconProvider, USER_ROLES) {
@@ -190,12 +190,12 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
 
     .run(function ($rootScope, $state, $http, AUTH_EVENTS, AuthService, appConf) {
 
-       /* $rootScope.$on("$locationChangeStart", function(event, next, current,newState,oldState) {
-            // handle route changes
-            alert(newState+" : "+oldState +" $locationChangeStart:  "+next+" , "+current);
-        });*/
+        /* $rootScope.$on("$locationChangeStart", function(event, next, current,newState,oldState) {
+         // handle route changes
+         alert(newState+" : "+oldState +" $locationChangeStart:  "+next+" , "+current);
+         });*/
 
-        $rootScope.$on('$stateChangeStart', function (event, next, nextParams,previous, fromParams) {
+        $rootScope.$on('$stateChangeStart', function (event, next, nextParams, previous, fromParams) {
             var authorizedRoles = next.data.authorizedRoles;
             var authorizedRolesAdmin = next.data.authorizedRolesAdmin;
 
@@ -249,4 +249,28 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
 
     .constant('appConf', {
         baseURL: 'http://localhost:3000'
+    })
+
+
+    // The invoice displayed when the user first uses the app
+    .constant('DEFAULT_INVOICE', {
+        tax: 13.00,
+        invoice_number: 10,
+        customer_info: {
+            name: 'Mr. John Doe',
+            web_link: 'John Doe Designs Inc.',
+            address1: '1 Infinite Loop',
+            address2: 'Cupertino, California, US',
+            postal: '90210'
+        },
+        company_info: {
+            name: 'Metaware Labs',
+            web_link: 'www.metawarelabs.com',
+            address1: '123 Yonge Street',
+            address2: 'Toronto, ON, Canada',
+            postal: 'M5S 1B6'
+        },
+        items: [
+            {qty: 10, description: 'Gadget', cost: 9.95}
+        ]
     })
