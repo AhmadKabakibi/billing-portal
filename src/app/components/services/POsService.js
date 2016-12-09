@@ -40,6 +40,11 @@
                     comment: params.comment
                 });
             },
+            inovicePO:function(params){
+                return $http.put('http://localhost:3000/api/po/inovice', {
+                    PONumber: params.PONumber
+                });
+            },
             getPartner: function () {
                 return $http.get('http://localhost:3000/api/pos/partners')
             },

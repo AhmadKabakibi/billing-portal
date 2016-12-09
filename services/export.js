@@ -224,6 +224,10 @@ var service = module.exports = {
     rejectedPO: function (po) {
         return models.poheader.update({POStatus: 'Rejected'}, {where: {PONumber: po}});
     },
+    invociePO:function(po){
+        return models.poheader.update({POStatus: 'Invoiced'}, {where: {PONumber: po}});
+    }
+    ,
     createInvocie: function (params) {
 
       return  models.invoice.findAll({
@@ -242,7 +246,7 @@ var service = module.exports = {
                         ContactEmail: params.ContactEmail,
                         QuantityInvoiced: params.QuantityInvoiced,
                         Total: params.Total,
-                        poheaderPONumber: params.PONumber
+                        poheaderPONumber: params.poheaderPONumber
                     }).then(function (invoice) {
 
                     //todo create invoice PO details line

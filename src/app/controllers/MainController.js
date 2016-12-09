@@ -3,10 +3,10 @@
     angular
         .module('app')
         .controller('MainController', [
-            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$scope', '$rootScope', '$timeout', '$location', 'loginFactory', '$mdEditDialog', '$mdDialog', '$http', 'appConf',
+            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$scope', '$rootScope', '$timeout', '$location', 'loginFactory', '$mdEditDialog', '$mdDialog', '$http', 'appConf', '$mdToast', 'Upload', '$timeout',
             MainController
         ]);
-    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf) {
+    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout) {
         var vm = this;
 
         vm.getAll = getAll
@@ -314,6 +314,46 @@
         };
 
 
+        var last = {
+            bottom: false,
+            top: true,
+            left: false,
+            right: true
+        };
+
+        $scope.toastPosition = angular.extend({}, last);
+
+        $scope.getToastPosition = function () {
+            sanitizePosition();
+
+            return Object.keys($scope.toastPosition)
+                .filter(function (pos) {
+                    return $scope.toastPosition[pos];
+                })
+                .join(' ');
+        };
+
+        function sanitizePosition() {
+            var current = $scope.toastPosition;
+
+            if (current.bottom && last.top) current.top = false;
+            if (current.top && last.bottom) current.bottom = false;
+            if (current.right && last.left) current.left = false;
+            if (current.left && last.right) current.right = false;
+
+            last = angular.extend({}, current);
+        }
+
+        $scope.showSimpleStatus = function (status) {
+            var pinTo = $scope.getToastPosition();
+            $mdToast.show(
+                $mdToast.simple()
+                    .textContent(status)
+                    .position(pinTo)
+                    .hideDelay(3000)
+            );
+        }
+
         /*Authorization*/
 
         //$scope.currentUser = null;
@@ -585,6 +625,10 @@
             podetails: []
         };
 
+        $scope.invoicePreview = {
+            isDisabled: false
+        };
+
         //Handling charge
         $scope.addHandling = function () {
             $scope.invoice.podetails.push({
@@ -594,7 +638,8 @@
                 QuantityOrdered: '1',
                 QuantityBackordered: '',
                 QuantityInvoiced: '1',
-                Total: ''
+                Total: '',
+                poheaderPONumber: $rootScope.POdetails[0].PONumber
             });
         }
         //Freight Charge
@@ -606,7 +651,8 @@
                 QuantityOrdered: '1',
                 QuantityBackordered: '',
                 QuantityInvoiced: '1',
-                Total: ''
+                Total: '',
+                poheaderPONumber: $rootScope.POdetails[0].PONumber
             });
         }
         $scope.remove = function (index) {
@@ -614,7 +660,7 @@
         }
 
         $scope.preview = function () {
-
+            $scope.invoicePreview.isDisabled = true;
         }
 
         $scope.total = function () {
@@ -626,11 +672,32 @@
             return total;
         }
 
-        $scope.sendInvoice = function (POSelected) {
-            $scope.invoice.poheaderPONumber=POSelected.PONumber;
+        $scope.sendInvoice = function () {
             POsService.createInvocie($scope.invoice).then(function (response) {
-                //todo clear scopes
-                alert(response.success +" , "+JSON.toString(response.data));
+                if (response.data.success) {
+                    POsService.inovicePO({PONumber: $rootScope.POdetails[0].PONumber})
+                        .then(function (response) {
+                            //clear the incovie again and close the window
+                            $scope.invoice = {
+                                InvoiceNumber: '#####',
+                                InvoiceDate: new Date(),
+                                PurchaseOrder: '',
+                                ContactEmail: '',
+                                QuantityInvoiced: '',
+                                Total: '',
+                                poheaderPONumber: '',
+                                podetails: []
+                            }
+
+                            $scope.discard();
+
+                        }, function (error) {
+                            $scope.status = 'Unable to inovice a po data: ' + error.message;
+                            console.log($scope.status);
+                        });
+                } else {
+                    $scope.showSimpleStatus(response.data.data)
+                }
             }, function (error) {
                 $scope.status = 'Unable to create an Invocie data: ' + error.message;
                 console.log($scope.status);
@@ -641,11 +708,36 @@
             $mdDialog.hide()
         }
 
+        /*files*/
 
+        $scope.uploadFiles = function (files) {
+            $scope.files = files;
+            if (files && files.length) {
+                Upload.upload({
+                    url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
+                    data: {
+                        files: files
+                    }
+                }).then(function (response) {
+                    $timeout(function () {
+                        $scope.result = response.data;
+                    });
+                }, function (response) {
+                    if (response.status > 0) {
+                        $scope.errorMsg = response.status + ': ' + response.data;
+                    }
+                }, function (evt) {
+                    $scope.progress =
+                        Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                });
+            }
+        };
+
+        /*end files*/
         $scope.AcknowledgeInvoice = function (evt) {
             $mdDialog.show({
                 targetEvent: evt,
-                locals: {parent: $scope},
+                locals: {parent: $scope, root: $rootScope},
                 controller: angular.noop,
                 controllerAs: 'ctrl',
                 bindToController: true,

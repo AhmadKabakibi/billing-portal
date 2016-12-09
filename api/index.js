@@ -256,8 +256,8 @@ module.exports = function (apiRouter) {
             //todo send an email to admin using API SendGrid
             //todo use partner name instead of the code
 
-            NotificationEmail.to =config.email;
-            NotificationEmail.subject = "PO: "+req.body.PONumber+" was rejected by "+ req.user.code;
+            NotificationEmail.to = config.email;
+            NotificationEmail.subject = "PO: " + req.body.PONumber + " was rejected by " + req.user.code;
             NotificationEmail.html = req.body.comment;
             sendgrid.send(NotificationEmail, function (err, json) {
                 if (err) {
@@ -273,10 +273,20 @@ module.exports = function (apiRouter) {
         });
     });
 
+    //change the status of the PO from “Pending” to “Accepted”
+    //Admin Function
+    apiRouter.put('/po/inovice', function (req, res) {
+        return exportService.invociePO(req.body.PONumber).then(function (result) {
+            return successHandler(res, result);
+        }).catch(function (error) {
+            return errorHandler(res, error);
+        });
+    });
+
+
     //todo Create new invoice api
 
     apiRouter.post('/po/invoice/create', function (req, res) {
-
         return exportService.createInvocie({
             InvoiceNumber: req.body.InvoiceNumber,
             InvoiceDate: req.body.InvoiceDate,
@@ -284,12 +294,12 @@ module.exports = function (apiRouter) {
             ContactEmail: req.body.ContactEmail,
             QuantityInvoiced: req.body.QuantityInvoiced,
             Total: req.body.Total,
-            poheaderPONumber: req.body.PONumber,
-            podetails:req.body.podetails // array of lines
+            poheaderPONumber: req.body.poheaderPONumber,
+            podetails: req.body.podetails // array of lines
         }).then(function (result) {
-            if(!result){
+            if (!result) {
                 return res.json({success: false, data: "cannot enter the same invoice number twice"});
-            }else {
+            } else {
                 return successHandler(res, result);
             }
         }).catch(function (error) {
@@ -297,7 +307,6 @@ module.exports = function (apiRouter) {
         })
 
     });
-
 
 
     apiRouter.get('/users', function (req, res) {

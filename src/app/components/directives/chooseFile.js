@@ -17,7 +17,7 @@
                     scope.$apply(function () {
                         var files = e.target.files;
                         if (files[0]) {
-                            scope.fileName = files[0].name;
+                            scope.fileName = files;
                         } else {
                             scope.fileName = null;
                         }
