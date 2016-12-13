@@ -179,8 +179,7 @@
                             </md-input-container>
                             <md-input-container>
                                 <label>Purchase Order</label>
-                                <input ng-model="ctrl.parent.invoice.PurchaseOrder" type="number"
-                                       ng-disabled="ctrl.parent.invoicePreview.isDisabled">
+                                <input ng-model="ctrl.parent.invoice.PurchaseOrder" type="text" ng-disabled="true">
                             </md-input-container>
                             <md-input-container>
                                 <label>contact(email)</label>
@@ -257,34 +256,41 @@
                         </tbody>
                     </table>
 
-                    <md-content layout="row" layout-align="space-around center">
-                        <choose-file flex="25" layout="row" ng-disabled="ctrl.parent.invoicePreview.isDisabled">
+                    <md-content ng-controller="UploadController as up" layout="row" layout-align="space-around center">
+                    <!--    <choose-file flex="25" layout="row" ng-disabled="ctrl.parent.invoicePreview.isDisabled">
                             <input id="fileInput" type="file" class="ng-hide" multiple>
                             <md-input-container flex class="md-block">
                                 <input type="text" disabled>
                                 <div style="position: absolute;left: 5px;right: auto; bottom: 0px; font-size: 14px;line-height: 14px;transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);color: grey; ">
                                     Select your file / Only PDF files allowed.
                                 </div>
-                                <table>
-                                    <tr ng-repeat="file in fileName">
-                                        <td>{{$index+1}}</td>
-                                        <td>{{file.name}}</td>
-                                        <td ng-click="removeFile($index)">
-                                            <ng-md-icon icon="clear">
-                                                
-                                            </ng-md-icon>
-                                        </td>
-                                    </tr>
-                                </table>
                             </md-input-container>
                             <div>
                                 <md-button id="uploadButton" class="md-fab md-mini">
                                     <md-icon class="material-icons">attach_file</md-icon>
                                 </md-button>
                             </div>
-                        </choose-file>
+                        </choose-file>-->
 
-                        <div flex="40"></div>
+                        <form name="up.upload_form">
+                            <input type="file" ngf-select ng-model="up.file" name="file" multiple accept="application/pdf"
+                                   ngf-max-size="10MB"/>
+                            <!--<button type="submit" ng-click="up.submit()">Upload</button>
+                            -->
+                            <p>{{up.progress}}</p>
+                        </form>
+
+                        <div flex="40">
+                            <table>
+                                <tr ng-repeat="file in up.file">
+                                    <td>{{$index+1}} -</td>
+                                    <td>{{file.name}}</td>
+                                    <td ng-click="removeFile($index)">
+                                        <md-icon>close</md-icon>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                         <div flex="35" layout="row" style="border-bottom: 1px solid black;  box-shadow: 0 1px 0 black;">
 
                             <h3>Total USD: </h3>

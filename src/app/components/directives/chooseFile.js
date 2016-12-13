@@ -23,6 +23,10 @@
                         }
                     });
                 });
+                scope.removeFile = function (index) {
+                   /* alert(angular.toJson(scope.fileName));
+                    scope.fileName.remove(index);*/
+                }
             }
         };
     }

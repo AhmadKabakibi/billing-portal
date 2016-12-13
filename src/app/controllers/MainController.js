@@ -710,31 +710,30 @@
 
         /*files*/
 
-        $scope.uploadFiles = function (files) {
-            $scope.files = files;
-            if (files && files.length) {
-                Upload.upload({
-                    url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
-                    data: {
-                        files: files
-                    }
-                }).then(function (response) {
-                    $timeout(function () {
-                        $scope.result = response.data;
-                    });
-                }, function (response) {
-                    if (response.status > 0) {
-                        $scope.errorMsg = response.status + ': ' + response.data;
-                    }
-                }, function (evt) {
-                    $scope.progress =
-                        Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-                });
+        vm.submit = function () { //function to call on form submit
+            if (vm.upload_form.file.$valid && vm.file) { //check if from is valid
+                vm.upload(vm.file); //call upload function
             }
+        }
+
+        vm.upload = function (file) {
+            //ngFileUpload provides an Upload service
+            Upload.upload({
+                url: 'api/questions/'+Questions.getQid()+'/upload', //webAPI exposed to upload the file
+                data: {file: file} //pass file as data, should be user ng-model
+            }).then(function (resp) { //upload function returns a promise
+                $scope.$parent.appendMessage(resp.data.data);
+            }, function (resp) { //catch error
+            }, function (evt) {
+                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                vm.progress;// = 'progress: ' + progressPercentage + '% '; // capture upload progress
+            });
         };
+
 
         /*end files*/
         $scope.AcknowledgeInvoice = function (evt) {
+            $scope.invoice.PurchaseOrder = $rootScope.POdetails[0].PONumber
             $mdDialog.show({
                 targetEvent: evt,
                 locals: {parent: $scope, root: $rootScope},
