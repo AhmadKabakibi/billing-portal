@@ -732,6 +732,9 @@
 
 
         /*end files*/
+
+        $scope.date = new Date();
+
         $scope.AcknowledgeInvoice = function (evt) {
             $scope.invoice.PurchaseOrder = $rootScope.POdetails[0].PONumber
             $mdDialog.show({
@@ -753,6 +756,5 @@
                  '</md-dialog>'*/
             });
         };
-
     }
 })();

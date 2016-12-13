@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('app', ['ngMaterial', 'md.data.table','ngResource','ngFileUpload'])
+    angular.module('app', ['ngMaterial', 'md.data.table','ngResource','ngFileUpload','ngJsonExportExcel'])
 
         .config(['$compileProvider', '$mdThemingProvider', function ($compileProvider, $mdThemingProvider) {
             'use strict';

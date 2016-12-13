@@ -27,8 +27,9 @@
             <md-button
                     ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range,PartnerCode:partnerCode})">Run
             </md-button>
-            <md-button
-                    ng-click="">Export
+            <md-button ng-json-export-excel data="posHeader"
+                       report-fields="{PONumber: 'PO Number', PartnerName: 'Partner', PODate: 'Order Date',Division: 'Division data',OrderType: 'Order Type',PartnerCode: 'Partner Code',ShipToName: 'Ship to Name',POStatus: 'Status'}"
+                       filename="'MyPOs'" separator="," > Export
             </md-button>
         </md-card-actions>
 
