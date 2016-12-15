@@ -3,10 +3,10 @@
     angular
         .module('app')
         .controller('MainController', [
-            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$scope', '$rootScope', '$timeout', '$location', 'loginFactory', '$mdEditDialog', '$mdDialog', '$http', 'appConf', '$mdToast', 'Upload', '$timeout',
+            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$scope', '$rootScope', '$timeout', '$location', 'loginFactory', '$mdEditDialog', '$mdDialog', '$http', 'appConf', '$mdToast', 'Upload', '$timeout','$filter',
             MainController
         ]);
-    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout) {
+    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout,$filter) {
         var vm = this;
 
         vm.getAll = getAll
@@ -186,6 +186,7 @@
                 .then(function (response) {
                     //$scope.posHeader = removeDuplicate(response.data.data, 'PONumber');
                     $scope.posHeader = response.data.data;
+
                     //alert(JSON.stringify($scope.posHeader));
                 }, function (error) {
                     $scope.status = 'Unable to load customer data: ' + error.message;
@@ -201,9 +202,11 @@
                     $scope.status = 'Unable to load customer Partners data: ' + error.message;
                     console.log($scope.status);
                 });
+
         }
 
         getAll();
+        $scope.filter = {POStatus: "!!"};
 
         $scope.loadPOHeader = function (params) {
             $scope.promise = $timeout(function () {
@@ -282,7 +285,6 @@
                 .textContent('You can only select one PO at a time when requesting a change')
                 .targetEvent(event)
                 .ok('ok');
-
 
             if ($scope.selected.length > 1) {
                 $mdDialog.show(maxPo).then(function () {
@@ -615,7 +617,7 @@
          poheaderPONumber: data.PONumber
          */
         $scope.invoice = {
-            InvoiceNumber: '#####',
+            InvoiceNumber: '',
             InvoiceDate: new Date(),
             PurchaseOrder: '',
             ContactEmail: '',
@@ -679,7 +681,7 @@
                         .then(function (response) {
                             //clear the incovie again and close the window
                             $scope.invoice = {
-                                InvoiceNumber: '#####',
+                                InvoiceNumber: '',
                                 InvoiceDate: new Date(),
                                 PurchaseOrder: '',
                                 ContactEmail: '',
