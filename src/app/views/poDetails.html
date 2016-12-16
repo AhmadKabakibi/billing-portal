@@ -147,7 +147,7 @@
 </div>
 
 <script type="text/ng-template" id="invoice.tmpl.html">
-    <md-dialog aria-label="Acknowledge and invoice">
+    <md-dialog ng-controller="InvoiceController" aria-label="Acknowledge and invoice">
         <form ng-cloak>
             <md-toolbar>
                 <div class="md-toolbar-tools">
@@ -169,22 +169,22 @@
                         <md-content flex="30" layout="column">
                             <md-input-container>
                                 <label>Inovice number</label>
-                                <input ng-required="true" ng-model="ctrl.parent.invoice.InvoiceNumber" type="text"
-                                       ng-disabled="ctrl.parent.invoicePreview.isDisabled">
+                                <input ng-required="true" ng-model="invoice.InvoiceNumber" type="text"
+                                       ng-disabled="invoicePreview.isDisabled">
                             </md-input-container>
                             <md-input-container>
                                 <label>Invoice date</label>
-                                <md-datepicker ng-model="ctrl.parent.invoice.InvoiceDate"
-                                               ng-disabled="ctrl.parent.invoicePreview.isDisabled"></md-datepicker>
+                                <md-datepicker ng-model="invoice.InvoiceDate"
+                                               ng-disabled="invoicePreview.isDisabled"></md-datepicker>
                             </md-input-container>
                             <md-input-container>
                                 <label>Purchase Order</label>
-                                <input ng-model="ctrl.parent.invoice.PurchaseOrder" type="text" ng-disabled="true">
+                                <input ng-model="invoice.PurchaseOrder" type="text" ng-disabled="true">
                             </md-input-container>
                             <md-input-container>
                                 <label>contact(email)</label>
-                                <input ng-model="ctrl.parent.invoice.ContactEmail" type="email"
-                                       ng-disabled="ctrl.parent.invoicePreview.isDisabled">
+                                <input ng-model="invoice.ContactEmail" type="email"
+                                       ng-disabled="invoicePreview.isDisabled">
                             </md-input-container>
                         </md-content>
                     </md-content>
@@ -208,7 +208,31 @@
                         </thead>
                         <tbody>
 
-                        <tr ng-repeat="item in ctrl.parent.invoice.podetails">
+
+                        <tr ng-repeat="item in invoice.podetails_invoice">
+
+                            <!--<td><input type="text" ng-model="item.ItemCode" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.Description" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.WarehouseCode" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.PartnerPONumber" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.UnitofMeasure" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.QuantityOrdered" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.QuantityBackordered" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.QuantityInvoiced" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.UnitCost" class="form-control"/></td>
+                            <td><input type="text" ng-model="item.Total" class="form-control"/></td>
+                            -->
+                            <td>{{item.ItemCode}}</td>
+                            <td>{{item.Description}}</td>
+                            <td>{{item.UnitofMeasure}}</td>
+                            <td>{{item.QuantityOrdered}}</td>
+                            <td>{{item.QuantityBackordered}}</td>
+                            <td>{{item.QuantityInvoiced}}</td>
+                            <td>{{item.Total}}</td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="item in invoice.podetails">
 
                             <!--<td><input type="text" ng-model="item.ItemCode" class="form-control"/></td>
                             <td><input type="text" ng-model="item.Description" class="form-control"/></td>
@@ -228,27 +252,27 @@
                             <td>{{item.QuantityBackordered}}</td>
                             <td>{{item.QuantityInvoiced}}</td>
                             <td>
-                                <input type="number" min="1" step="any" ng-model="item.Total" class="form-control"
-                                       ng-disabled="ctrl.parent.invoicePreview.isDisabled"/>
+                                <input type="text" ng-model="item.Total" ng-currency min="1" max="99999" fraction="3"
+                                       ng-required="true" ng-disabled="invoicePreview.isDisabled"/>
                             </td>
 
                             <td>
-                                <button type="button" class="btn btn-danger" ng-click="ctrl.parent.remove($index)"
-                                        ng-disabled="ctrl.parent.invoicePreview.isDisabled">
+                                <button type="button" class="btn btn-danger" ng-click="remove($index)"
+                                        ng-disabled="invoicePreview.isDisabled">
                                     remove
                                 </button>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <button type="button" class="btn btn-primary" ng-click="ctrl.parent.addHandling()"
-                                        ng-disabled="ctrl.parent.invoicePreview.isDisabled">Add
+                                <button type="button" class="btn btn-primary" ng-click="addHandling()"
+                                        ng-disabled="invoicePreview.isDisabled">Add
                                     Handling Charge
                                 </button>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-primary" ng-click="ctrl.parent.addFreight()"
-                                        ng-disabled="ctrl.parent.invoicePreview.isDisabled">Add
+                                <button type="button" class="btn btn-primary" ng-click="addFreight()"
+                                        ng-disabled="invoicePreview.isDisabled">Add
                                     Freight Charge
                                 </button>
                             </td>
@@ -257,23 +281,24 @@
                     </table>
 
                     <md-content ng-controller="UploadController as up" layout="row" layout-align="space-around center">
-                    <!--    <choose-file flex="25" layout="row" ng-disabled="ctrl.parent.invoicePreview.isDisabled">
-                            <input id="fileInput" type="file" class="ng-hide" multiple>
-                            <md-input-container flex class="md-block">
-                                <input type="text" disabled>
-                                <div style="position: absolute;left: 5px;right: auto; bottom: 0px; font-size: 14px;line-height: 14px;transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);color: grey; ">
-                                    Select your file / Only PDF files allowed.
+                        <!--    <choose-file flex="25" layout="row" ng-disabled="invoicePreview.isDisabled">
+                                <input id="fileInput" type="file" class="ng-hide" multiple>
+                                <md-input-container flex class="md-block">
+                                    <input type="text" disabled>
+                                    <div style="position: absolute;left: 5px;right: auto; bottom: 0px; font-size: 14px;line-height: 14px;transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);color: grey; ">
+                                        Select your file / Only PDF files allowed.
+                                    </div>
+                                </md-input-container>
+                                <div>
+                                    <md-button id="uploadButton" class="md-fab md-mini">
+                                        <md-icon class="material-icons">attach_file</md-icon>
+                                    </md-button>
                                 </div>
-                            </md-input-container>
-                            <div>
-                                <md-button id="uploadButton" class="md-fab md-mini">
-                                    <md-icon class="material-icons">attach_file</md-icon>
-                                </md-button>
-                            </div>
-                        </choose-file>-->
+                            </choose-file>-->
 
                         <form name="up.upload_form">
-                            <input type="file" ngf-select ng-model="up.file" name="file" multiple accept="application/pdf"
+                            <input type="file" ngf-select ng-model="up.file" name="file" multiple
+                                   accept="application/pdf"
                                    ngf-max-size="10MB"/>
                             <!--<button type="submit" ng-click="up.submit()">Upload</button>
                             -->
@@ -294,7 +319,7 @@
                         <div flex="35" layout="row" style="border-bottom: 1px solid black;  box-shadow: 0 1px 0 black;">
 
                             <h3>Total USD: </h3>
-                            <h3 style="margin-left:5%">{{ctrl.parent.total()}}</h3>
+                            <h3 style="margin-left:5%">{{total()}}</h3>
                         </div>
                     </md-content>
                 </md-content>
@@ -302,15 +327,15 @@
             </md-dialog-content>
 
             <md-dialog-actions layout="row">
-                <md-button ng-click="ctrl.parent.discard()" md-autofocus>
+                <md-button ng-click="discard()" md-autofocus>
                     discard
                 </md-button>
 
                 <span flex></span>
-                <md-button ng-click="ctrl.parent.preview()">
+                <md-button ng-click="preview()">
                     Preview
                 </md-button>
-                <md-button ng-click="ctrl.parent.sendInvoice()">
+                <md-button ng-click="sendInvoice()">
                     Send
                 </md-button>
             </md-dialog-actions>

@@ -20,7 +20,8 @@
     "angular-filter": "^0.5.11",
     "angular-resource": "^1.5.8",
     "ng-file-upload": "^12.2.13",
-    "json-export-excel": "ng-json-export-excel#^1.0.2"
+    "json-export-excel": "ng-json-export-excel#^1.0.2",
+    "ng-currency": "^1.1.4"
   },
   "devDependencies": {}
 }
