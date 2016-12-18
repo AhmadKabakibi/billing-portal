@@ -47,13 +47,13 @@ NotificationEmail.setFilters({
 NotificationEmail.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
 
 
-/*
+
 FTPService.startFTP();
 
 FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
     logger.info("onFTPConnected Emitt " + CheckingTime);
 });
-*/
+
 
 //API
 module.exports = function (apiRouter) {
@@ -182,7 +182,8 @@ module.exports = function (apiRouter) {
         if (req.user.type == 'admin') {
             return exportService.getPOHeader({
                 PONumber: req.body.PONumber,
-                PartnerCode: req.body.PartnerCode
+                PartnerCode: req.body.PartnerCode,
+                POStatus:req.body.status
             }).then(function (result) {
                 var unq = removeDuplicate(result, 'PONumber');
                 return successHandler(res, unq);
@@ -193,7 +194,8 @@ module.exports = function (apiRouter) {
             parseCode(req.user.code, function (codes) {
                 return exportService.getPOHeaderCode({
                     PONumber: req.body.PONumber,
-                    PartnerCode: codes
+                    PartnerCode: codes,
+                    POStatus:req.body.status
                 }).then(function (result) {
                     var unq = removeDuplicate(result, 'PONumber');
                     return successHandler(res, unq);

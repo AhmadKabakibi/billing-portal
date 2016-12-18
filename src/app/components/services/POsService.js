@@ -19,13 +19,14 @@
                 return $http.get('http://localhost:3000/api/pos');
             },
             loadPOHeader: function (params) {
-                if (params.PartnerCode == "allCodes") {
+                if (params.PartnerCode == "allCodes" || params.status=="All") {
                     return $http.post('http://localhost:3000/api/pos', {PONumber: params.PONumber});
                 }
-                console.log("PONumber: " + params.PONumber + "PartnerCode: " + params.PartnerCode)
+                console.log("PONumber: " + params.PONumber + "PartnerCode: " + params.PartnerCode +" : " +params.status)
                 return $http.post('http://localhost:3000/api/pos', {
                     PONumber: params.PONumber,
-                    PartnerCode: params.PartnerCode
+                    PartnerCode: params.PartnerCode,
+                    status:params.status
                 });
             },
             getPOs: function (params) {

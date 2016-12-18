@@ -20,13 +20,16 @@
                 <md-option ng-repeat="st in POStatus" value="{{st.val}}">{{st.str}}</md-option>
             </md-select>
 
-            <md-select ng-model="range" placeholder="Select PO Date range" style="min-width: 200px;">
-                <md-option ng-repeat="date in dateRange" value="{{date.val}}">{{date.str}}</md-option>
+            <md-select ng-model="range" ng-model-options="{trackBy: '$value.date'}"
+                       placeholder="Select PO Date range" style="min-width: 200px;">
+                <md-option ng-repeat="date in dateRange" value="{{date.date}}">{{date.name}}</md-option>
             </md-select>
+
         </div>
         <md-card-actions layout="row" layout-align="start center">
             <md-button
-                    ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range,PartnerCode:partnerCode})">Run
+                    ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range,PartnerCode:partnerCode,status:filter.POStatus})">
+                Run
             </md-button>
             <md-button ng-json-export-excel data="posHeader"
                        report-fields="{PONumber: 'PO Number', PartnerName: 'Partner', PODate: 'Order Date',Division: 'Division data',OrderType: 'Order Type',PartnerCode: 'Partner Code',ShipToName: 'Ship to Name',POStatus: 'Status'}"

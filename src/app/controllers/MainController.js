@@ -3,10 +3,10 @@
     angular
         .module('app')
         .controller('MainController', [
-            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$scope', '$rootScope', '$timeout', '$location', 'loginFactory', '$mdEditDialog', '$mdDialog', '$http', 'appConf', '$mdToast', 'Upload', '$timeout','$filter',
+            'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$scope', '$rootScope', '$timeout', '$location', 'loginFactory', '$mdEditDialog', '$mdDialog', '$http', 'appConf', '$mdToast', 'Upload', '$timeout', '$filter', 'filterFilter',
             MainController
         ]);
-    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout,$filter) {
+    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout, $filter, filterFilter) {
         var vm = this;
 
         vm.getAll = getAll
@@ -23,11 +23,14 @@
         vm.menuItems = [];
 
         $scope.dateRange = [
-            {val: "30", str: "Last 30 days"},
-            {val: "60", str: "Last 60 days"},
-            {val: "7", str: "This week"},
-            {val: "1", str: "Today"}
+            {name: 'All items', date: moment().subtract(10, 'year')},
+            {name: 'Last 30 days', date: moment().subtract(1, 'month')},
+            {name: 'Last 60 days', date: moment().subtract(2, 'month')},
+            {name: 'This week', date: moment().subtract(7, 'days')},
+            {name: 'Today', date: moment().subtract(1, 'days')}
         ];
+
+
         $scope.POStatus = [
             {val: "Pending", str: "Pending"},
             {val: "Accepted", str: "Accepted"},
@@ -209,16 +212,22 @@
         $scope.filter = {POStatus: "!!"};
 
         $scope.loadPOHeader = function (params) {
-            $scope.promise = $timeout(function () {
-                // loading
-                POsService.loadPOHeader(params)
-                    .then(function (response) {
-                        $scope.posHeader = response.data.data;
-                    }, function (error) {
-                        $scope.status = 'Unable to load partner data: ' + error.message;
-                    });
+            return $scope.posHeader = $filter('filter')($scope.posHeader, {
+                PONumber: params.PONumber,
+                PartnerCode: params.PartnerCode.PartnerCode,
+                POStatus: params.status
+            })
+            /*  $scope.promise = $timeout(function () {
+             // loading
+             POsService.loadPOHeader(params)
+             .then(function (response) {
+             $scope.posHeader = response.data.data;
+             }, function (error) {
+             $scope.status = 'Unable to load partner data: ' + error.message;
+             });
 
-            }, 2000);
+             }, 2000);*/
+
         }
 
         $scope.logItem = function (item) {

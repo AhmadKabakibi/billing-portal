@@ -34,19 +34,20 @@ var service = module.exports = {
         });
     },
     getPOHeader: function (params) {
-        if (typeof params.PONumber != "undefined" && typeof params.PartnerCode != "undefined") {
+        if (typeof params.PONumber != "undefined" && typeof params.PartnerCode != "undefined" && typeof params.POStatus != "undefined") {
             console.log("both " + params.PONumber + " " + params.PartnerCode)
             return models.poheader.findAll({
                 where: {
                     PONumber: params.PONumber,
-                    PartnerCode: params.PartnerCode.PartnerCode
+                    PartnerCode: params.PartnerCode.PartnerCode,
+                    POStatus: params.POStatus
                 }
             });
         } else if (typeof params.PONumber != "undefined" || typeof params.PartnerCode == "undefined") {
             console.log("just PONumber " + params.PONumber + " " + params.PartnerCode)
             return models.poheader.findAll({
                 where: {
-                    PONumber: params.PONumber,
+                    PONumber: params.PONumber
                 }
             });
         } else if (typeof params.PONumber == "undefined" || typeof params.PartnerCode != "undefined") {
@@ -54,6 +55,13 @@ var service = module.exports = {
             return models.poheader.findAll({
                 where: {
                     PartnerCode: params.PartnerCode.PartnerCode
+                }
+            });
+        } else {
+            console.log("POStatus " + params.POStatus)
+            return models.poheader.findAll({
+                where: {
+                    POStatus: params.POStatus
                 }
             });
         }
