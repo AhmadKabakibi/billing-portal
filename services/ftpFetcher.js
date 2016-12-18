@@ -245,7 +245,28 @@ var service = module.exports = {
                                 POERPStatus: data.POERPStatus
                             }, {where: {PONumber: data.PONumber}}).then(function (PoHeader) {
                             console.log("PO exist line has been updated")
+                            return models.podetails.update(
+                                {
+                                    CustomerNumber: data.CustomerNumber,
+                                    FreightAmount: data.FreightAmount,
+                                    ItemCode: data.ItemCode,
+                                    Description: data.Description,
+                                    WarehouseCode: data.WarehouseCode,
+                                    PartnerPONumber: data.PartnerPONumber,
+                                    UnitofMeasure: data.UnitofMeasure,
+                                    QuantityOrdered: data.QuantityOrdered,
+                                    QuantityBackordered: data.QuantityBackordered,
+                                    QuantityInvoiced: data.QuantityInvoiced,
+                                    UnitCost: data.UnitCost,
+                                    Total: data.Total,
+                                    poheaderPONumber: data.PONumber
+                                }, {where: {poheaderPONumber: data.PONumber}}).then(function (PoHeader) {
 
+
+                            }).catch(function (err) {
+                                // err is whatever rejected the promise chain returned to the transaction callback
+                                logger.db(err)
+                            })
                         }).catch(function (err) {
                             // err is whatever rejected the promise chain returned to the transaction callback
                             logger.db(err)
@@ -267,16 +288,35 @@ var service = module.exports = {
                                 POERPStatus: data.POERPStatus
                             }).then(function (PoHeader) {
                             console.log("a new PO created line has been crearted")
+                            return models.podetails.create(
+                                {
+                                    CustomerNumber: data.CustomerNumber,
+                                    FreightAmount: data.FreightAmount,
+                                    ItemCode: data.ItemCode,
+                                    Description: data.Description,
+                                    WarehouseCode: data.WarehouseCode,
+                                    PartnerPONumber: data.PartnerPONumber,
+                                    UnitofMeasure: data.UnitofMeasure,
+                                    QuantityOrdered: data.QuantityOrdered,
+                                    QuantityBackordered: data.QuantityBackordered,
+                                    QuantityInvoiced: data.QuantityInvoiced,
+                                    UnitCost: data.UnitCost,
+                                    Total: data.Total,
+                                    poheaderPONumber: data.PONumber
+                                }).then(function (PODetalis) {
+                            }).catch(function (err) {
+                                // err is whatever rejected the promise chain returned to the transaction callback
+                                logger.db(err)
+                            })
                         }).catch(function (err) {
                             // err is whatever rejected the promise chain returned to the transaction callback
                             logger.db(err)
                         })
                     }
-                }
-                if (data.POERPStatus == 'O' || data.POERPStatus == 'C') {
+                } else if (data.POERPStatus == 'O' || data.POERPStatus == 'C') {
                     if (data.POERPStatus == 'C') {
                         //  PO Changed C replace existing PO if it is not invoiced yet
-                        return models.podetails.create(
+                        return models.podetails.update(
                             {
                                 CustomerNumber: data.CustomerNumber,
                                 FreightAmount: data.FreightAmount,
@@ -291,7 +331,9 @@ var service = module.exports = {
                                 UnitCost: data.UnitCost,
                                 Total: data.Total,
                                 poheaderPONumber: data.PONumber
-                            }).then(function (PODetalis) {
+                            }, {where: {poheaderPONumber: data.PONumber}}).then(function (PoHeader) {
+
+
                         }).catch(function (err) {
                             // err is whatever rejected the promise chain returned to the transaction callback
                             logger.db(err)
