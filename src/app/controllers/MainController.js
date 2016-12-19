@@ -189,6 +189,7 @@
                 .then(function (response) {
                     //$scope.posHeader = removeDuplicate(response.data.data, 'PONumber');
                     $scope.posHeader = response.data.data;
+                    $scope.GlobalPosHeader=$scope.posHeader;
 
                     //alert(JSON.stringify($scope.posHeader));
                 }, function (error) {
@@ -209,14 +210,22 @@
         }
 
         getAll();
-        $scope.filter = {POStatus: "!!"};
+
+        $scope.filter = {PONumber:"",POStatus: "!!", PartnerCode: "!!"};
 
         $scope.loadPOHeader = function (params) {
-            return $scope.posHeader = $filter('filter')($scope.posHeader, {
-                PONumber: params.PONumber,
-                PartnerCode: params.PartnerCode.PartnerCode,
-                POStatus: params.status
-            })
+
+            if (params.PartnerCode == "!!") {
+                return $scope.posHeader = $scope.GlobalPosHeader;
+            } else {
+                return $scope.posHeader = $filter('filter')($scope.posHeader, {
+                    PONumber: params.PONumber,
+                    PartnerCode: params.PartnerCode,
+                    POStatus: params.status
+                })
+            }
+
+
             /*  $scope.promise = $timeout(function () {
              // loading
              POsService.loadPOHeader(params)

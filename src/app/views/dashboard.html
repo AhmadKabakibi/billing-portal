@@ -3,15 +3,16 @@
     <md-card flex md-theme-watch layout="row" layout-wrap
              layout-padding style="background-color: #ECEFF1;">
         <div flex="50">
-            <md-select ng-show=" currentUser.type=='admin' " placeholder="Partner" ng-model="partnerCode"
-                       ng-model-options="{trackBy: '$value.PartnerCode'}" style="min-width: 200px;">
-                <md-option ng-value="code" ng-repeat="code in Partners">{{code.PartnerName}}</md-option>
+            <md-select ng-show=" currentUser.type=='admin' " placeholder="Partner" ng-model="filter.PartnerCode"
+                       style="min-width: 200px;">
+                <md-option value="!!">All</md-option>
+                <md-option ng-value="code.PartnerCode" ng-repeat="code in Partners">{{code.PartnerName}}</md-option>
             </md-select>
             <!--<p class="md-caption">selected customer: {{ user ? user.name : 'No one yet' }}</p>-->
 
             <md-input-container>
                 <label>PO Number</label>
-                <input ng-model="user.PONumber">
+                <input ng-model="filter.PONumber">
             </md-input-container>
         </div>
         <div flex="50">
@@ -28,7 +29,7 @@
         </div>
         <md-card-actions layout="row" layout-align="start center">
             <md-button
-                    ng-click="loadPOHeader({PONumber:user.PONumber,dateRange:range,PartnerCode:partnerCode,status:filter.POStatus})">
+                    ng-click="loadPOHeader({PONumber:filter.PONumber,dateRange:range,PartnerCode:filter.PartnerCode,status:filter.POStatus})">
                 Run
             </md-button>
             <md-button ng-json-export-excel data="posHeader"
@@ -126,7 +127,7 @@
             ng-repeat="item in posHeader| limitTo: query.limit : (query.page - 1) * query.limit">
         -->
         <tr class="poCell" md-row md-select="item" md-on-select="logItem" md-auto-select="options.autoSelect"
-            ng-repeat="item in posHeader  | filter:filter | limitTo: query.limit : (query.page - 1) * query.limit ">
+            ng-repeat="item in posHeader | filter:filter | limitTo: query.limit : (query.page - 1) * query.limit ">
             <td md-cell>
                 <md-button class="md-icon-button" ng-click="getPODetails({PONumber:item.PONumber})">
                     <md-icon>visibility</md-icon>
