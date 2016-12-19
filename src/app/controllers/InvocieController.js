@@ -75,8 +75,11 @@
          poheaderPONumber: data.PONumber
          */
 
+        //alert(($rootScope.currentUser.code).split(";"));
+
         $scope.invoice = {
             InvoiceNumber: '',
+            PartnerCode:  $rootScope.currentUser.code,
             InvoiceDate: new Date(),
             PurchaseOrder: $rootScope.POdetails[0].PONumber,
             ContactEmail: '',
@@ -156,6 +159,7 @@
                                 //clear the incovie again and close the window
                                 $scope.invoice = {
                                     InvoiceNumber: '',
+                                    PartnerCode:  $rootScope.currentUser.code,
                                     InvoiceDate: new Date(),
                                     PurchaseOrder: $rootScope.POdetails[0].PONumber,
                                     ContactEmail: '',
@@ -187,6 +191,7 @@
 
             $scope.invoice = {
                 InvoiceNumber: '',
+                PartnerCode:  $rootScope.currentUser.code,
                 InvoiceDate: new Date(),
                 PurchaseOrder: $rootScope.POdetails[0].PONumber,
                 ContactEmail: '',

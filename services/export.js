@@ -240,7 +240,8 @@ var service = module.exports = {
 
         return models.invoice.findAll({
             where: {
-                InvoiceNumber: params.InvoiceNumber
+                InvoiceNumber: params.InvoiceNumber,
+                PartnerCode: params.PartnerCode
             }
         }).then(function (rows) {
             if (rows.length > 0) {
@@ -249,6 +250,7 @@ var service = module.exports = {
                 return models.invoice.create(
                     {
                         InvoiceNumber: params.InvoiceNumber,
+                        PartnerCode: params.PartnerCode,
                         InvoiceDate: params.InvoiceDate,
                         PurchaseOrder: params.PurchaseOrder,
                         ContactEmail: params.ContactEmail,

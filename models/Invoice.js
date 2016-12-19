@@ -5,7 +5,8 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
     var Invoice = sequelize.define('invoice', {
-        InvoiceNumber: { type: DataTypes.STRING,primaryKey: true},
+        InvoiceNumber: { type: DataTypes.STRING},
+        PartnerCode: {type: DataTypes.STRING},
         InvoiceDate: { type: DataTypes.DATE},
         PurchaseOrder:{ type: DataTypes.STRING },
         ContactEmail:{ type: DataTypes.STRING },

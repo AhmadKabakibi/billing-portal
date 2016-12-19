@@ -289,6 +289,7 @@ module.exports = function (apiRouter) {
     apiRouter.post('/po/invoice/create', function (req, res) {
         return exportService.createInvocie({
             InvoiceNumber: req.body.InvoiceNumber,
+            PartnerCode: req.body.PartnerCode,
             InvoiceDate: req.body.InvoiceDate,
             PurchaseOrder: req.body.PurchaseOrder,
             ContactEmail: req.body.ContactEmail,
