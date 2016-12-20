@@ -180,6 +180,7 @@
 
                     POsService.createInvocie($scope.invoice).then(function (response) {
                         if (response.data.success) {
+
                             POsService.underReviewPO({PONumber: $rootScope.POdetails[0].PONumber})
                                 .then(function (response) {
                                     //clear the incovie again and close the window

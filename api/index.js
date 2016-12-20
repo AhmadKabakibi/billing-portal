@@ -47,14 +47,12 @@ NotificationEmail.setFilters({
 NotificationEmail.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
 
 
-/*
-
 FTPService.startFTP();
 
 FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
     logger.info("onFTPConnected Emitt " + CheckingTime);
 });
-*/
+
 
 
 //API
@@ -276,7 +274,6 @@ module.exports = function (apiRouter) {
     });
 
     //change the status of the PO from “Pending” to “Accepted”
-    //Admin Function
     apiRouter.put('/po/inovice', function (req, res) {
         return exportService.invociePO(req.body.PONumber).then(function (result) {
             return successHandler(res, result);
@@ -286,9 +283,23 @@ module.exports = function (apiRouter) {
     });
 
     //change the status of the PO to “UnderReviewPO”
-    //Admin Function
     apiRouter.put('/po/underreview', function (req, res) {
         return exportService.UnderReviewPO(req.body.PONumber).then(function (result) {
+            return successHandler(res, result);
+        }).catch(function (error) {
+            return errorHandler(res, error);
+        });
+    });
+
+    //Update POdetails line after acknowledge invocie
+    apiRouter.put('/poline', function (req, res) {
+        return exportService.updatePoLine({
+            id:req.body.id,
+            QuantityOrdered: req.body.QuantityOrdered,
+            QuantityInvoiced: req.body.QuantityInvoiced,
+            Total: req.body.Total,
+            PONumber: req.body.PONumber
+        }).then(function (result) {
             return successHandler(res, result);
         }).catch(function (error) {
             return errorHandler(res, error);
@@ -308,7 +319,8 @@ module.exports = function (apiRouter) {
             QuantityInvoiced: req.body.QuantityInvoiced,
             Total: req.body.Total,
             poheaderPONumber: req.body.poheaderPONumber,
-            podetails: req.body.podetails // array of lines
+            podetails_invoice:req.body.podetails_invoice, //array of updated lines
+            podetails: req.body.podetails // array of new lines
         }).then(function (result) {
             if (!result) {
                 return res.json({success: false, data: "cannot enter the same invoice number twice"});

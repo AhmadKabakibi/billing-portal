@@ -51,6 +51,15 @@
                     PONumber: params.PONumber
                 });
             },
+            updatePoLine:function(params){
+                return $http.put('http://localhost:3000/api/poline', {
+                    id:params.id,
+                    QuantityOrdered: params.QuantityOrdered,
+                    QuantityInvoiced: params.QuantityInvoiced,
+                    Total: params.Total,
+                    PONumber: params.PONumber
+                });
+            },
             getPartner: function () {
                 return $http.get('http://localhost:3000/api/pos/partners')
             },

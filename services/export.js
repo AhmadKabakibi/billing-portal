@@ -262,6 +262,21 @@ var service = module.exports = {
                         poheaderPONumber: params.PurchaseOrder
                     }).then(function (invoice) {
 
+                    //podetails_invoice
+
+                    for (var i = 0; i < params.podetails_invoice.length; i++) {
+                        models.podetails.update(
+                            {
+                                QuantityInvoiced: params.podetails_invoice[i].QuantityInvoiced,
+                                Total: params.Total
+                            }, {where: {id: params.podetails_invoice[i].id}}).then(function (PoLine) {
+
+                        }).catch(function (err) {
+                            // err is whatever rejected the promise chain returned to the transaction callback
+                            logger.db(err)
+                        })
+                    }
+
                     for (var i = 0; i < params.podetails.length; i++) {
                         params.podetails[i].Total = (params.podetails[i].Total).toString();
                         console.log(typeof(params.podetails[i].Total))
@@ -274,6 +289,19 @@ var service = module.exports = {
         }).catch(function (err) {
             // err is whatever rejected the promise chain returned to the transaction callback
             console.log(err)
+        })
+    },
+    updatePoLine: function (params) {
+        return models.podetails.update(
+            {
+                QuantityOrdered: params.QuantityOrdered,
+                QuantityInvoiced: params.QuantityInvoiced,
+                Total: params.Total
+            }, {where: {id: params.id}}).then(function (PoLine) {
+
+        }).catch(function (err) {
+            // err is whatever rejected the promise chain returned to the transaction callback
+            logger.db(err)
         })
     }
 }
