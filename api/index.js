@@ -48,11 +48,13 @@ NotificationEmail.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
 
 
 /*
+
 FTPService.startFTP();
 
 FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
     logger.info("onFTPConnected Emitt " + CheckingTime);
-});*/
+});
+*/
 
 
 //API
@@ -277,6 +279,16 @@ module.exports = function (apiRouter) {
     //Admin Function
     apiRouter.put('/po/inovice', function (req, res) {
         return exportService.invociePO(req.body.PONumber).then(function (result) {
+            return successHandler(res, result);
+        }).catch(function (error) {
+            return errorHandler(res, error);
+        });
+    });
+
+    //change the status of the PO to “UnderReviewPO”
+    //Admin Function
+    apiRouter.put('/po/underreview', function (req, res) {
+        return exportService.UnderReviewPO(req.body.PONumber).then(function (result) {
             return successHandler(res, result);
         }).catch(function (error) {
             return errorHandler(res, error);

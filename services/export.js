@@ -234,6 +234,9 @@ var service = module.exports = {
     },
     invociePO: function (po) {
         return models.poheader.update({POStatus: 'Invoiced'}, {where: {PONumber: po}});
+    },
+    UnderReviewPO: function (po) {
+        return models.poheader.update({POStatus: 'UnderReview'}, {where: {PONumber: po}});
     }
     ,
     createInvocie: function (params) {

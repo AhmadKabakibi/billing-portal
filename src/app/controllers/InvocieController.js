@@ -5,9 +5,8 @@
             InvoiceController
         ]);
 
-    function InvoiceController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout) {
+    function InvoiceController (navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout) {
         var vm = this;
-
 
 
         var last = {
@@ -29,7 +28,7 @@
                 .join(' ');
         };
 
-        function sanitizePosition() {
+        function sanitizePosition () {
             var current = $scope.toastPosition;
 
             if (current.bottom && last.top) current.top = false;
@@ -79,7 +78,7 @@
 
         $scope.invoice = {
             InvoiceNumber: '',
-            PartnerCode:  $rootScope.currentUser.code,
+            PartnerCode: $rootScope.currentUser.code,
             InvoiceDate: new Date(),
             PurchaseOrder: $rootScope.POdetails[0].PONumber,
             ContactEmail: '',
@@ -91,11 +90,14 @@
         };
 
         $scope.invoicePreview = {
-            isDisabled: false
+            isDisabled: false,
+            isUnderReviewTotal: false,
+            isUnderReview: false,
         };
 
         //Handling charge
         $scope.addHandling = function () {
+            $scope.invoicePreview.isUnderReview = true;
             $scope.invoice.podetails.push({
                 ItemCode: 'handling',
                 Description: 'handling',
@@ -109,6 +111,7 @@
         }
         //Freight Charge
         $scope.addFreight = function () {
+            $scope.invoicePreview.isUnderReview = true;
             $scope.invoice.podetails.push({
                 ItemCode: 'freight',
                 Description: 'handling',
@@ -122,6 +125,10 @@
         }
         $scope.remove = function (index) {
             $scope.invoice.podetails.splice(index, 1);
+
+            if ($scope.invoice.podetails.length == 0) {
+                $scope.invoicePreview.isUnderReview = false;
+            }
         }
 
         $scope.preview = function () {
@@ -130,6 +137,10 @@
 
         $scope.unpreview = function () {
             $scope.invoicePreview.isDisabled = false;
+        }
+
+        $scope.UnderReview = function () {
+            $scope.invoicePreview.isUnderReviewTotal = true;
         }
 
         $scope.total = function () {
@@ -149,41 +160,95 @@
         }
 
         $scope.sendInvoice = function () {
+            if ($scope.invoice.Total.length == 0 ) {
+                $scope.showSimpleStatus('Invoice Total can not be empty');
+            }
             if ($scope.invoice.InvoiceNumber == '') {
                 $scope.showSimpleStatus('InvoiceNumber can not be empty');
             } else {
-                POsService.createInvocie($scope.invoice).then(function (response) {
-                    if (response.data.success) {
-                        POsService.inovicePO({PONumber: $rootScope.POdetails[0].PONumber})
-                            .then(function (response) {
-                                //clear the incovie again and close the window
-                                $scope.invoice = {
-                                    InvoiceNumber: '',
-                                    PartnerCode:  $rootScope.currentUser.code,
-                                    InvoiceDate: new Date(),
-                                    PurchaseOrder: $rootScope.POdetails[0].PONumber,
-                                    ContactEmail: '',
-                                    QuantityInvoiced: '',
-                                    Total: '',
-                                    poheaderPONumber: '',
-                                    podetails: $rootScope.POdetails[0].podetails
-                                }
 
-                                $scope.discard();
-                                $state.go('dashboard');
+                var lines=$scope.invoice.podetails_invoice;
 
-                            }, function (error) {
-                                $scope.status = 'Unable to inovice a po data: ' + error.message;
-                                $scope.showSimpleStatus($scope.status)
-                                console.log($scope.status);
-                            });
-                    } else {
-                        $scope.showSimpleStatus(response.data.data)
+                for(var i=0;i< lines.length && !$scope.invoicePreview.isUnderReview ; i++){
+                    if(lines[i].QuantityOrdered != lines[i].QuantityInvoiced){
+                        $scope.invoicePreview.isUnderReview=true;
                     }
-                }, function (error) {
-                    $scope.status = 'Unable to create an Invocie data: ' + error.message;
-                    console.log($scope.status);
-                });
+                }
+
+                if($scope.invoicePreview.isUnderReviewTotal || $scope.invoicePreview.isUnderReview ) {
+                        console.log($rootScope.POdetails[0].PONumber+" is Under Review")
+
+                    POsService.createInvocie($scope.invoice).then(function (response) {
+                        if (response.data.success) {
+                            POsService.underReviewPO({PONumber: $rootScope.POdetails[0].PONumber})
+                                .then(function (response) {
+                                    //clear the incovie again and close the window
+                                    $scope.invoice = {
+                                        InvoiceNumber: '',
+                                        PartnerCode: $rootScope.currentUser.code,
+                                        InvoiceDate: new Date(),
+                                        PurchaseOrder: $rootScope.POdetails[0].PONumber,
+                                        ContactEmail: '',
+                                        QuantityInvoiced: '',
+                                        Total: '',
+                                        poheaderPONumber: '',
+                                        podetails: $rootScope.POdetails[0].podetails
+                                    }
+
+                                    $scope.discard();
+                                    $state.go('dashboard');
+
+                                }, function (error) {
+                                    $scope.status = 'Unable to inovice a po data: ' + error.message;
+                                    $scope.showSimpleStatus($scope.status)
+                                    console.log($scope.status);
+                                });
+                        } else {
+                            $scope.showSimpleStatus(response.data.data)
+                        }
+                    }, function (error) {
+                        $scope.status = 'Unable to create an Invocie data: ' + error.message;
+                        console.log($scope.status);
+                    });
+
+                }
+                else{
+                    console.log($rootScope.POdetails[0].PONumber+ " Invoiced")
+
+                    POsService.createInvocie($scope.invoice).then(function (response) {
+                        if (response.data.success) {
+                            POsService.inovicePO({PONumber: $rootScope.POdetails[0].PONumber})
+                                .then(function (response) {
+                                    //clear the incovie again and close the window
+                                    $scope.invoice = {
+                                        InvoiceNumber: '',
+                                        PartnerCode: $rootScope.currentUser.code,
+                                        InvoiceDate: new Date(),
+                                        PurchaseOrder: $rootScope.POdetails[0].PONumber,
+                                        ContactEmail: '',
+                                        QuantityInvoiced: '',
+                                        Total: '',
+                                        poheaderPONumber: '',
+                                        podetails: $rootScope.POdetails[0].podetails
+                                    }
+
+                                    $scope.discard();
+                                    $state.go('dashboard');
+
+                                }, function (error) {
+                                    $scope.status = 'Unable to inovice a po data: ' + error.message;
+                                    $scope.showSimpleStatus($scope.status)
+                                    console.log($scope.status);
+                                });
+                        } else {
+                            $scope.showSimpleStatus(response.data.data)
+                        }
+                    }, function (error) {
+                        $scope.status = 'Unable to create an Invocie data: ' + error.message;
+                        console.log($scope.status);
+                    });
+
+                }
             }
         }
 
@@ -191,7 +256,7 @@
 
             $scope.invoice = {
                 InvoiceNumber: '',
-                PartnerCode:  $rootScope.currentUser.code,
+                PartnerCode: $rootScope.currentUser.code,
                 InvoiceDate: new Date(),
                 PurchaseOrder: $rootScope.POdetails[0].PONumber,
                 ContactEmail: '',

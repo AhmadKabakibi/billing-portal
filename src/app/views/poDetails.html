@@ -227,8 +227,10 @@
                             <td>{{item.UnitofMeasure}}</td>
                             <td>{{item.QuantityOrdered}}</td>
                             <td>{{item.QuantityBackordered}}</td>
-                            <td>{{item.QuantityInvoiced}}</td>
-                            <td>{{item.Total}}</td>
+                            <td><input type="text" ng-model="item.QuantityInvoiced" class="form-control"
+                                       ng-required="true" ng-disabled="invoicePreview.isDisabled"/></td>
+                            <td><input type="text" ng-model="item.Total" class="form-control"
+                                       ng-required="true" ng-disabled="invoicePreview.isDisabled"/></td>
                             <td>
                             </td>
                         </tr>
@@ -248,11 +250,14 @@
                             <td>{{item.ItemCode}}</td>
                             <td>{{item.Description}}</td>
                             <td>{{item.UnitofMeasure}}</td>
-                            <td>{{item.QuantityOrdered}}</td>
+                            <td><input type="text" ng-model="item.QuantityOrdered" class="form-control"
+                                       ng-required="true" ng-disabled="invoicePreview.isDisabled" /></td>
                             <td>{{item.QuantityBackordered}}</td>
-                            <td>{{item.QuantityInvoiced}}</td>
+                            <td><input type="text" ng-model="item.QuantityInvoiced" class="form-control"
+                                       ng-required="true" ng-disabled="invoicePreview.isDisabled" /></td>
                             <td>
-                                <input type="text" ng-model="item.Total" ng-currency min="1" max="99999" fraction="3"
+                                <input type="text" ng-change="UnderReview()" ng-model="item.Total" ng-currency min="1"
+                                       max="99999" fraction="3"
                                        ng-required="true" ng-disabled="invoicePreview.isDisabled"/>
                             </td>
 
@@ -332,9 +337,14 @@
                 </md-button>
 
                 <span flex></span>
-                <md-button ng-click="preview()">
+                <md-button ng-show="!invoicePreview.isDisabled" ng-click="preview()">
                     Preview
                 </md-button>
+
+                <md-button ng-show="invoicePreview.isDisabled" ng-click="unpreview()">
+                    Undo
+                </md-button>
+
                 <md-button ng-click="sendInvoice()">
                     Send
                 </md-button>

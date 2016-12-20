@@ -46,6 +46,11 @@
                     PONumber: params.PONumber
                 });
             },
+           underReviewPO:function(params){
+                return $http.put('http://localhost:3000/api/po/underreview', {
+                    PONumber: params.PONumber
+                });
+            },
             getPartner: function () {
                 return $http.get('http://localhost:3000/api/pos/partners')
             },

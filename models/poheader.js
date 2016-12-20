@@ -12,7 +12,7 @@ module.exports = function (sequelize, DataTypes) {
         POERPStatus: {type: DataTypes.STRING},
         POStatus: {
             type: DataTypes.ENUM,
-            values: ['Pending', 'Accepted','Invoiced', 'Rejected'], // etc...
+            values: ['Pending', 'Accepted','Invoiced', 'Rejected','UnderReview'], // etc...
             allowNull: false,
             defaultValue: 'Pending'
         }
