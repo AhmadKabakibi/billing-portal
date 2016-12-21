@@ -289,6 +289,10 @@
             }
         }
 
+        $scope.removeFile = function (index) {
+            $scope.filesList.splice(index, 1);
+        }
+
         $scope.uploadAPI = function (file) {
             POsService.uploadInvocieFile({
                 PONumber: $rootScope.POdetails[0].PONumber,
