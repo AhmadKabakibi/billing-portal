@@ -130,7 +130,7 @@
 
     <div class="md-actions" layout="row" layout-align="start center">
 
-        <md-button class="md-warn" ng-click="AcknowledgeInvoice($event)">
+        <md-button class="md-warn" ng-show="POdetails[0].POStatus=='Accepted'" ng-click="AcknowledgeInvoice($event)">
             <div class="md-tile-content">Acknowledge</div>
             <md-tooltip>
                 Acknowledge and invoice

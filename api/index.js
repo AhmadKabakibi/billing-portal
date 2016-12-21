@@ -4,6 +4,7 @@ var exportService = require('../services/export.js'),
     usersService = require('../services/users.js'),
     FTPService = require('../services/ftpFetcher.js'),
     ParserService = require('../services/parser.js'),
+    FilesService = require('../services/files.js'),
     logger = require('../services/logger.js'),
     successHandler = function (res, result) {
         res.json({success: true, data: result});
@@ -48,12 +49,12 @@ NotificationEmail.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
 
 
 /*
-FTPService.startFTP();
+ FTPService.startFTP();
 
-FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
-    logger.info("onFTPConnected Emitt " + CheckingTime);
-});
-*/
+ FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
+ logger.info("onFTPConnected Emitt " + CheckingTime);
+ });
+ */
 
 
 
@@ -185,7 +186,7 @@ module.exports = function (apiRouter) {
             return exportService.getPOHeader({
                 PONumber: req.body.PONumber,
                 PartnerCode: req.body.PartnerCode,
-                POStatus:req.body.status
+                POStatus: req.body.status
             }).then(function (result) {
                 var unq = removeDuplicate(result, 'PONumber');
                 return successHandler(res, unq);
@@ -197,7 +198,7 @@ module.exports = function (apiRouter) {
                 return exportService.getPOHeaderCode({
                     PONumber: req.body.PONumber,
                     PartnerCode: codes,
-                    POStatus:req.body.status
+                    POStatus: req.body.status
                 }).then(function (result) {
                     var unq = removeDuplicate(result, 'PONumber');
                     return successHandler(res, unq);
@@ -296,7 +297,7 @@ module.exports = function (apiRouter) {
     //Update POdetails line after acknowledge invocie
     apiRouter.put('/poline', function (req, res) {
         return exportService.updatePoLine({
-            id:req.body.id,
+            id: req.body.id,
             QuantityOrdered: req.body.QuantityOrdered,
             QuantityInvoiced: req.body.QuantityInvoiced,
             Total: req.body.Total,
@@ -321,7 +322,7 @@ module.exports = function (apiRouter) {
             QuantityInvoiced: req.body.QuantityInvoiced,
             Total: req.body.Total,
             poheaderPONumber: req.body.poheaderPONumber,
-            podetails_invoice:req.body.podetails_invoice, //array of updated lines
+            podetails_invoice: req.body.podetails_invoice, //array of updated lines
             podetails: req.body.podetails // array of new lines
         }).then(function (result) {
             if (!result) {
@@ -333,6 +334,69 @@ module.exports = function (apiRouter) {
             return errorHandler(res, error);
         })
 
+    });
+
+    /** API path that will upload the files*/
+
+    apiRouter.post('/po/invoice/:PONumber/upload', FilesService.middleware.single('file'), function (req, res) {
+        return QuestionsService.createPost({
+            questionId: req.params.Qid,
+            user: req.user,
+            message: req.file.filename,
+            type: 'file',
+            metadata: {
+                mimetype: req.file.mimetype,
+                path: req.file.destination.split('/').pop(),
+                filename: req.file.filename,
+                originalFilename: req.file.originalname,
+                size: req.file.size
+            }
+        }).then(function (result) {
+
+            /*Notify*/
+            QuestionsService.listUsers({questionId: req.params.Qid}).then(function (result) {
+                var users = sanitizeUsers(result);
+                console.log("list:" + JSON.stringify(users));
+                users.forEach(function (item) {
+                    if (req.user.email != item.email) {
+                        QuestionsService.getMetadata(req.params.Qid).then(function (metadata) {
+                            NotificationEmail.to = item.email;
+                            NotificationEmail.html = xss('<h2>Hi ' + item.name + '</h2> </br> <h2>you have a new message on <a href="http://helpdesk.openembassy.nl/user#/" target="_target">Open Embassy!</a><h2> </br>' + metadata.title + '<br>' + req.file.filename);
+                            sendgrid.send(NotificationEmail, function (err, json) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log('Notify a new message uploaded! ' + item.email);
+                                }
+                            });
+                        });
+                    }
+                });
+
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            });
+            /*End-Notify*/
+            return successHandler(res, result);
+        }).catch(function (error) {
+            return errorHandler(res, error);
+        });
+    });
+
+    apiRouter.get('/po/invoice/:PONumber/file/:uuid/:filename', function (req, res) {
+        return FilesService.getPath({
+            uuid: req.params.uuid,
+            filename: req.params.filename
+        }).then(function (filePath) {
+            return res.sendFile(filePath, {
+                dotfiles: 'deny',
+                headers: {
+                    'Content-Disposition': 'attachment; filename="' + req.params.filename + '"'
+                }
+            });
+        }).catch(function (error) {
+            return errorHandler(res, error);
+        });
     });
 
 
@@ -443,7 +507,7 @@ module.exports = function (apiRouter) {
 
 }
 
-function parseCode(cd, callback) {
+function parseCode (cd, callback) {
     var codes = [];
     var code = cd.split(";");
     for (var i = 0; i < code.length; i++) {
@@ -452,7 +516,7 @@ function parseCode(cd, callback) {
     return callback(codes)
 }
 
-function removeDuplicate(arr, prop) {
+function removeDuplicate (arr, prop) {
     var new_arr = [];
     var lookup = {};
     for (var i in arr) {
@@ -464,7 +528,7 @@ function removeDuplicate(arr, prop) {
     return new_arr;
 }
 
-function Receivedfiles(files, callback) {
+function Receivedfiles (files, callback) {
 
     var files_report = []
 
