@@ -128,6 +128,18 @@
     </section>
 -->
 
+    <md-list class="md-actions" ng-show="POdetails[0].invoicefiles.length>0">
+        <md-subheader class="md-no-sticky">Invoice Attachments</md-subheader>
+        <md-list-item ng-repeat="file in POdetails[0].invoicefiles">
+            <p> {{file.filename}}
+                <a
+                        href="http://localhost:3000/api/po/invoice/file/{{file.path}}/{{file.filename}}">
+                    <md-icon>file_download</md-icon>
+                </a>
+            </p>
+        </md-list-item>
+    </md-list>
+
     <div class="md-actions" layout="row" layout-align="start center">
 
         <md-button class="md-warn" ng-show="POdetails[0].POStatus=='Accepted'" ng-click="AcknowledgeInvoice($event)">
@@ -251,10 +263,10 @@
                             <td>{{item.Description}}</td>
                             <td>{{item.UnitofMeasure}}</td>
                             <td><input type="text" ng-model="item.QuantityOrdered" class="form-control"
-                                       ng-required="true" ng-disabled="invoicePreview.isDisabled" /></td>
+                                       ng-required="true" ng-disabled="invoicePreview.isDisabled"/></td>
                             <td>{{item.QuantityBackordered}}</td>
                             <td><input type="text" ng-model="item.QuantityInvoiced" class="form-control"
-                                       ng-required="true" ng-disabled="invoicePreview.isDisabled" /></td>
+                                       ng-required="true" ng-disabled="invoicePreview.isDisabled"/></td>
                             <td>
                                 <input type="text" ng-change="UnderReview()" ng-model="item.Total" ng-currency min="1"
                                        max="99999" fraction="3"
@@ -285,7 +297,7 @@
                         </tbody>
                     </table>
 
-                    <md-content ng-controller="UploadController as up" layout="row" layout-align="space-around center">
+                    <md-content layout="row" layout-align="space-around center">
                         <!--    <choose-file flex="25" layout="row" ng-disabled="invoicePreview.isDisabled">
                                 <input id="fileInput" type="file" class="ng-hide" multiple>
                                 <md-input-container flex class="md-block">
@@ -301,18 +313,16 @@
                                 </div>
                             </choose-file>-->
 
-                        <form name="up.upload_form">
-                            <input type="file" ngf-select ng-model="up.file" name="file" multiple
-                                   accept="application/pdf"
-                                   ngf-max-size="10MB"/>
+                        <form>
+                            <input type="file" ngf-select ng-model="filesList" name="filesList" multiple
+                                   accept="application/pdf" ngf-max-size="10MB"/>
                             <!--<button type="submit" ng-click="up.submit()">Upload</button>
                             -->
-                            <p>{{up.progress}}</p>
                         </form>
 
                         <div flex="40">
                             <table>
-                                <tr ng-repeat="file in up.file">
+                                <tr ng-repeat="file in filesList">
                                     <td>{{$index+1}} -</td>
                                     <td>{{file.name}}</td>
                                     <td ng-click="removeFile($index)">

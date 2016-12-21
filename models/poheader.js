@@ -26,6 +26,7 @@ module.exports = function (sequelize, DataTypes) {
             associate: function (models) {
                 POHeader.hasMany(models.podetails);
                 POHeader.hasMany(models.invoice);
+                POHeader.hasMany(models.invoicefiles);
             }
         }
     });

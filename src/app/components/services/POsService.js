@@ -7,7 +7,7 @@
             POsService
         ]);
 
-    function POsService($http) {
+    function POsService ($http) {
 
         /*
          $http.get('/someUrl', config).then(successCallback, errorCallback);
@@ -19,14 +19,14 @@
                 return $http.get('http://localhost:3000/api/pos');
             },
             loadPOHeader: function (params) {
-                if (params.PartnerCode == "allCodes" || params.status=="All") {
+                if (params.PartnerCode == "allCodes" || params.status == "All") {
                     return $http.post('http://localhost:3000/api/pos', {PONumber: params.PONumber});
                 }
-                console.log("PONumber: " + params.PONumber + "PartnerCode: " + params.PartnerCode +" : " +params.status)
+                console.log("PONumber: " + params.PONumber + "PartnerCode: " + params.PartnerCode + " : " + params.status)
                 return $http.post('http://localhost:3000/api/pos', {
                     PONumber: params.PONumber,
                     PartnerCode: params.PartnerCode,
-                    status:params.status
+                    status: params.status
                 });
             },
             getPOs: function (params) {
@@ -41,19 +41,19 @@
                     comment: params.comment
                 });
             },
-            inovicePO:function(params){
+            inovicePO: function (params) {
                 return $http.put('http://localhost:3000/api/po/inovice', {
                     PONumber: params.PONumber
                 });
             },
-           underReviewPO:function(params){
+            underReviewPO: function (params) {
                 return $http.put('http://localhost:3000/api/po/underreview', {
                     PONumber: params.PONumber
                 });
             },
-            updatePoLine:function(params){
+            updatePoLine: function (params) {
                 return $http.put('http://localhost:3000/api/poline', {
-                    id:params.id,
+                    id: params.id,
                     QuantityOrdered: params.QuantityOrdered,
                     QuantityInvoiced: params.QuantityInvoiced,
                     Total: params.Total,
@@ -71,6 +71,22 @@
             },
             createInvocie: function (params) {
                 return $http.post('http://localhost:3000/api/po/invoice/create', params);
+            },
+            uploadInvocieFile: function (params) {
+                return $http({
+                    method: 'POST',
+                    url: 'http://localhost:3000/api/po/invoice/' + params.PONumber + '/upload',
+                    headers: {'Content-Type': undefined},
+                    data: params,
+                    transformRequest: function (data, headersGetter) {
+                        var formData = new FormData();
+                        angular.forEach(data, function (value, key) {
+                            formData.append(key, value);
+                        });
+                        return formData;
+                    }
+                })
+
             }
         };
     }

@@ -1,30 +1,32 @@
 (function () {
     angular
         .module('app')
-        .controller('UploadController', ['$scope', '$rootScope', '$stateParams', 'Upload', '$window',
+        .controller('UploadController', ['$scope', '$rootScope', '$stateParams', 'Upload', '$window', 'POsService',
             UploadController
         ]);
 
-    function UploadController($scope, $rootScope, $state, $stateParams,Upload, $window) {
+    function UploadController ($scope, $rootScope, $state, $stateParams, Upload, $window, POsService) {
         var vm = this;
-        vm.submit = function () { //function to call on form submit
-            if (vm.upload_form.file.$valid && vm.file) { //check if from is valid
-                vm.upload(vm.file); //call upload function
+
+        $rootScope.submitFile = function () { //function to call on form submit
+            for (var i = 0; i < vm.file.length; i++) {
+                //check if from is valid
+                $scope.uploadAPI(vm.file[i]);
             }
         }
 
-        vm.upload = function (file) {
-            //ngFileUpload provides an Upload service
-            Upload.upload({
-                url: 'api/upload', //webAPI exposed to upload the file
-                data: {file: file} //pass file as data, should be user ng-model
-            }).then(function (resp) { //upload function returns a promise
-                $scope.$parent.appendMessage(resp.data.data);
-            }, function (resp) { //catch error
-            }, function (evt) {
-                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                vm.progress;// = 'progress: ' + progressPercentage + '% '; // capture upload progress
+        $scope.uploadAPI = function (file) {
+            POsService.uploadInvocieFile({
+                PONumber: $rootScope.POdetails[0].PONumber,
+                file: file
+            }).then(function (response) {
+
+            }, function (error) {
+                $scope.status = 'Unable to create an Invocie data: ' + error.message;
+                //$scope.showSimpleStatus($scope.status)
+                console.log($scope.status);
             });
+
         };
     }
 })();

@@ -147,9 +147,12 @@
             var total = 0;
             var total_lines = 0;
 
-            for (var i = 0; i < $scope.invoice.podetails_invoice.length; i++) {
-                var line = $scope.invoice.podetails_invoice[i];
-                total_lines += parseFloat(line.Total);
+            if(typeof ($scope.invoice.podetails_invoice) != "undefined" ){
+
+                for (var i = 0; i < $scope.invoice.podetails_invoice.length; i++) {
+                    var line = $scope.invoice.podetails_invoice[i];
+                    total_lines += parseFloat(line.Total);
+                }
             }
 
             angular.forEach($scope.invoice.podetails, function (item) {
@@ -166,6 +169,8 @@
             if ($scope.invoice.InvoiceNumber == '') {
                 $scope.showSimpleStatus('InvoiceNumber can not be empty');
             } else {
+
+                $scope.submitFile();
 
                 var lines=$scope.invoice.podetails_invoice;
 
@@ -193,6 +198,7 @@
                                         QuantityInvoiced: '',
                                         Total: '',
                                         poheaderPONumber: '',
+                                        podetails_invoice: $rootScope.POdetails[0].podetails,
                                         podetails: $rootScope.POdetails[0].podetails
                                     }
 
@@ -230,6 +236,7 @@
                                         QuantityInvoiced: '',
                                         Total: '',
                                         poheaderPONumber: '',
+                                        podetails_invoice: $rootScope.POdetails[0].podetails,
                                         podetails: $rootScope.POdetails[0].podetails
                                     }
 
@@ -264,6 +271,7 @@
                 QuantityInvoiced: '',
                 Total: '',
                 poheaderPONumber: '',
+                podetails_invoice: $rootScope.POdetails[0].podetails,
                 podetails: $rootScope.POdetails[0].podetails
             }
 
@@ -271,6 +279,29 @@
         }
 
         $scope.date = new Date();
+
+        $scope.filesList=[];
+
+        $scope.submitFile = function () { //function to call on form submit
+            for (var i = 0; i < $scope.filesList.length; i++) {
+                //check if from is valid
+                $scope.uploadAPI($scope.filesList[i]);
+            }
+        }
+
+        $scope.uploadAPI = function (file) {
+            POsService.uploadInvocieFile({
+                PONumber: $rootScope.POdetails[0].PONumber,
+                file: file
+            }).then(function (response) {
+
+            }, function (error) {
+                $scope.status = 'Unable to create an Invocie data: ' + error.message;
+                //$scope.showSimpleStatus($scope.status)
+                console.log($scope.status);
+            });
+
+        };
 
     }
 })();

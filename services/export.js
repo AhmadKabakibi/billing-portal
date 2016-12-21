@@ -144,7 +144,7 @@ var service = module.exports = {
                 where: {
                     PONumber: params.PONumber
                 },
-                include: [{model: models.podetails}],
+                include: [{model: models.podetails},{model: models.invoicefiles}],
 
             });
         }
@@ -221,7 +221,7 @@ var service = module.exports = {
                 where: {
                     PONumber: params.PONumber
                 },
-                include: [{model: models.podetails}]
+                include: [{model: models.podetails},{model: models.invoicefiles}]
             });
         }
     },
@@ -302,6 +302,18 @@ var service = module.exports = {
         }).catch(function (err) {
             // err is whatever rejected the promise chain returned to the transaction callback
             logger.db(err)
+        })
+    },
+    createFile: function (params) {
+        return models.invoicefiles.create(
+            {
+                mimetype: params.mimetype,
+                path:params.path,
+                filename: params.filename,
+                originalFilename: params.originalname,
+                size: params.size,
+                poheaderPONumber: params.poheaderPONumber
+            }).then(function (file) {
         })
     }
 }

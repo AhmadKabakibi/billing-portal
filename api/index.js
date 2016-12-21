@@ -48,13 +48,11 @@ NotificationEmail.setFilters({
 NotificationEmail.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
 
 
-/*
  FTPService.startFTP();
 
  FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
  logger.info("onFTPConnected Emitt " + CheckingTime);
  });
- */
 
 
 
@@ -339,51 +337,21 @@ module.exports = function (apiRouter) {
     /** API path that will upload the files*/
 
     apiRouter.post('/po/invoice/:PONumber/upload', FilesService.middleware.single('file'), function (req, res) {
-        return QuestionsService.createPost({
-            questionId: req.params.Qid,
-            user: req.user,
-            message: req.file.filename,
-            type: 'file',
-            metadata: {
-                mimetype: req.file.mimetype,
-                path: req.file.destination.split('/').pop(),
-                filename: req.file.filename,
-                originalFilename: req.file.originalname,
-                size: req.file.size
-            }
+        return exportService.createFile({
+            mimetype: req.file.mimetype,
+            path: req.file.destination.split('/').pop(),
+            filename: req.file.filename,
+            originalFilename: req.file.originalname,
+            size: req.file.size,
+            poheaderPONumber: req.params.PONumber
         }).then(function (result) {
-
-            /*Notify*/
-            QuestionsService.listUsers({questionId: req.params.Qid}).then(function (result) {
-                var users = sanitizeUsers(result);
-                console.log("list:" + JSON.stringify(users));
-                users.forEach(function (item) {
-                    if (req.user.email != item.email) {
-                        QuestionsService.getMetadata(req.params.Qid).then(function (metadata) {
-                            NotificationEmail.to = item.email;
-                            NotificationEmail.html = xss('<h2>Hi ' + item.name + '</h2> </br> <h2>you have a new message on <a href="http://helpdesk.openembassy.nl/user#/" target="_target">Open Embassy!</a><h2> </br>' + metadata.title + '<br>' + req.file.filename);
-                            sendgrid.send(NotificationEmail, function (err, json) {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    console.log('Notify a new message uploaded! ' + item.email);
-                                }
-                            });
-                        });
-                    }
-                });
-
-            }).catch(function (error) {
-                return errorHandler(res, error);
-            });
-            /*End-Notify*/
             return successHandler(res, result);
         }).catch(function (error) {
             return errorHandler(res, error);
         });
     });
 
-    apiRouter.get('/po/invoice/:PONumber/file/:uuid/:filename', function (req, res) {
+    apiRouter.get('/po/invoice/file/:uuid/:filename', function (req, res) {
         return FilesService.getPath({
             uuid: req.params.uuid,
             filename: req.params.filename

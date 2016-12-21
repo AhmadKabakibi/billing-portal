@@ -2,7 +2,7 @@
 
 angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
         'ngSanitize', 'ui.router', 'ngMaterial', 'nvd3', 'app', 'permission',
-        'permission.ui', 'angular.filter', 'ngMessages'])
+        'permission.ui', 'angular.filter', 'ngMessages','ngFileUpload'])
 
     .config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider,
                       $mdIconProvider, USER_ROLES) {
