@@ -47,6 +47,7 @@ NotificationEmail.setFilters({
 });
 NotificationEmail.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
 
+/*
 
 FTPService.startFTP();
 
@@ -54,6 +55,7 @@ FTPService.on(FTPService.events.onFTPConnected, function (CheckingTime) {
     logger.info("onFTPConnected Emitt " + CheckingTime);
 });
 
+*/
 
 //API
 module.exports = function (apiRouter) {
