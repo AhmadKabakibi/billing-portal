@@ -61,11 +61,16 @@ var service = module.exports = {
         events.EventEmitter.call(service);
         service.__proto__ = events.EventEmitter.prototype;
 
+
         ftp.connect(function () {
             var now = moment();
             service.emit(service.events.onFTPConnected, now.format('YYYY-MM-DD hh:mm'));
-            service.sweepFTP();
+
+            if (config.ftp.parser) {
+                service.sweepFTP();
+            }
             service.pingFTP();
+            service.generateInvoicedPos();
         });
 
     },
@@ -80,6 +85,53 @@ var service = module.exports = {
             logger.info("FTP ping Ok: " + info);
         });
         setTimeout(service.pingFTP, 60000);
+    },
+    generateInvoicedPos: function () {
+
+        console.log('generate Invoiced Pos to FTP every ' + (config.ftp.intervalExport / 1000) / 60 + ' minutes!');
+        logger.info('generate Invoiced Pos to FTP every' + (config.ftp.intervalExport / 1000) / 60 + ' minutes!');
+
+        var csv = "";
+
+        models.podetails.findAll({
+            include: [{model: models.poheader, where: {POStatus: 'Invoiced'}, include: [{model: models.invoice}]}]
+        }).then(function (Invoicedline) {
+
+            Invoicedline.forEach(function (line) {
+
+                //console.log(JSON.stringify(line))
+
+                csv += 'I' + ',' + '' + ',' + moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY') + ',' + line.poheaderPONumber + ',' + line.poheader.Division + ',' + line.poheader.PartnerCode + ',' + line.poheader.PartnerName + ',' + moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY') + ',' + line.poheader.invoices[0].InvoiceNumber + ',' + moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY') + ',' + 'NONTAX' + ',' + line.FreightAmount + ',' + '' + ',' + line.ItemCode + ',' + '' + ',' + line.UnitofMeasure + ',' + line.WarehouseCode + ',' + line.QuantityOrdered + ',' + line.QuantityInvoiced + ',' + line.UnitCost + ',' + line.Total + '\r\n';
+            })
+
+            console.log(csv)
+
+            var now = new moment();
+            var generatedFile = 'POInvImport-' + now.format('YYYYMMDDhhmmss')+'.txt';
+
+            fs.writeFile(path.join(ftpLocal, generatedFile), csv, function (err) {
+                if (err) {
+                    logger.error('error creating new export csv ' + generatedFile + ' ' + err);
+                }
+
+                ftp.put([path.join(ftpLocal, generatedFile), path.join(config.ftp.rootExport, generatedFile)], function (status) {
+
+                    fs.unlink(path.join(ftpLocal, generatedFile), function (err) {
+                        if (err) {
+                            logger.error('error deleting ' + generatedFile + ' ' + err);
+                        }
+                        logger.info(generatedFile + ' deleted successfully from local disk')
+                    });
+
+                });
+
+            });
+
+        })
+
+
+        setTimeout(service.generateInvoicedPos, config.ftp.intervalExport);
+
     },
     sweepFTP: function () {
         ftp.ls(config.ftp.root, function (err, fileslist) {

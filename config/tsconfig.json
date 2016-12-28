@@ -14,14 +14,17 @@
       "local":"ftp",
       "remote":"/",
       "root":"/POExport",
+      "rootExport":"/POImport",
       "archive":"/Archive",
       "interval":900000,
+      "intervalExport":3600000,
       "host":"ftp.r-pac.com",
       "port":21,
       "user":"rpacnysp",
       "password":"ku2rRpKb",
       "pass":"ku2rRpKb",
-      "debug":false
+      "debug":false,
+      "parser":false
     },
     "secret":"r-pacSecret",
     "email":"ahmadkbakibi@gmail.com"
@@ -38,14 +41,17 @@
       "local":"ftp",
       "remote":"/",
       "root":"/POExport",
+      "rootExport":"/POImport",
       "archive":"/Archive",
       "interval":900000,
+      "intervalExport":3600000,
       "host":"ftp.r-pac.com",
       "port":21,
       "user":"rpacnysp",
       "password":"ku2rRpKb",
       "pass":"ku2rRpKb",
-      "debug":true
+      "debug":true,
+      "parser":false
     },
     "secret":"r-pacSecret",
     "email":"ahmadkbakibi@gmail.com"
@@ -62,14 +68,17 @@
       "local":"ftp",
       "remote":"/",
       "root":"/POExport",
+      "rootExport":"/POImport",
       "archive":"/Archive",
       "interval":900000,
+      "intervalExport":3600000,
       "host":"ftp.r-pac.com",
       "port":21,
       "user":"rpacnysp",
       "password":"ku2rRpKb",
       "pass":"ku2rRpKb",
-      "debug":false
+      "debug":false,
+      "parser":false
     },
     "secret":"r-pacSecret",
     "email":"ahmadkbakibi@gmail.com"
@@ -89,14 +98,18 @@
       "local":"ftp",
       "remote":"/",
       "root":"/POExport",
+      "rootExport":"/POImport",
+      "timezone": "Europe/Amsterdam",
       "archive":"/Archive",
       "interval":900000,
+      "intervalExport":3600000,
       "host":"ftp.r-pac.com",
       "port":21,
       "user":"rpacnysp",
       "password":"ku2rRpKb",
       "pass":"ku2rRpKb",
-      "debug":false
+      "debug":false,
+      "parser":false
     }
   },
   "secret":"r-pacSecret",
