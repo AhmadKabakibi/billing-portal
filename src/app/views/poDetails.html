@@ -144,16 +144,16 @@
 
         <md-button class="md-warn" ng-show="POdetails[0].POStatus=='UnderReview' && currentUser.type=='admin'"
                    ng-click="Approved(POdetails)">
-            <div class="md-tile-content">Approved and Mark Invoice</div>
+            <div class="md-tile-content">Approved and Mark Invoiced</div>
             <md-tooltip>
-                Approved and Mark Invoice
+                Approved and Mark Invoiced
             </md-tooltip>
         </md-button>
 
         <md-button class="md-warn" ng-show="POdetails[0].POStatus=='Accepted'" ng-click="AcknowledgeInvoice($event)">
             <div class="md-tile-content">Acknowledge</div>
             <md-tooltip>
-                Acknowledge and invoiced
+                Acknowledge and invoice
             </md-tooltip>
         </md-button>
 

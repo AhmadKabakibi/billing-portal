@@ -271,17 +271,27 @@
 
         //Accept PO
         $scope.Accept = function (pos) {
-            POsService.acceptPO(pos.map(function (a) {
-                    return a.PONumber;
-                }))
-                .then(function (response) {
-                    $scope.loadStuff();
-                    $scope.selected = [];
-                }, function (error) {
-                    $scope.status = 'Unable to load partner data: ' + error.message;
-                    console.log($scope.status);
-                });
 
+            var confirm = $mdDialog.confirm()
+                .title('Please click on OK to proceed with accepting the POs selected or click on Discard to go back')
+                .targetEvent(event)
+                .ok('OK')
+                .cancel('Discard');
+
+            $mdDialog.show(confirm).then(function () {
+                POsService.acceptPO(pos.map(function (a) {
+                        return a.PONumber;
+                    }))
+                    .then(function (response) {
+                        $scope.loadStuff();
+                        $scope.selected = [];
+                    }, function (error) {
+                        $scope.status = 'Unable to load partner data: ' + error.message;
+                        console.log($scope.status);
+                    });
+
+            }, function () {
+            })
         };
 
         //Change Po
@@ -612,14 +622,28 @@
 
 
         $scope.Approved = function (po) {
-            POsService.inovicePO({PONumber: po[0].PONumber})
-                .then(function (response) {
-                    $state.go('dashboard');
-                }, function (error) {
-                    $scope.status = 'Unable to invoice a po data: ' + error.message;
-                    $scope.showSimpleStatus($scope.status)
-                    console.log($scope.status);
-                });
+
+
+            var confirm = $mdDialog.confirm()
+                .title('Please click on OK to proceed with approving this PO\'s invoice or click on Discard to go back')
+                .targetEvent(event)
+                .ok('OK')
+                .cancel('Discard');
+
+            $mdDialog.show(confirm).then(function () {
+
+                POsService.inovicePO({PONumber: po[0].PONumber})
+                    .then(function (response) {
+                        $state.go('dashboard');
+                    }, function (error) {
+                        $scope.status = 'Unable to invoice a po data: ' + error.message;
+                        $scope.showSimpleStatus($scope.status)
+                        console.log($scope.status);
+                    });
+
+            }, function () {
+            })
+
         }
 
         /*Acknowledge and invoice*/

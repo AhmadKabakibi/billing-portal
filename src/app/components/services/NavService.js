@@ -13,7 +13,7 @@
         name: 'My POs',
         icon: 'assignment',
         sref: 'dashboard'
-      },
+      }/*,
       {
         name: 'Received',
         icon: 'import_export',
@@ -23,7 +23,7 @@
         name: 'Exported',
         icon: 'unarchive',
         sref: 'exported'
-      }
+      }*/
     ];
 
     return {

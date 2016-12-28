@@ -14,6 +14,32 @@
 
     <md-button ng-show=" currentUser.type=='admin' " layout="column" layout-align="center center"
                flex class="capitalize" ng-click="vm.selectItem(item)"
+               ui-sref-active="md-warn" ui-sref="received">
+        <div hide-sm hide-md class="md-tile-content">
+            <i class="material-icons md-36">import_export</i>
+        </div>
+        <div class="md-tile-content">
+            Received
+        </div>
+    </md-button>
+    <md-divider></md-divider>
+
+
+    <md-button ng-show=" currentUser.type=='admin' " layout="column" layout-align="center center"
+               flex class="capitalize" ng-click="vm.selectItem(item)"
+               ui-sref-active="md-warn" ui-sref="exported">
+        <div hide-sm hide-md class="md-tile-content">
+            <i class="material-icons md-36">unarchive</i>
+        </div>
+        <div class="md-tile-content">
+            Exported
+        </div>
+    </md-button>
+    <md-divider></md-divider>
+
+
+    <md-button ng-show=" currentUser.type=='admin' " layout="column" layout-align="center center"
+               flex class="capitalize" ng-click="vm.selectItem(item)"
                ui-sref-active="md-warn" ui-sref="settings">
         <div hide-sm hide-md class="md-tile-content">
             <i class="material-icons md-36">settings</i>
