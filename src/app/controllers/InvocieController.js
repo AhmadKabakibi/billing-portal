@@ -162,6 +162,7 @@
             return parseFloat(total + total_lines).toFixed(2);
         }
 
+
         $scope.sendInvoice = function () {
             if ($scope.invoice.Total.length == 0 ) {
                 $scope.showSimpleStatus('Invoice Total can not be empty');

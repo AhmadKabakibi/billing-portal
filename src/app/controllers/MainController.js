@@ -6,7 +6,7 @@
             'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$scope', '$rootScope', '$timeout', '$location', 'loginFactory', '$mdEditDialog', '$mdDialog', '$http', 'appConf', '$mdToast', 'Upload', '$timeout', '$filter', 'filterFilter',
             MainController
         ]);
-    function MainController(navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout, $filter, filterFilter) {
+    function MainController (navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout, $filter, filterFilter) {
         var vm = this;
 
         vm.getAll = getAll
@@ -184,12 +184,12 @@
             }, 2000);
         }
 
-        function getAll() {
+        function getAll () {
             POsService.loadAllItems()
                 .then(function (response) {
                     //$scope.posHeader = removeDuplicate(response.data.data, 'PONumber');
                     $scope.posHeader = response.data.data;
-                    $scope.GlobalPosHeader=$scope.posHeader;
+                    $scope.GlobalPosHeader = $scope.posHeader;
 
                     //alert(JSON.stringify($scope.posHeader));
                 }, function (error) {
@@ -211,7 +211,7 @@
 
         getAll();
 
-        $scope.filter = {PONumber:"",POStatus: "!!", PartnerCode: "!!"};
+        $scope.filter = {PONumber: "", POStatus: "!!", PartnerCode: "!!"};
 
         $scope.loadPOHeader = function (params) {
 
@@ -283,6 +283,7 @@
                 });
 
         };
+
         //Change Po
 
         /**/
@@ -353,7 +354,7 @@
                 .join(' ');
         };
 
-        function sanitizePosition() {
+        function sanitizePosition () {
             var current = $scope.toastPosition;
 
             if (current.bottom && last.top) current.top = false;
@@ -443,7 +444,7 @@
         }];
 
 
-        function getAllReceived() {
+        function getAllReceived () {
             POsService.receivedFiles()
                 .then(function (response) {
                     $scope.receivedList = response.data.data;
@@ -609,9 +610,19 @@
             console.log('limit: ', limit);
         }
 
+
+        $scope.Approved = function (po) {
+            POsService.inovicePO({PONumber: po[0].PONumber})
+                .then(function (response) {
+                    $state.go('dashboard');
+                }, function (error) {
+                    $scope.status = 'Unable to invoice a po data: ' + error.message;
+                    $scope.showSimpleStatus($scope.status)
+                    console.log($scope.status);
+                });
+        }
+
         /*Acknowledge and invoice*/
-
-
         $scope.AcknowledgeInvoice = function (evt) {
             $mdDialog.show({
                 targetEvent: evt,
