@@ -273,7 +273,8 @@
         $scope.Accept = function (pos) {
 
             var confirm = $mdDialog.confirm()
-                .title('Please click on OK to proceed with accepting the POs selected or click on Discard to go back')
+                .title('')
+                .textContent('Please click on OK to proceed with accepting the POs selected or click on Discard to go back')
                 .targetEvent(event)
                 .ok('OK')
                 .cancel('Discard');
@@ -625,7 +626,8 @@
 
 
             var confirm = $mdDialog.confirm()
-                .title('Please click on OK to proceed with approving this PO\'s invoice or click on Discard to go back')
+                .title('')
+                .textContent('Please click on OK to proceed with approving this PO\'s invoice or click on Discard to go back')
                 .targetEvent(event)
                 .ok('OK')
                 .cancel('Discard');
