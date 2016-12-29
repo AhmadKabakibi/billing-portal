@@ -144,21 +144,21 @@
         }
 
         $scope.total = function () {
-            var total = 0;
-            var total_lines = 0;
+            var total = 0.00;
+            var total_lines = 0.00;
 
             if(typeof ($scope.invoice.podetails_invoice) != "undefined" ){
 
                 for (var i = 0; i < $scope.invoice.podetails_invoice.length; i++) {
                     var line = $scope.invoice.podetails_invoice[i];
-                    total_lines += parseFloat(line.Total).toFixed(2);
+                    total_lines += parseFloat(line.Total);
                 }
             }
 
             angular.forEach($scope.invoice.podetails, function (item) {
-                total += parseFloat(item.Total).toFixed(2);
+                total += parseFloat(item.Total);
             })
-            $scope.invoice.Total = (total + total_lines).toString();
+            $scope.invoice.Total = (parseFloat(total + total_lines).toFixed(2)).toString();
             return parseFloat(total + total_lines).toFixed(2);
         }
 
