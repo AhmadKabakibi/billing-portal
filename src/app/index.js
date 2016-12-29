@@ -86,7 +86,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
             .state('exported', {
                 parent: 'site',
                 url: '/exported',
-                controller: 'POsController',
+                controller: 'POsExportController',
                 templateUrl: 'app/views/exported.html',
                 data: {
                     title: 'exported',
@@ -98,7 +98,7 @@ angular.module('angularMaterialAdmin', ['ngAnimate', 'ngCookies', 'ngTouch',
             .state('received', {
                 parent: 'site',
                 url: '/received',
-                controller: 'MainController',
+                controller: 'POsController',
                 controllerAs: 'vm',
                 templateUrl: 'app/views/received.html',
                 data: {

@@ -78,6 +78,45 @@ module.exports = function (apiRouter) {
         }
     });
 
+    apiRouter.get('/ftp/export/:FileName', function (req, res) {
+
+        var Ftp = new JSFtp({
+            host: config.ftp.host,
+            port: config.ftp.port,
+            user: config.ftp.user,
+            pass: config.ftp.password,
+            debugMode: false
+        });
+
+        Ftp.get(path.join(config.ftp.rootExport, req.params.FileName), path.join(__dirname, '../', req.params.FileName), function (error) {
+            if (error) {
+                return errorHandler(res, error);
+            }
+            else {
+                //console.log('File copied successfully!');
+                return res.sendFile(path.join(__dirname, '../', req.params.FileName), {
+                    dotfiles: 'deny',
+                    headers: {
+                        'Content-Disposition': 'attachment; filename="' + req.params.FileName + '"'
+                    }
+                }, function (err) {
+                    if (err) {
+                        return errorHandler(res, error);
+                    }
+                    fs.unlink(path.join(__dirname, '../', req.params.FileName), function (err) {
+                        if (err) {
+                            logger.error('error deleting after download from ftp ' + localFile + ' ' + err);
+                        }
+                        Ftp.raw.quit(function (err, data) {
+                            if (err) return console.error(err);
+                            console.log("FTP disconnected after download file!");
+                        });
+                    });
+                });
+
+            }
+        });
+    });
 
     apiRouter.get('/ftp/:FileName', function (req, res) {
 
@@ -148,6 +187,18 @@ module.exports = function (apiRouter) {
                 Receivedfiles(result, function (received_files) {
                     return successHandler(res, received_files);
                 })
+            }).catch(function (error) {
+                return errorHandler(res, error);
+            })
+        } else if (req.user.type == 'normal') {
+            return res.status(401).json({success: false, error: 'Not Authorized'});
+        }
+    });
+
+    apiRouter.get('/pos/exported', function (req, res) {
+        if (req.user.type == 'admin') {
+            return exportService.Exportedfiles().then(function (result) {
+                    return successHandler(res, result);
             }).catch(function (error) {
                 return errorHandler(res, error);
             })

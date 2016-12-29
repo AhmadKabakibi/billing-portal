@@ -116,6 +116,19 @@ var service = module.exports = {
 
                 ftp.put([path.join(ftpLocal, generatedFile), path.join(config.ftp.rootExport, generatedFile)], function (status) {
 
+                    models.sequelize.transaction(function (t) {
+                        return models.exportfileslogs.create(
+                            {
+                                FileName: generatedFile
+                            },
+                            {transaction: t}).then(function (log) {
+
+                        });
+                    }).catch(function (err) {
+                        logger.error("Create Logs record err: " + err);
+                    });
+
+
                     fs.unlink(path.join(ftpLocal, generatedFile), function (err) {
                         if (err) {
                             logger.error('error deleting ' + generatedFile + ' ' + err);

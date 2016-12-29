@@ -2,35 +2,27 @@
 
     angular
         .module('app')
-        .controller('POsController', [
+        .controller('POsExportController', [
             'navService', 'POsService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', 'principal', '$scope', '$rootScope', '$timeout', '$location', 'loginFactory', '$mdEditDialog', '$mdDialog', '$http', 'appConf', '$mdToast', 'Upload', '$timeout', '$filter', 'filterFilter',
-            POsController
+            POsExportController
         ]);
 
-    function POsController (navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout, $filter, filterFilter) {
+    function POsExportController (navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout, $filter, filterFilter) {
         var vm = this;
 
-        /*Receivedfiles*/
-
-        /*:D */
-
-        $scope.gridReceived = [{
+        $scope.gridExportedFiles = [{
             name: 'File name'
         }, {
-            name: 'Date received'
-        }, {
-            name: 'Status'
-        }, {
-            name: 'Failure reason'
-        }, {
+            name: 'Date generated'
+        },{
             name: 'Download'
         }];
 
 
         function getAllReceived () {
-            POsService.receivedFiles()
+            POsService.exportedFiles()
                 .then(function (response) {
-                    $scope.receivedList = response.data.data;
+                    $scope.exportedList = response.data.data;
                     //alert(JSON.stringify($scope.posHeader));
                 }, function (error) {
                     $scope.status = 'Unable to load received files data: ' + error.message;

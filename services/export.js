@@ -9,6 +9,9 @@ var service = module.exports = {
             include: [{model: models.statuslogs}]
         });
     },
+    Exportedfiles: function () {
+        return models.exportfileslogs.findAll();
+    },
 
     listPOs: function () {
         return models.poheader.findAll();

@@ -441,7 +441,7 @@
         /*Receivedfiles*/
 
         /*:D */
-
+/*
         $scope.gridReceived = [{
             name: 'File name'
         }, {
@@ -494,7 +494,7 @@
                     $scope.status = 'Unable to Download Archive File from FTP ' + error.message;
                     console.log($scope.status);
                 });
-            /*  var deferred = $q.defer();
+            /!*  var deferred = $q.defer();
              var promise = $mdEditDialog.large({
              title: "Delete Selected User",
              ok: "delete",
@@ -523,7 +523,7 @@
              promise.then(function (ctrl) {
 
              });
-             */
+             *!/
         }
 
         $scope._f_toggleLimitOptions = function () {
@@ -552,7 +552,7 @@
         $scope._f_logPagination = function (page, limit) {
             console.log('page: ', page);
             console.log('limit: ', limit);
-        }
+        }*/
 
         /*PODetails Grid*/
         $scope.girdPoDetails = [{
