@@ -3,6 +3,7 @@
     <md-card flex md-theme-watch layout="row" layout-wrap
              layout-padding style="background-color: #ECEFF1;">
         <div flex="50">
+            <label>Partner</label>
             <md-select ng-show=" currentUser.type=='admin' " placeholder="Partner" ng-model="filter.PartnerCode"
                        style="min-width: 200px;">
                 <md-option value="!!">All</md-option>
@@ -16,11 +17,13 @@
             </md-input-container>
         </div>
         <div flex="50">
+            <label>Status</label>
             <md-select ng-model="filter.POStatus" placeholder="Status" style="min-width: 200px;">
                 <md-option value="!!">All</md-option>
                 <md-option ng-repeat="st in POStatus" value="{{st.val}}">{{st.str}}</md-option>
             </md-select>
 
+            <label>Select PO Date range</label>
             <md-select ng-model="range" ng-model-options="{trackBy: '$value.date'}"
                        placeholder="Select PO Date range" style="min-width: 200px;">
                 <md-option ng-repeat="date in dateRange" value="{{date.date}}">{{date.name}}</md-option>
