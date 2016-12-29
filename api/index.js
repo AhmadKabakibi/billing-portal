@@ -89,14 +89,19 @@ module.exports = function (apiRouter) {
         });
 
         Ftp.get(path.join(config.ftp.rootExport, req.params.FileName), path.join(__dirname, '../', req.params.FileName), function (error) {
+
+            console.log(path.join(__dirname, '../', req.params.FileName));
+            console.log(path.join(config.ftp.rootExport, req.params.FileName));
+
             if (error) {
                 return errorHandler(res, error);
             }
             else {
-                //console.log('File copied successfully!');
+                console.log(path.join(__dirname, '../', req.params.FileName));
                 return res.sendFile(path.join(__dirname, '../', req.params.FileName), {
                     dotfiles: 'deny',
                     headers: {
+                        "Content-Type": "text/html",
                         'Content-Disposition': 'attachment; filename="' + req.params.FileName + '"'
                     }
                 }, function (err) {
