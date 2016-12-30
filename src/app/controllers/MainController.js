@@ -30,6 +30,9 @@
             {name: 'Today', date: moment().subtract(1, 'days')}
         ];
 
+        $scope.dateRanges = $scope.dateRange;
+        $scope.dateAfter =  $scope.dateRanges[0];
+
 
         $scope.POStatus = [
             {val: "Pending", str: "Pending"},
@@ -670,4 +673,17 @@
             });
         };
     }
+
+
+    angular
+        .module('app')
+        .filter('isAfter', function() {
+            return function(items, dateAfter) {
+                // Using ES6 filter method
+                return items.filter(function(item){
+                    return moment(item.PODate).isAfter(dateAfter);
+                })
+            }
+        });
+
 })();
