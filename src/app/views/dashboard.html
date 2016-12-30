@@ -3,7 +3,7 @@
     <md-card flex md-theme-watch layout="row" layout-wrap
              layout-padding style="background-color: #ECEFF1;">
         <div flex="50">
-            <label>Partner</label>
+            <label  ng-show=" currentUser.type=='admin' "  >Partner</label>
             <md-select ng-show=" currentUser.type=='admin' " placeholder="Partner" ng-model="filter.PartnerCode"
                        style="min-width: 200px;">
                 <md-option value="!!">All</md-option>
