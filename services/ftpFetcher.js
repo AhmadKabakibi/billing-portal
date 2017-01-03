@@ -101,7 +101,7 @@ var service = module.exports = {
 
                 //console.log(JSON.stringify(line))
 
-                csv += 'I' + ',' + '' + ',' + moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY') + ',' + line.poheaderPONumber + ',' + line.poheader.Division + ',' + line.poheader.PartnerCode + ',' + line.poheader.PartnerName + ',' + moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY') + ',' + line.poheader.invoices[0].InvoiceNumber + ',' + moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY') + ',' + 'NONTAX' + ',' + line.FreightAmount + ',' + '' + ',' + line.ItemCode + ',' + '' + ',' + line.UnitofMeasure + ',' + line.WarehouseCode + ',' + line.QuantityOrdered + ',' + line.QuantityInvoiced + ',' + line.UnitCost + ',' + line.Total + '\r\n';
+                csv += 'I' + ',' + '' + ',' + moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY') + ',' + line.poheaderPONumber + ',' + line.poheader.Division + ',' + line.poheader.PartnerCode + ',' + line.poheader.PartnerName + ',' + moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY') + ',' + line.poheader.invoices[0].InvoiceNumber + ',' + moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY') + ',' + 'NONTAX' + ',' + line.FreightAmount + ',' + '' + ',' + line.ItemCode + ',' + '4521-000' + ',' + line.UnitofMeasure + ',' + line.WarehouseCode + ',' + line.QuantityOrdered + ',' + line.QuantityInvoiced + ',' + line.UnitCost + ',' + line.Total + '\r\n';
             })
 
             console.log(csv)
