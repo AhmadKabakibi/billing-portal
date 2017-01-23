@@ -628,16 +628,25 @@
         $scope.Approved = function (po) {
 
 
-            var confirm = $mdDialog.confirm()
+        /*    var confirm = $mdDialog.confirm()
                 .title('')
                 .textContent('Please click on OK to proceed with approving this PO\'s invoice or click on Discard to go back')
                 .targetEvent(event)
                 .ok('OK')
-                .cancel('Discard');
+                .cancel('Discard');*/
 
-            $mdDialog.show(confirm).then(function () {
+            var confirm = $mdDialog.prompt()
+              .title('')
+              .textContent('Please click on OK to proceed with approving this PO\'s invoice or click on Discard to go back')
+              .ariaLabel('comment')
+              .placeholder('type your approving comment 1000 characters max')
+              .targetEvent(event)
+              .ok('OK')
+              .cancel('Discard');
 
-                POsService.inovicePO({PONumber: po[0].PONumber})
+            $mdDialog.show(confirm).then(function (comment) {
+
+                POsService.inovicePO({PONumber: po[0].PONumber,ActionNote:comment})
                     .then(function (response) {
                         $state.go('dashboard');
                     }, function (error) {

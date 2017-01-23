@@ -202,8 +202,12 @@
                                 <input ng-model="invoice.PurchaseOrder" type="text" ng-disabled="true">
                             </md-input-container>
                             <md-input-container>
+                                <label>Phone Number</label>
+                                <input ng-required="true" ng-model="invoice.phoneNumber" type="text">
+                            </md-input-container>
+                            <md-input-container>
                                 <label>contact(email)</label>
-                                <input ng-model="invoice.ContactEmail" type="email"
+                                <input ng-required="true" ng-model="invoice.ContactEmail" type="email"
                                        ng-disabled="invoicePreview.isDisabled">
                             </md-input-container>
                         </md-content>
@@ -247,10 +251,12 @@
                             <td>{{item.UnitofMeasure}}</td>
                             <td>{{item.QuantityOrdered}}</td>
                             <td>{{item.QuantityBackordered}}</td>
-                            <td><input type="text" ng-model="item.QuantityInvoiced" class="form-control"
+                            <td>{{item.QuantityInvoiced}}</td>
+                            <td>{{item.Total}}</td>
+                            <!--<td><input type="text" ng-model="item.QuantityInvoiced" class="form-control"
                                        ng-required="true" ng-disabled="invoicePreview.isDisabled"/></td>
                             <td><input type="text" ng-model="item.Total" class="form-control"
-                                       ng-required="true" ng-disabled="invoicePreview.isDisabled"/></td>
+                                       ng-required="true" ng-disabled="invoicePreview.isDisabled"/></td>-->
                             <td>
                             </td>
                         </tr>

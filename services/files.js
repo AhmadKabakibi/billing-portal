@@ -20,7 +20,9 @@ var BASE_PATH = path.resolve(__dirname, '../uploads'),
             });
         },
         filename: function (req, file, cb) {
-            cb(null, sanitize(file.originalname));
+            //PartnerName_PONumber_InvoiceNumber_SerialNumber.PDF
+            //sanitize(file.originalname)
+            cb(null, req.body.PartnerName+"_"+req.body.PONumber+"_"+req.body.InvoiceNumber+"_"+uuid.v4()+".pdf");
         }
     });
 

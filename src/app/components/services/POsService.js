@@ -43,7 +43,8 @@
             },
             inovicePO: function (params) {
                 return $http.put('http://localhost:3000/api/po/inovice', {
-                    PONumber: params.PONumber
+                    PONumber: params.PONumber,
+                    ActionNote:params.ActionNote
                 });
             },
             underReviewPO: function (params) {
