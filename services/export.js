@@ -368,11 +368,10 @@ var service = module.exports = {
   },
   listActions: function (params) {
     return models.historyactions.findAll({
-      //PODate:params.dateRange
       where: {
-        PONumber: params.PONumber
+        poheaderPONumber: params.PONumber
       },
-      include: [{model: models.poheader}, {model: models.user}]
+      include: [{model: models.poheader}, {model: models.user,attributes: ['username','type','code','email']}]
     });
   }
 }

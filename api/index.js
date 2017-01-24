@@ -450,6 +450,14 @@ module.exports = function (apiRouter) {
     });
   });
 
+  apiRouter.get('/po/actions/:PONumber', function (req, res) {
+    return exportService.listActions({PONumber:req.params.PONumber}).then(function (result) {
+      return successHandler(res, result);
+    }).catch(function (error) {
+      return errorHandler(res, error);
+    })
+  });
+
 
   apiRouter.get('/users', function (req, res) {
     if (req.user.type == 'admin') {

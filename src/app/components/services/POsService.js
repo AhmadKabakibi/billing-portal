@@ -70,6 +70,9 @@
             exportedFiles: function () {
                 return $http.get('http://localhost:3000/api/pos/exported')
             },
+            actionsTimeline: function (params) {
+                return $http.get('http://localhost:3000/api/po/actions/'+ params.PONumber)
+            },
             DownloadArchiveFile: function (fileName) {
                 return $http.get('http://localhost:3000/api/ftp/' + fileName)
             },

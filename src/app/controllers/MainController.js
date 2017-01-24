@@ -681,6 +681,18 @@
                  '</md-dialog>'*/
             });
         };
+        /*Actions Timeline*/
+        $scope.TimeLine = function (evt) {
+            $mdDialog.show({
+                targetEvent: evt,
+                locals: {parent: $scope, root: $rootScope},
+                controller: angular.noop,
+                controllerAs: 'ctrl',
+                bindToController: true,
+                templateUrl: 'timeline.tmpl.html',
+                clickOutsideToClose: true
+            });
+        };
     }
 
 
