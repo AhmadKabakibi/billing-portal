@@ -45,7 +45,8 @@
         $mdToast.simple()
           .textContent(status)
           .position(pinTo)
-          .hideDelay(3000)
+          .hideDelay(160000)
+          .theme('error-toast')
       );
     }
 
@@ -190,13 +191,15 @@
 
         var lines = $scope.invoice.podetails_invoice;
 
-        for (var i = 0; i < lines.length && !$scope.invoicePreview.isUnderReview; i++) {
-          if (lines[i].QuantityOrdered != lines[i].QuantityInvoiced) {
-            $scope.invoicePreview.isUnderReview = true;
-          }
-        }
+        //
+        /*for (var i = 0; i < lines.length && !$scope.invoicePreview.isUnderReview; i++) {
+         if (lines[i].QuantityOrdered != lines[i].QuantityInvoiced) {
+         $scope.invoicePreview.isUnderReview = true;
+         }
+         }*/
 
-        if ($scope.invoicePreview.isUnderReviewTotal || $scope.invoicePreview.isUnderReview) {
+        //if ($scope.invoicePreview.isUnderReviewTotal || $scope.invoicePreview.isUnderReview)
+        if ($scope.invoicePreview.isUnderReview) {
           console.log($rootScope.POdetails[0].PONumber + " is Under Review")
 
           POsService.createInvocie($scope.invoice).then(function (response) {

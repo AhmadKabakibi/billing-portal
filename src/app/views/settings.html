@@ -83,7 +83,7 @@
                 <td md-cell>{{item.username}}</td>
                 <td md-cell>{{item.code}}</td>
                 <td md-cell>{{item.email}}</td>
-                <td md-cell>{{item.type}}</td>
+                <td md-cell>{{item.type=='normal' ? 'Partner' :'R-pac Admin'}}</td>
                 <td md-cell ng-show="_u_options.rowSelection && _u_selected.length">
                     <button class="md-icon-button md-button md-ink-ripple" type="button"
                             ui-sref="modify" aria-label="edit">
