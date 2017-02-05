@@ -31,7 +31,7 @@
     function sanitizePosition () {
       var current = $scope.toastPosition;
 
-      if (current.bottom && last.top) current.top = true;
+      if (current.bottom && last.top) current.top = false;
       if (current.top && last.bottom) current.bottom = false;
       if (current.right && last.left) current.left = false;
       if (current.left && last.right) current.right = false;
@@ -44,8 +44,8 @@
       $mdToast.show(
         $mdToast.simple()
           .textContent(status)
-          .position(pinTo)
-          .hideDelay(30000)
+          .position('top center')
+          .hideDelay(15000)
           .theme('error-toast')
       );
     }
@@ -296,7 +296,7 @@
         podetails_invoice: $rootScope.POdetails[0].podetails,
         podetails: $rootScope.POdetails[0].podetails
       }
-
+      $mdToast.cancel();
       $mdDialog.hide()
     }
 

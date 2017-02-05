@@ -312,12 +312,12 @@ var service = module.exports = {
 
           //podetails_invoice
 
-          for (var i = 0; i < params.podetails_invoice.length; i++) {
+          for (var i = 0; i < params.podetails.length; i++) {
             models.podetails.update(
               {
-                QuantityInvoiced: params.podetails_invoice[i].QuantityInvoiced,
+                QuantityInvoiced: params.podetails[i].QuantityInvoiced,
                 Total: params.Total
-              }, {where: {id: params.podetails_invoice[i].id}}).then(function (PoLine) {
+              }, {where: {id: params.podetails[i].id}}).then(function (PoLine) {
 
             }).catch(function (err) {
               // err is whatever rejected the promise chain returned to the transaction callback
