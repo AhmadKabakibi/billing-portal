@@ -41,11 +41,29 @@ NotificationEmail.setFilters({
   "templates": {
     "settings": {
       "enabled": 1,
-      "template_id": "ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3"
+      "template_id": config.Notify_temp_id
     }
   }
 });
+
 NotificationEmail.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
+
+var NotificationEmailAdmin = new sendgrid.Email({
+  to: 'ahmadkbakibi@gmail.com',
+  from: 'noreply@r-pac.com',
+  subject: 'r-pac billing portal Notification',
+  html: '<h2>New Notification!</h2>'
+});
+NotificationEmailAdmin.setFilters({
+  "templates": {
+    "settings": {
+      "enabled": 1,
+      "template_id": config.NotifyAdmin_temp_id
+    }
+  }
+});
+NotificationEmailAdmin.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
+
 
 FTPService.startFTP();
 
@@ -310,16 +328,20 @@ module.exports = function (apiRouter) {
       //todo send an email to admin using API SendGrid
       //todo use partner name instead of the code
 
-      NotificationEmail.to = config.email;
-      NotificationEmail.subject = "PO: " + req.body.PONumber + " was rejected by " + req.user.code;
-      NotificationEmail.html = req.body.comment;
-      sendgrid.send(NotificationEmail, function (err, json) {
-        if (err) {
-          console.log("Notification Error Email: " + err);
-        } else {
-          console.log('Notify Invitation! ');
-        }
-      })
+      for(var i =0;i<config.email.length;i++){
+
+        NotificationEmailAdmin.to = config.email[i];
+        NotificationEmailAdmin.subject = "PO: " + req.body.PONumber + " was rejected by " + req.user.code;
+        NotificationEmailAdmin.html = req.body.comment;
+        sendgrid.send(NotificationEmailAdmin, function (err, json) {
+          if (err) {
+            console.log("Notification Error Email: " + err);
+          } else {
+            console.log('Notify Invitation! '+ config.email[i]);
+          }
+        })
+
+      }
 
       return successHandler(res, result);
     }).catch(function (error) {
@@ -368,6 +390,20 @@ module.exports = function (apiRouter) {
   //change the status of the PO to “UnderReviewPO”
   apiRouter.put('/po/underreview', function (req, res) {
     return exportService.UnderReviewPO(req.body.PONumber,req.user.id).then(function (result) {
+
+      for(var i =0;i<config.email.length;i++){
+        NotificationEmailAdmin.to = config.email[i];
+        NotificationEmailAdmin.subject = "PO: " + req.body.PONumber + " is Under Review"
+        NotificationEmailAdmin.html = "PO: " + req.body.PONumber + " is Under Review"
+        sendgrid.send(NotificationEmailAdmin, function (err, json) {
+          if (err) {
+            console.log("Notification Error Email: " + err);
+          } else {
+            console.log('Notify Invitation!');
+          }
+        })
+      }
+
       return successHandler(res, result);
     }).catch(function (error) {
       return errorHandler(res, error);
@@ -415,6 +451,16 @@ module.exports = function (apiRouter) {
       return errorHandler(res, error);
     })
 
+  });
+
+  apiRouter.get('/po/invoice/:PONumber', function (req, res) {
+    return exportService.listInvoiceLines({
+      PONumber: req.params.PONumber
+    }).then(function (result) {
+      return successHandler(res, result);
+    }).catch(function (error) {
+      return errorHandler(res, error);
+    })
   });
 
   /** API path that will upload the files*/

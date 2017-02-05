@@ -79,6 +79,9 @@
             createInvocie: function (params) {
                 return $http.post('http://localhost:3000/api/po/invoice/create', params);
             },
+            ListInvocie: function (params) {
+                return $http.get('http://localhost:3000/api/po/invoice/'+ params.PONumber);
+            },
             uploadInvocieFile: function (params) {
                 return $http({
                     method: 'POST',

@@ -228,9 +228,9 @@ var service = module.exports = {
       });
     }
   },
-  acceptPOslist: function (pos,userId) {
-    return models.poheader.update({POStatus: 'Accepted'}, {where: {PONumber: pos}}).then(function (po){
-      for(var i=0;i<pos.length;i++){
+  acceptPOslist: function (pos, userId) {
+    return models.poheader.update({POStatus: 'Accepted'}, {where: {PONumber: pos}}).then(function (po) {
+      for (var i = 0; i < pos.length; i++) {
         service.createAction({
           Action: 'Accept',
           ActionNote: 'Accepted',
@@ -241,22 +241,22 @@ var service = module.exports = {
     })
   }
   ,
-  rejectedPO: function (po,userId) {
-    return models.poheader.update({POStatus: 'Rejected'}, {where: {PONumber: po}}).then(function (){
-        service.createAction({
-          Action: 'Reject',
-          ActionNote: 'Rejected',
-          poheaderPONumber: po,
-          userId: userId
-        })
+  rejectedPO: function (po, userId) {
+    return models.poheader.update({POStatus: 'Rejected'}, {where: {PONumber: po}}).then(function () {
+      service.createAction({
+        Action: 'Reject',
+        ActionNote: 'Rejected',
+        poheaderPONumber: po,
+        userId: userId
+      })
 
     })
   },
-  invociePO: function (po,userId,ActionNote) {
-    return models.poheader.update({POStatus: 'Invoiced'}, {where: {PONumber: po}}).then(function (){
+  invociePO: function (po, userId, ActionNote) {
+    return models.poheader.update({POStatus: 'Invoiced'}, {where: {PONumber: po}}).then(function () {
       service.createAction({
         Action: 'Invoice',
-        ActionNote: ActionNote||'Invoiced',
+        ActionNote: ActionNote || 'Invoiced',
         poheaderPONumber: po,
         userId: userId
       })
@@ -268,8 +268,8 @@ var service = module.exports = {
       attributes: ['POStatus']
     })
   },
-  UnderReviewPO: function (po,userId) {
-    return models.poheader.update({POStatus: 'UnderReview'}, {where: {PONumber: po}}).then(function (){
+  UnderReviewPO: function (po, userId) {
+    return models.poheader.update({POStatus: 'UnderReview'}, {where: {PONumber: po}}).then(function () {
       service.createAction({
         Action: 'UnderReview',
         ActionNote: 'UnderReview',
@@ -279,6 +279,13 @@ var service = module.exports = {
     })
   }
   ,
+  listInvoiceLines: function (params) {
+    return models.invoice.findAll({
+      where: {
+        PurchaseOrder: params.PONumber
+      }
+    })
+  },
   createInvocie: function (params) {
 
     return models.invoice.findAll({
@@ -294,6 +301,7 @@ var service = module.exports = {
           {
             InvoiceNumber: params.InvoiceNumber,
             PartnerCode: params.PartnerCode,
+            phoneNumber: params.phoneNumber,
             InvoiceDate: params.InvoiceDate,
             PurchaseOrder: params.PurchaseOrder,
             ContactEmail: params.ContactEmail,
@@ -371,7 +379,7 @@ var service = module.exports = {
       where: {
         poheaderPONumber: params.PONumber
       },
-      include: [{model: models.poheader}, {model: models.user,attributes: ['username','type','code','email']}]
+      include: [{model: models.poheader}, {model: models.user, attributes: ['username', 'type', 'code', 'email']}]
     });
   }
 }

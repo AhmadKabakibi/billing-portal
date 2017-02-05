@@ -140,6 +140,55 @@
         </md-list-item>
     </md-list>
 
+    <!---->
+    <md-toolbar ng-show="POdetails[0].POStatus=='UnderReview'|| POdetails[0].POStatus=='Invoiced' "
+                class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Invoice Lines:</span>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="_inv_loadStuff()">
+                <md-icon>refresh</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-table-container ng-show="POdetails[0].POStatus=='UnderReview'|| POdetails[0].POStatus=='Invoiced' ">
+        <table md-table md-row-select="_inv_options.rowSelection" multiple="{{_inv_options.multiSelect}}"
+               md-progress="_inv_promise">
+            <thead ng-if="!_inv_options.decapitate" md-head md-order="_inv_query.order" md-on-reorder="_inv_logOrder">
+            <tr md-row>
+                <th md-column ng-repeat="column in girdInvoiceLines">
+                    <span>{{column.name}}</span>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody md-body>
+            <tr md-row
+                ng-repeat="line in InvoiceLines | limitTo: _inv_query.limit : (_inv_query.page -1) * _inv_query.limit">
+
+                <td md-cell>{{line.InvoiceNumber}}</td>
+                <td md-cell>{{line.PartnerCode}}</td>
+                <td md-cell>{{line.phoneNumber}}</td>
+                <td md-cell>{{line.InvoiceDate}}</td>
+                <td md-cell>{{line.PurchaseOrder}}</td>
+                <td md-cell>{{line.ContactEmail}}</td>
+                <!--<td md-cell>{{line.QuantityInvoiced}}</td>-->
+                <td md-cell>{{line.Total}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+
+    <md-table-pagination ng-show="POdetails[0].POStatus=='UnderReview'|| POdetails[0].POStatus=='Invoiced' "
+                         md-limit="_inv_query.limit" md-limit-options="_inv_limitOptions" md-page="_inv_query.page"
+                         md-total="{{InvoiceLines.length}}" md-page-select="_inv_options.pageSelect"
+                         md-boundary-links="_inv_options.boundaryLinks"
+                         md-on-paginate="_inv_logPagination"></md-table-pagination>
+
+    <!---->
+
     <div class="md-actions" layout="row" layout-align="start center">
 
         <md-button class="md-warn" ng-show="POdetails[0].POStatus=='UnderReview' && currentUser.type=='admin'"
@@ -189,7 +238,7 @@
                         <md-content flex="30" layout="column">
                             <md-input-container>
                                 <label>Inovice number</label>
-                                <input required="" name="InvoiceNumber" type="text" ng-model="invoice.InvoiceNumber"
+                                <input required name="InvoiceNumber" type="text" ng-model="invoice.InvoiceNumber"
                                        ng-disabled="invoicePreview.isDisabled">
                                 <div ng-messages="projectForm.InvoiceNumber.$error">
                                     <div ng-message="required">InvoiceNumber can not be empty</div>
@@ -206,7 +255,7 @@
                             </md-input-container>
                             <md-input-container>
                                 <label>Phone Number</label>
-                                <input required="" name="PhoneNumber" ng-model="invoice.phoneNumber" type="text"
+                                <input required name="PhoneNumber" ng-model="invoice.phoneNumber" type="text"
                                        ng-disabled="invoicePreview.isDisabled">
                                 <div ng-messages="projectForm.PhoneNumber.$error">
                                     <div ng-message="required">Phone Number can not be empty</div>
@@ -214,7 +263,7 @@
                             </md-input-container>
                             <md-input-container>
                                 <label>contact(email)</label>
-                                <input required="" name="email" ng-model="invoice.ContactEmail" type="email"
+                                <input required name="email" ng-model="invoice.ContactEmail" type="email"
                                        ng-disabled="invoicePreview.isDisabled">
                                 <div ng-messages="projectForm.email.$error">
                                     <div ng-message="required">Contact Email can not be empty</div>
@@ -339,9 +388,9 @@
 
                         <form>
                             <input type="file" ngf-select ng-model="filesList" name="filesList" multiple
-                                                               accept="application/pdf" ngf-max-size="10MB"/>
-                                <!--<button type="submit" ng-click="up.submit()">Upload</button>
-                                -->
+                                   accept="application/pdf" ngf-max-size="10MB"/>
+                            <!--<button type="submit" ng-click="up.submit()">Upload</button>
+                            -->
                         </form>
 
                         <div flex="40">
@@ -394,11 +443,11 @@
     }
 
     md-toast.md-error-toast-theme .md-toast-content {
-        background-color: red;
+        background-color: #E75753;
+        font-size: 17px;
         font-weight: 500;
         color: #ffffff;
     }
-
 
     .timeline {
         position: relative;

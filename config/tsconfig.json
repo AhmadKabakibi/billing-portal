@@ -27,7 +27,9 @@
       "parser":false
     },
     "secret":"r-pacSecret",
-    "email":"ahmadkbakibi@gmail.com"
+    "email":["ahmadkbakibi@gmail.com","ahmad.Hisham@dataarena.com"],
+    "Notify_temp_id":"ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3",
+    "NotifyAdmin_temp_id":"ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3"
   },
   "test": {
     "username": "portal",
@@ -54,7 +56,9 @@
       "parser":false
     },
     "secret":"r-pacSecret",
-    "email":"ahmadkbakibi@gmail.com"
+    "email":["ahmadkbakibi@gmail.com","ahmad.Hisham@dataarena.com"],
+    "Notify_temp_id":"ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3",
+    "NotifyAdmin_temp_id":"ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3"
   },
   "beta": {
     "username": "",
@@ -81,7 +85,9 @@
       "parser":false
     },
     "secret":"r-pacSecret",
-    "email":"ahmadkbakibi@gmail.com"
+    "email":["ahmadkbakibi@gmail.com","ahmad.Hisham@dataarena.com"],
+    "Notify_temp_id":"ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3",
+    "NotifyAdmin_temp_id":"ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3"
   },
   "production": {
     "username": "",
@@ -113,5 +119,7 @@
     }
   },
   "secret":"r-pacSecret",
-  "email":"ahmadkbakibi@gmail.com"
+  "email":["ahmadkbakibi@gmail.com","ahmad.Hisham@dataarena.com"],
+  "Notify_temp_id":"ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3",
+  "NotifyAdmin_temp_id":"ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3"
 }
