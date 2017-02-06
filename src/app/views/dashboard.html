@@ -7,7 +7,7 @@
             <md-select ng-show=" currentUser.type=='admin' " placeholder="Partner" ng-model="filter.PartnerCode"
                        style="min-width: 200px;">
                 <md-option value="!!">All</md-option>
-                <md-option ng-value="code.PartnerCode" ng-repeat="code in Partners">{{code.PartnerName}}</md-option>
+                <md-option ng-value="code.PartnerCode" ng-repeat="code in Partners| orderBy:'PartnerName' ">{{code.PartnerName}}</md-option>
             </md-select>
             <!--<p class="md-caption">selected customer: {{ user ? user.name : 'No one yet' }}</p>-->
 
