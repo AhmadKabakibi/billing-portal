@@ -48,6 +48,24 @@ NotificationEmail.setFilters({
 
 NotificationEmail.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
 
+var NotificationEmailUnderReview = new sendgrid.Email({
+  to: 'ahmadkbakibi@gmail.com',
+  from: 'noreply@r-pac.com',
+  subject: 'r-pac billing portal Notification',
+  html: '<h2>New Notification!</h2>'
+});
+NotificationEmailUnderReview.setFilters({
+  "templates": {
+    "settings": {
+      "enabled": 1,
+      "template_id": config.underreview_temp_id
+    }
+  }
+});
+NotificationEmailUnderReview.addSubstitution('-R-Pac Billing Portal-', "Thanks!");
+
+
+
 var NotificationEmailAdmin = new sendgrid.Email({
   to: 'ahmadkbakibi@gmail.com',
   from: 'noreply@r-pac.com',
@@ -330,10 +348,10 @@ module.exports = function (apiRouter) {
 
       for(var i =0;i<config.email.length;i++){
 
-        NotificationEmailAdmin.to = config.email[i];
-        NotificationEmailAdmin.subject = "PO: " + req.body.PONumber + " was rejected by " + req.user.code;
-        NotificationEmailAdmin.html = req.body.comment;
-        sendgrid.send(NotificationEmailAdmin, function (err, json) {
+        NotificationEmail.to = config.email[i];
+        NotificationEmail.subject = "PO: " + req.body.PONumber + " was rejected by " + req.user.code;
+        NotificationEmail.html = req.body.comment;
+        sendgrid.send(NotificationEmail, function (err, json) {
           if (err) {
             console.log("Notification Error Email: " + err);
           } else {
@@ -355,10 +373,10 @@ module.exports = function (apiRouter) {
     return exportService.checkPOStatus(req.body.PONumber).then(function (po) {
       if (po.POStatus == 'UnderReview') {
 
-        NotificationEmail.to = req.user.email;
-        NotificationEmail.subject = "PO: " + req.body.PONumber + " has been UnderReview and now Invoiced ";
-        NotificationEmail.html = "PO: " + req.body.PONumber + " has been Under Review and now Invoiced ";
-        sendgrid.send(NotificationEmail, function (err, json) {
+        NotificationEmailUnderReview.to = req.user.email;
+        NotificationEmailUnderReview.subject = "PO: " + req.body.PONumber + " has been UnderReview and now Invoiced ";
+        NotificationEmailUnderReview.html = "PO: " + req.body.PONumber + " has been Under Review and now Invoiced ";
+        sendgrid.send(NotificationEmailUnderReview, function (err, json) {
           if (err) {
             console.log("Notification Error Email: " + err);
           } else {

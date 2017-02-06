@@ -58,7 +58,9 @@
     "secret":"r-pacSecret",
     "email":["ahmadkbakibi@gmail.com","ahmad.Hisham@dataarena.com"],
     "Notify_temp_id":"ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3",
-    "NotifyAdmin_temp_id":"ae6ea2e4-adae-4b6a-8184-9b0b6ebc7fa3"
+    "underreview_temp_id":"5d15283f-897b-4346-8407-b01b309ef4c2",
+    "new_temp_id":"b0711ade-28ef-4855-b07a-d7b632c54819",
+    "NotifyAdmin_temp_id":"5231545f-9a8d-4260-8edf-19b7f441734b"
   },
   "beta": {
     "username": "",
