@@ -374,11 +374,11 @@ module.exports = function (apiRouter) {
       if (po.POStatus == 'UnderReview') {
 
         exportService.matchUsersPartnerCode(po.PartnerCode).then(function (emails) {
-          console.log(JSON.stringify(emails))
+          console.log(JSON.stringify(emails));
           for(var i =0;i<emails.length;i++){
             NotificationEmailUnderReview.to = emails[i].email;
-            NotificationEmailUnderReview.subject = "PO: " + req.body.PONumber + " has been UnderReview and now Invoiced ";
-            NotificationEmailUnderReview.html = "PO: " + req.body.PONumber + " has been Under Review and now Invoiced ";
+            NotificationEmailUnderReview.subject = "PO: " + req.body.PONumber + " is Invoiced ";
+            NotificationEmailUnderReview.html = "PO: " + req.body.PONumber + " is Invoiced ";
             sendgrid.send(NotificationEmailUnderReview, function (err, json) {
               if (err) {
                 console.log("Notification Error Email: " + err);
