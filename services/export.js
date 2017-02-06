@@ -265,7 +265,13 @@ var service = module.exports = {
   checkPOStatus: function (po) {
     return models.poheader.findOne({
       where: {PONumber: po},
-      attributes: ['POStatus']
+      attributes: ['POStatus','PartnerCode']
+    })
+  },
+  matchUsersPartnerCode: function (code) {
+    return models.user.findAll({
+      where: {code: { $like: '%' + code + '%' } },
+      attributes: ['email']
     })
   },
   UnderReviewPO: function (po, userId) {

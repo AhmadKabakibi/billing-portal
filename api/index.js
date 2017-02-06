@@ -373,14 +373,19 @@ module.exports = function (apiRouter) {
     return exportService.checkPOStatus(req.body.PONumber).then(function (po) {
       if (po.POStatus == 'UnderReview') {
 
-        NotificationEmailUnderReview.to = req.user.email;
-        NotificationEmailUnderReview.subject = "PO: " + req.body.PONumber + " has been UnderReview and now Invoiced ";
-        NotificationEmailUnderReview.html = "PO: " + req.body.PONumber + " has been Under Review and now Invoiced ";
-        sendgrid.send(NotificationEmailUnderReview, function (err, json) {
-          if (err) {
-            console.log("Notification Error Email: " + err);
-          } else {
-            console.log('Notify Sent to !' + req.user.email);
+        exportService.matchUsersPartnerCode(po.PartnerCode).then(function (emails) {
+          console.log(JSON.stringify(emails))
+          for(var i =0;i<emails.length;i++){
+            NotificationEmailUnderReview.to = emails[i].email;
+            NotificationEmailUnderReview.subject = "PO: " + req.body.PONumber + " has been UnderReview and now Invoiced ";
+            NotificationEmailUnderReview.html = "PO: " + req.body.PONumber + " has been Under Review and now Invoiced ";
+            sendgrid.send(NotificationEmailUnderReview, function (err, json) {
+              if (err) {
+                console.log("Notification Error Email: " + err);
+              } else {
+                console.log('Notify Invitation!');
+              }
+            })
           }
         })
 
