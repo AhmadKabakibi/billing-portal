@@ -1,37 +1,41 @@
 <div layout="column">
-    <section flex class="md-whiteframe-1dp">
-        <md-content class="md-padding" layout="row" layout="column">
-            <div class="table-responsive-vertical">
-                <h2 class="md-title">Order Information:</h2>
-                <table id="table" class="table table-hover table-bordered">
-                    <thead>
-                    <tr>
-                        <th>PO Number</th>
-                        <th>Partner</th>
-                        <th>Order Date</th>
-                        <th>Division data</th>
-                        <th>Order Type</th>
-                        <th>Partner Code</th>
-                        <th>Ship to Name</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>{{POdetails[0].PONumber}}</td>
-                        <td>{{POdetails[0].PartnerName}}</td>
-                        <td>{{POdetails[0].PODate | date:'yyyy-dd-MM'}}</td>
-                        <td>{{POdetails[0].Division}}</td>
-                        <td>{{POdetails[0].OrderType}}</td>
-                        <td>{{POdetails[0].PartnerCode}}</td>
-                        <td>{{POdetails[0].ShipToName}}</td>
-                        <td>{{POdetails[0].POStatus}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </md-content>
-    </section>
+
+    <md-toolbar class="md-table-toolbar md-default">
+        <div class="md-toolbar-tools">
+            <span>Order Information:</span>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+
+    <md-table-container>
+        <table md-table>
+            <thead md-head>
+            <tr md-row>
+                <th>PO Number</th>
+                <th>Partner</th>
+                <th>Order Date</th>
+                <th>Division data</th>
+                <th>Order Type</th>
+                <th>Partner Code</th>
+                <th>Ship to Name</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+
+            <tbody md-body>
+            <tr md-row>
+                <td md-cell>{{POdetails[0].PONumber}}</td>
+                <td md-cell>{{POdetails[0].PartnerName}}</td>
+                <td md-cell>{{POdetails[0].PODate | date:'yyyy-dd-MM'}}</td>
+                <td md-cell>{{POdetails[0].Division}}</td>
+                <td md-cell>{{POdetails[0].OrderType}}</td>
+                <td md-cell>{{POdetails[0].PartnerCode}}</td>
+                <td md-cell>{{POdetails[0].ShipToName}}</td>
+                <td md-cell>{{POdetails[0].POStatus}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
 
     <br>
     <!---->
