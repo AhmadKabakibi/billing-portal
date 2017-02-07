@@ -210,6 +210,10 @@
           console.log($scope.status);
         });
 
+      $timeout(function(){
+        getAll()
+      },30000)
+
     }
 
     getAll();
