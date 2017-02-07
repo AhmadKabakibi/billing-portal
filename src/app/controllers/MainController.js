@@ -186,6 +186,10 @@
       }, 2000);
     }
 
+    $timeout(function () {
+      $scope.loadStuff()
+    }, 15000)
+
     function getAll () {
       POsService.loadAllItems()
         .then(function (response) {
@@ -208,11 +212,6 @@
           $scope.status = 'Unable to load customer Partners data: ' + error.message;
           console.log($scope.status);
         });
-
-      $timeout(function () {
-        getAll()
-      }, 15000)
-
     }
 
     getAll();
