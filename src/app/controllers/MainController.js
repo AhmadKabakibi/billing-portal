@@ -186,9 +186,16 @@
       }, 2000);
     }
 
-    $timeout(function () {
-      $scope.loadStuff()
-    }, 15000)
+    // Function to replicate setInterval using $timeout service.
+    $scope.intervalFunction = function(){
+      $timeout(function() {
+        $scope.loadStuff();
+        $scope.intervalFunction();
+      }, 15000)
+    };
+
+    // Kick off the interval
+    $scope.intervalFunction();
 
     function getAll () {
       POsService.loadAllItems()
