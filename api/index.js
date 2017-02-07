@@ -394,6 +394,23 @@ module.exports = function (apiRouter) {
         })
 
       }else {
+
+        exportService.matchUsersPartnerCode(po.PartnerCode).then(function (emails) {
+          console.log(JSON.stringify(emails));
+          for(var i =0;i<emails.length;i++){
+            NotificationEmailUnderReview.to = emails[i].email;
+            NotificationEmailUnderReview.subject = "PO: " + req.body.PONumber + " is Invoiced ";
+            NotificationEmailUnderReview.html = "PO: " + req.body.PONumber + " is Invoiced ";
+            sendgrid.send(NotificationEmailUnderReview, function (err, json) {
+              if (err) {
+                console.log("Notification Error Email: " + err);
+              } else {
+                console.log('Notify Invitation!');
+              }
+            })
+          }
+        })
+
         exportService.invociePO(req.body.PONumber,req.user.id).then(function (result) {
           return successHandler(res, result);
         })

@@ -33,7 +33,6 @@
     $scope.dateRanges = $scope.dateRange;
     $scope.dateAfter = $scope.dateRanges[0];
 
-
     $scope.POStatus = [
       {val: "Pending", str: "Pending"},
       {val: "Accepted", str: "Accepted"},
@@ -210,9 +209,9 @@
           console.log($scope.status);
         });
 
-      $timeout(function(){
+      $timeout(function () {
         getAll()
-      },30000)
+      }, 15000)
 
     }
 
@@ -775,9 +774,13 @@
     .filter('isAfter', function () {
       return function (items, dateAfter) {
         // Using ES6 filter method
-        return items.filter(function (item) {
-          return moment(item.PODate).isAfter(dateAfter);
-        })
+        if (items != undefined || items != null) {
+          return items.filter(function (item) {
+            return moment(item.PODate).isAfter(dateAfter);
+          })
+        }else{
+          return;
+        }
       }
     });
 
