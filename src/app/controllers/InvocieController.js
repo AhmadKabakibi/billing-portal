@@ -8,6 +8,12 @@
   function InvoiceController (navService, POsService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, principal, $scope, $rootScope, $timeout, $location, loginFactory, $mdEditDialog, $mdDialog, $http, appConf, $mdToast, Upload, $timeout) {
     var vm = this;
 
+    $scope.invoicePreview = {
+      isDisabled: false,
+      isUnderReviewTotal: false,
+      isUnderReview: false,
+      validPercentage: false
+    };
 
     var last = {
       bottom: false,
@@ -90,12 +96,6 @@
       podetails: []
     };
 
-    $scope.invoicePreview = {
-      isDisabled: false,
-      isUnderReviewTotal: false,
-      isUnderReview: false,
-    };
-
     //Handling charge
     $scope.addHandling = function () {
       $scope.invoicePreview.isUnderReview = true;
@@ -144,6 +144,15 @@
       $scope.invoicePreview.isUnderReviewTotal = true;
     }
 
+    $scope.valueChanged = function (ctrl, QTY, value) {
+      //console.log((((QTY - value) / value) * 100).toFixed(3))
+      if ((((QTY - value) / value) * 100).toFixed(3) >= -5.000 && (((QTY - value) / value) * 100).toFixed(3) <= 5.000) {
+        ctrl.QuantityInvoiced.$setValidity('validPercentage', true);
+      } else {
+        ctrl.QuantityInvoiced.$setValidity('validPercentage', false);
+      }
+    }
+
     $scope.total = function () {
       var total = 0.00;
       var total_lines = 0.00;
@@ -181,6 +190,10 @@
         $scope.showSimpleStatus('You should upload at least one file in PDF format');
         return;
       }
+      if(!$scope.projectForm.$valid){
+        $scope.showSimpleStatus('Your Invoice has empty rows');
+        return;
+      }
       if ($scope.invoice.InvoiceNumber == '') {
 
         $scope.showSimpleStatus('InvoiceNumber can not be empty');
@@ -192,11 +205,11 @@
         var lines = $scope.invoice.podetails_invoice;
 
         //
-        /*for (var i = 0; i < lines.length && !$scope.invoicePreview.isUnderReview; i++) {
-         if (lines[i].QuantityOrdered != lines[i].QuantityInvoiced) {
-         $scope.invoicePreview.isUnderReview = true;
-         }
-         }*/
+        for (var i = 0; i < lines.length && !$scope.invoicePreview.isUnderReview; i++) {
+          if (lines[i].QuantityOrdered != lines[i].QuantityInvoiced) {
+            $scope.invoicePreview.isUnderReview = true;
+          }
+        }
 
         //if ($scope.invoicePreview.isUnderReviewTotal || $scope.invoicePreview.isUnderReview)
         if ($scope.invoicePreview.isUnderReview) {

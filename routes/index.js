@@ -39,7 +39,7 @@ module.exports = function (app, passport) {
         if (req.user)
             res.json({success: true, user: req.user,isAuthenticated:req.isAuthenticated()});
         else
-            res.send({success: false, msg: 'Authentication failed.'});
+            res.sendStatus({success: false, msg: 'Authentication failed.'});
     });
 }
 
@@ -52,5 +52,5 @@ function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on
     if (req.isAuthenticated())
         return next()
-    res.send(401);
+    res.sendStatus(401);
 }

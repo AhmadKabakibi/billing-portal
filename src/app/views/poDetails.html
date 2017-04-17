@@ -244,9 +244,9 @@
                                 <label>Inovice number</label>
                                 <input required name="InvoiceNumber" type="text" ng-model="invoice.InvoiceNumber"
                                        ng-disabled="invoicePreview.isDisabled">
-                                <div ng-messages="projectForm.InvoiceNumber.$error">
-                                    <div ng-message="required">InvoiceNumber can not be empty</div>
-                                </div>
+                                <span class="error" ng-show="projectForm.InvoiceNumber.$error.required">
+                                    InvoiceNumber can not be empty
+                                </span>
                             </md-input-container>
                             <md-input-container>
                                 <label>Invoice date</label>
@@ -261,17 +261,17 @@
                                 <label>Phone Number</label>
                                 <input required name="PhoneNumber" ng-model="invoice.phoneNumber" type="text"
                                        ng-disabled="invoicePreview.isDisabled">
-                                <div ng-messages="projectForm.PhoneNumber.$error">
-                                    <div ng-message="required">Phone Number can not be empty</div>
-                                </div>
+                                <span class="error" ng-show="projectForm.PhoneNumber.$error.required">
+                                    Phone Number can not be empty
+                                </span>
                             </md-input-container>
                             <md-input-container>
                                 <label>contact(email)</label>
                                 <input required name="email" ng-model="invoice.ContactEmail" type="email"
                                        ng-disabled="invoicePreview.isDisabled">
-                                <div ng-messages="projectForm.email.$error">
-                                    <div ng-message="required">Contact Email can not be empty</div>
-                                </div>
+                                 <span class="error" ng-show="projectForm.email.$error.required">
+                                    Contact Email can not be empty
+                                </span>
                             </md-input-container>
                         </md-content>
                     </md-content>
@@ -294,8 +294,6 @@
                         </tr>
                         </thead>
                         <tbody>
-
-
                         <tr ng-repeat="item in invoice.podetails_invoice">
 
                             <!--<td><input type="text" ng-model="item.ItemCode" class="form-control"/></td>
@@ -314,15 +312,34 @@
                             <td>{{item.UnitofMeasure}}</td>
                             <td>{{item.QuantityOrdered}}</td>
                             <td>{{item.QuantityBackordered}}</td>
-                            <td>{{item.QuantityInvoiced}}</td>
+                            <td>
+
+                                <ng-form name="qty">
+                                    <input type="text" name="QuantityInvoiced"
+                                           ng-model="item.QuantityInvoiced"
+                                           ng-required="true"
+                                           class="form-control"
+                                           ng-class="qty.QuantityInvoiced.$error.validPercentage ? 'has-error' : '' "
+                                           ng-disabled="invoicePreview.isDisabled"
+                                           ng-change="valueChanged(qty,item.QuantityInvoiced,item.QuantityOrdered)">
+                                    <span class="error" ng-show="qty.QuantityInvoiced.$error.validPercentage">
+                                        The value should be within range -5% below and +5% above the original QTY.
+                                    </span>
+                                </ng-form>
+                            </td>
+
                             <td>{{item.Total}}</td>
-                            <!--<td><input type="text" ng-model="item.QuantityInvoiced" class="form-control"
+
+                            <!--
+                            <td>{{item.QuantityInvoiced}}</td>
+                            <td><input type="text" ng-model="item.QuantityInvoiced" class="form-control"
                                        ng-required="true" ng-disabled="invoicePreview.isDisabled"/></td>
                             <td><input type="text" ng-model="item.Total" class="form-control"
                                        ng-required="true" ng-disabled="invoicePreview.isDisabled"/></td>-->
                             <td>
                             </td>
                         </tr>
+
                         <tr ng-repeat="item in invoice.podetails">
 
                             <!--<td><input type="text" ng-model="item.ItemCode" class="form-control"/></td>
@@ -441,6 +458,15 @@
 </script>
 
 <style>
+    .has-error {
+        border-color: #E75753 !important;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+    }
+
+    .error {
+        color: #E75753 !important;
+    }
+
     /* ================ The Timeline ================ */
     md-toast.md-success-toast-theme .md-toast-content {
         background-color: green;
@@ -452,10 +478,12 @@
         font-weight: 500;
         color: #ffffff;
     }
+
     md-toast.md-center {
         left: 50%;
         transform: translate3d(-50%, 0, 0);
     }
+
     .timeline {
         position: relative;
         width: 660px;

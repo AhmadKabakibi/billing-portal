@@ -186,18 +186,18 @@
       }, 2000);
     }
 
-    // Function to replicate setInterval using $timeout service.
     $scope.intervalFunction = function(){
       $timeout(function() {
-        $scope.loadStuff();
+        getAll();
         $scope.intervalFunction();
-      }, 15000)
+      }, 35000)
     };
-
-    // Kick off the interval
     $scope.intervalFunction();
 
+
     function getAll () {
+    /*console.log(new Date());*/
+
       POsService.loadAllItems()
         .then(function (response) {
           //$scope.posHeader = removeDuplicate(response.data.data, 'PONumber');

@@ -1,6 +1,6 @@
 <!doctype html>
 <html class="no-js" ng-app="angularMaterialAdmin">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>r-pac billing portal</title>
     <meta name="description" content="billing portal system r-pac Dashboard">
@@ -12,25 +12,83 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <style>
-      md-sidenav{
-        width : 110px !important;
-        min-width : 110px !important;
-        max-width : 110px !important;
-      }
+        md-sidenav {
+            width: 110px !important;
+            min-width: 110px !important;
+            max-width: 110px !important;
+        }
 
-      /*table.md-table tr.poCell td.md-cell md-checkbox, table.md-table th.poHeader  md-checkbox {
-        display: none !important;
-      }*/
+        /*table.md-table tr.poCell td.md-cell md-checkbox, table.md-table th.poHeader  md-checkbox {
+          display: none !important;
+        }*/
 
-     /* md-edit-dialog.md-content md-input-container input {
-        display: none !important;
-      }*/
+        /* md-edit-dialog.md-content md-input-container input {
+           display: none !important;
+         }*/
 
-      .label  {
-        color: rgba(0, 0, 0, 0.54);
-        font-size: 12px;
-        font-weight: bold;
-      }
+        .label {
+            color: rgba(0, 0, 0, 0.54);
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Medium devices (desktops, 992px and up) */
+        @media (min-width: 992px) {
+            .form-control {
+                font-size:15px;
+            }
+            table.md-table th.md-column{
+                font-size: 14px !important;
+            }
+
+            table.md-table td.md-cell{
+                font-size: 14px;
+                font-weight: 600;
+            }
+            body,.md-title{
+                font-size: 18px;
+                font-weight: 500;
+            }
+
+            .table>tbody>tr>td{
+                font-size: 16px;
+                font-weight: 400;
+            }
+
+            .md-toolbar-tools {
+                font-size: 18px;
+                font-weight: 400;
+            }
+        }
+
+        /* Large devices (large desktops, 1200px and up) */
+        @media (min-width: 1200px) {
+            .form-control {
+                font-size:15px;
+            }
+            table.md-table th.md-column{
+                font-size: 14px !important;
+            }
+
+            table.md-table td.md-cell{
+                font-size: 14px;
+                font-weight: 600;
+            }
+            body,.md-title{
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            .table>tbody>tr>td{
+                font-size: 16px;
+                font-weight: 400;
+            }
+
+            .md-toolbar-tools {
+                font-size: 18px;
+                font-weight: 400;
+            }
+        }
     </style>
 
     <!-- build:css({.tmp/serve,src}) styles/vendor.css -->
@@ -44,31 +102,31 @@
     <!-- css files will be automaticaly insert here -->
     <!-- endinject -->
     <!-- endbuild -->
-  </head>
-  <body>
-    <!--[if lt IE 10]>
-      <p>You are using an <strong>outdated</strong> browser. Please
-        <a href="http://browsehappy.com/">upgrade your browser</a>
-        to improve your experience.</p>
-    <![endif]-->
+</head>
+<body>
+<!--[if lt IE 10]>
+<p>You are using an <strong>outdated</strong> browser. Please
+    <a href="http://browsehappy.com/">upgrade your browser</a>
+    to improve your experience.</p>
+<![endif]-->
 
-    <div ui-view layout="row" layout-fill></div>
+<div ui-view layout="row" layout-fill></div>
 
-    <!-- build:js(src) scripts/vendor.js -->
-    <!-- bower:js -->
-    <!-- run `gulp wiredep` to automaticaly populate bower script dependencies -->
-    <!-- endbower -->
-    <!-- endbuild -->
+<!-- build:js(src) scripts/vendor.js -->
+<!-- bower:js -->
+<!-- run `gulp wiredep` to automaticaly populate bower script dependencies -->
+<!-- endbower -->
+<!-- endbuild -->
 
-    <!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
-    <!-- inject:js -->
-    <!-- js files will be automaticaly insert here -->
-    <!-- endinject -->
+<!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
+<!-- inject:js -->
+<!-- js files will be automaticaly insert here -->
+<!-- endinject -->
 
-    <!-- inject:partials -->
-    <!-- angular templates will be automatically converted in js and inserted here -->
-    <!-- endinject -->
-    <!-- endbuild -->
+<!-- inject:partials -->
+<!-- angular templates will be automatically converted in js and inserted here -->
+<!-- endinject -->
+<!-- endbuild -->
 
-  </body>
+</body>
 </html>
