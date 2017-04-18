@@ -602,7 +602,7 @@
       name: 'Total'
     }];
 
-    $scope._pd_limitOptions = [5, 10, 15];
+    $scope._pd_limitOptions = [10, 15, 20];
     $scope._pd_options = {
       rowSelection: false,
       multiSelect: false,
@@ -616,12 +616,12 @@
 
     $scope._pd_query = {
       order: 'name',
-      limit: 5,
+      limit: 10,
       page: 1
     };
 
     $scope._pd_toggleLimitOptions = function () {
-      $scope.limitOptions = $scope.limitOptions ? undefined : [5, 10, 15];
+      $scope.limitOptions = $scope.limitOptions ? undefined : [10, 15, 20];
     };
 
     $scope._pd_getTypes = function () {
