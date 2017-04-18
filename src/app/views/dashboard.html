@@ -55,23 +55,23 @@
 
         <md-card-content>
             <div layout="row" layout-align="center center">
-                <p flex="50">Pending:</p><h4 flex="50" class="md-secondary">{{ (posHeader|
+                <p flex="50" style="color: #FC9D0B;">Pending:</p><h4 flex="50" class="md-secondary">{{ (posHeader|
                 filter:{POStatus:'Pending'}).length }}</h4>
             </div>
             <div layout="row" layout-align="center center">
-                <p flex="50">Accepted:</p><h4 flex="50" class="md-secondary">{{ (posHeader|
+                <p flex="50" style="color: #00ff00;">Accepted:</p><h4 flex="50" class="md-secondary">{{ (posHeader|
                 filter:{POStatus:'Accepted'}).length }}</h4>
             </div>
             <div layout="row" layout-align="center center">
-                <p flex="50">Invoiced:</p><h4 flex="50" class="md-secondary">{{ (posHeader|
+                <p flex="50" style="color: #0B7BFC;">Invoiced:</p><h4 flex="50" class="md-secondary">{{ (posHeader|
                 filter:{POStatus:'Invoiced'}).length }}</h4>
             </div>
             <div layout="row" layout-align="center center">
-                <p flex="50">Rejected:</p><h4 flex="50" class="md-secondary">{{ (posHeader|
+                <p flex="50" style="color: #FFBD33;">Rejected:</p><h4 flex="50" class="md-secondary">{{ (posHeader|
                 filter:{POStatus:'Rejected'}).length }}</h4>
             </div>
             <div layout="row" layout-align="center center">
-                <p flex="50">UnderReview:</p><h4 flex="50" class="md-secondary">{{ (posHeader|
+                <p flex="50" style="color: #FF5733;">UnderReview:</p><h4 flex="50" class="md-secondary">{{ (posHeader|
                 filter:{POStatus:'UnderReview'}).length }}</h4>
             </div>
         </md-card-content>
@@ -116,9 +116,8 @@
 <md-table-container>
 
     <table data-md-table data-md-row-select="options.rowSelection" multiple="{{options.multiSelect}}"
-           ng-model="selected" md-progress="promise">
-
-        <thead md-head md-order="query.order" md-on-reorder="logOrder">
+           ng-model="selected" md-progress="promise" style="background-color: #ECEFF1;">
+        <thead md-head md-order="query.order" md-on-reorder="logOrder" style="background: #29B6F6;">
         <tr md-row>
             <th md-column class="poHeader" ng-repeat="column in columns">
                 <span>{{column.name}}</span>

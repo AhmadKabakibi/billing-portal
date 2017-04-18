@@ -186,8 +186,8 @@
       }, 2000);
     }
 
-    $scope.intervalFunction = function(){
-      $timeout(function() {
+    $scope.intervalFunction = function () {
+      $timeout(function () {
         getAll();
         $scope.intervalFunction();
       }, 35000)
@@ -196,7 +196,7 @@
 
 
     function getAll () {
-    /*console.log(new Date());*/
+      /*console.log(new Date());*/
 
       POsService.loadAllItems()
         .then(function (response) {
@@ -784,7 +784,7 @@
           return items.filter(function (item) {
             return moment(item.PODate).isAfter(dateAfter);
           })
-        }else{
+        } else {
           return;
         }
       }

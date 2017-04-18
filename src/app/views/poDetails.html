@@ -8,17 +8,17 @@
     </md-toolbar>
 
     <md-table-container>
-        <table md-table>
+        <table md-table style="background-color: #ECEFF1;">
             <thead md-head>
             <tr md-row>
-                <th>PO Number</th>
-                <th>Partner</th>
-                <th>Order Date</th>
-                <th>Division data</th>
-                <th>Order Type</th>
-                <th>Partner Code</th>
-                <th>Ship to Name</th>
-                <th>Status</th>
+                <th md-column>PO Number</th>
+                <th md-column>Partner</th>
+                <th md-column>Order Date</th>
+                <th md-column>Division data</th>
+                <th md-column>Order Type</th>
+                <th md-column>Partner Code</th>
+                <th md-column>Ship to Name</th>
+                <th md-column>Status</th>
             </tr>
             </thead>
 
@@ -39,7 +39,7 @@
 
     <br>
     <!---->
-    <md-toolbar class="md-table-toolbar md-default">
+    <md-toolbar class="md-table-toolbar md-default" style="background-color: #ECEFF1; color: #757575;">
         <div class="md-toolbar-tools">
             <span>PO Details:</span>
             <span flex></span>
@@ -51,8 +51,8 @@
 
     <md-table-container>
         <table md-table md-row-select="_pd_options.rowSelection" multiple="{{_pd_options.multiSelect}}"
-               md-progress="_pd_promise">
-            <thead ng-if="!_pd_options.decapitate" md-head md-order="_pd_query.order" md-on-reorder="_pd_logOrder">
+               md-progress="_pd_promise" style="background-color: #ECEFF1;">
+            <thead ng-if="!_pd_options.decapitate" md-head md-order="_pd_query.order" md-on-reorder="_pd_logOrder" style="background: #29B6F6;">
             <tr md-row>
                 <th md-column ng-repeat="column in girdPoDetails">
                     <span>{{column.name}}</span>
@@ -64,7 +64,7 @@
             <tr md-row
                 ng-repeat="PO_dt in POdetails[0].podetails | limitTo: _pd_query.limit : (_pd_query.page -1) * _pd_query.limit">
 
-                <td md-cell>{{PO_dt.poheaderId}}</td>
+                <td md-cell>{{$index+1}}</td>
                 <td md-cell>{{PO_dt.ItemCode}}</td>
                 <td md-cell>{{PO_dt.Description}}</td>
                 <td md-cell>{{PO_dt.WarehouseCode}}</td>
@@ -146,7 +146,7 @@
 
     <!---->
     <md-toolbar ng-show="POdetails[0].POStatus=='UnderReview'|| POdetails[0].POStatus=='Invoiced' "
-                class="md-table-toolbar md-default">
+                class="md-table-toolbar md-default"  style="background-color: #ECEFF1; color: #757575;">
         <div class="md-toolbar-tools">
             <span>Invoice Lines:</span>
             <span flex></span>
@@ -158,8 +158,8 @@
 
     <md-table-container ng-show="POdetails[0].POStatus=='UnderReview'|| POdetails[0].POStatus=='Invoiced' ">
         <table md-table md-row-select="_inv_options.rowSelection" multiple="{{_inv_options.multiSelect}}"
-               md-progress="_inv_promise">
-            <thead ng-if="!_inv_options.decapitate" md-head md-order="_inv_query.order" md-on-reorder="_inv_logOrder">
+               md-progress="_inv_promise" style="background-color: #ECEFF1;">
+            <thead ng-if="!_inv_options.decapitate" md-head md-order="_inv_query.order" md-on-reorder="_inv_logOrder" style="background: #29B6F6;">
             <tr md-row>
                 <th md-column ng-repeat="column in girdInvoiceLines">
                     <span>{{column.name}}</span>
@@ -280,8 +280,8 @@
 
                 <md-content layout-padding="">
 
-                    <table class="table table-hover">
-                        <thead>
+                    <table class="table table-hover" style="background-color: #ECEFF1;">
+                        <thead style="background: #29B6F6;">
                         <tr>
                             <th>Item Code</th>
                             <th>Description</th>
@@ -323,7 +323,7 @@
                                            ng-disabled="invoicePreview.isDisabled"
                                            ng-change="valueChanged(qty,item.QuantityInvoiced,item.QuantityOrdered)">
                                     <span class="error" ng-show="qty.QuantityInvoiced.$error.validPercentage">
-                                        The value should be within range -5% below and +5% above the original QTY.
+                                        The value should be within range -5% below or +5% above the original QTY.
                                     </span>
                                 </ng-form>
                             </td>
