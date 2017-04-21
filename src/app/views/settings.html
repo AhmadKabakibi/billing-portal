@@ -1,7 +1,7 @@
 <md-content layout="column" layout-align="center">
     <div class='md-padding' layout="row" layout-align="start center" flex-offset-sm="0" flex-offset-md="0"
          flex-offset-lg="0" flex-offset-gt-lg="0" layout-wrap>
-        <md-card class="md-whiteframe-9dp" ng-style="{'border-radius': '6px'}" layout-padding>
+        <md-card class="md-whiteframe-9dp" ng-style="{'border-radius': '6px'}" layout-padding style="background-color: #ECEFF1;">
             <md-card-content>
                 <md-input-container>
                     <label>User Name</label>
@@ -43,7 +43,7 @@
         </md-card>
     </div>
 
-    <md-toolbar class="md-table-toolbar md-default" ng-show="!options.rowSelection || !selected.length">
+    <md-toolbar class="md-table-toolbar md-default" ng-show="!options.rowSelection || !selected.length" style="background-color: #ECEFF1; color: #757575;">
         <div class="md-toolbar-tools">
             <span flex></span>
             <md-button class="md-icon-button" ng-click="loadStuff()">
@@ -63,8 +63,8 @@
 
     <md-table-container>
         <table md-table md-row-select="_u_options.rowSelection" multiple="{{_u_options.multiSelect}}"
-               ng-model="_u_selected" md-progress="_u_promise">
-            <thead ng-if="!_u_options.decapitate" md-head md-order="_u_query.order" md-on-reorder="_u_logOrder">
+               ng-model="_u_selected" md-progress="_u_promise" style="background-color: #ECEFF1;">
+            <thead ng-if="!_u_options.decapitate" md-head md-order="_u_query.order" md-on-reorder="_u_logOrder" style="background: #29B6F6;">
             <tr md-row>
                 <th md-column ng-repeat="column in gridUsers">
                     <span>{{column.name}}</span>

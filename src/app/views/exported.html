@@ -1,7 +1,7 @@
 <md-content layout="column" layout-align="center">
     <div class='md-padding' layout="row" layout-align="start center" flex-offset-sm="0" flex-offset-md="0"
          flex-offset-lg="0" flex-offset-gt-lg="0" layout-wrap>
-        <md-card class="md-whiteframe-9dp" ng-style="{'border-radius': '6px'}" layout-padding>
+        <md-card class="md-whiteframe-9dp" ng-style="{'border-radius': '6px'}" layout-padding style="background-color: #ECEFF1;">
             <md-card-content>
                 <md-input-container>
                     <label>File Name</label>
@@ -29,7 +29,7 @@
         </md-card>
     </div>
 
-    <md-toolbar class="md-table-toolbar md-default">
+    <md-toolbar class="md-table-toolbar md-default" style="background-color: #ECEFF1; color: #757575;">
         <div class="md-toolbar-tools">
             <span>Files exported to ERP:</span>
             <span flex></span>
@@ -50,8 +50,8 @@
 
     <md-table-container>
         <table md-table md-row-select="_f_options.rowSelection" multiple="{{_f_options.multiSelect}}"
-               ng-model="_f_selected" md-progress="_f_promise">
-            <thead ng-if="!_f_options.decapitate" md-head md-order="_f_query.order" md-on-reorder="_f_logOrder">
+               ng-model="_f_selected" md-progress="_f_promise" style="background-color: #ECEFF1;">
+            <thead ng-if="!_f_options.decapitate" md-head md-order="_f_query.order" md-on-reorder="_f_logOrder" style="background: #29B6F6;">
             <tr md-row>
                 <th md-column ng-repeat="column in gridExportedFiles">
                     <span>{{column.name}}</span>

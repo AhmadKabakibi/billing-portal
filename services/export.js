@@ -6,11 +6,14 @@ var service = module.exports = {
 
   Receivedfiles: function () {
     return models.fileslogs.findAll({
-      include: [{model: models.statuslogs}]
+      include: [{model: models.statuslogs}],
+       order: '"fileslogs"."createdAt" DESC'
     });
   },
   Exportedfiles: function () {
-    return models.exportfileslogs.findAll();
+    return models.exportfileslogs.findAll({
+       order: '"exportfileslogs"."createdAt" DESC'
+    });
   },
 
   listPOs: function () {
