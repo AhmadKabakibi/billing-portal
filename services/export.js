@@ -14,6 +14,9 @@ var service = module.exports = {
   },
 
   listPOs: function () {
+      return models.poheader.findAll({
+        include: [{model: models.podetails}]
+      });
     return models.poheader.findAll();
   },
   listPartners: function () {

@@ -120,6 +120,8 @@
       }, {
         name: 'Order Date'
       }, {
+        name: 'Number of lines'
+      },{
         name: 'Division data'
       }, {
         name: 'Order Type'
