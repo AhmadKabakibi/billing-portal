@@ -62,8 +62,6 @@
             <tbody md-body>
             <tr md-row
                 ng-repeat="PO_dt in POdetails[0].podetails | limitTo: _pd_query.limit : (_pd_query.page -1) * _pd_query.limit">
-
-                <td md-cell>{{$index+1}}</td>
                 <td md-cell>{{PO_dt.ItemCode}}</td>
                 <td md-cell>{{PO_dt.Description}}</td>
                 <td md-cell>{{PO_dt.WarehouseCode}}</td>

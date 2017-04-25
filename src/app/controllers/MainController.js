@@ -119,18 +119,18 @@
         name: 'Partner'
       }, {
         name: 'Order Date'
+      },{
+        name: 'Partner Code'
       }, {
+        name: 'Status'
+      },{
         name: 'Number of lines'
       },{
-        name: 'Division data'
+        name: 'Division'
       }, {
         name: 'Order Type'
       }, {
-        name: 'Partner Code'
-      }, {
         name: 'Ship to Name'
-      }, {
-        name: 'Status data'
       }];
 
     /* // function that takes an array of objects
@@ -581,8 +581,6 @@
 
     /*PODetails Grid*/
     $scope.girdPoDetails = [{
-      name: 'Line'
-    }, {
       name: 'Item Code'
     }, {
       name: 'Description'
@@ -618,7 +616,7 @@
 
     $scope._pd_query = {
       order: 'name',
-      limit: 10,
+      limit: 5,
       page: 1
     };
 

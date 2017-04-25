@@ -33,11 +33,11 @@
 -->
         </div>
         <md-card-actions layout="row" layout-align="start center">
-            <md-button
+            <md-button class="md-raised"
                     ng-click="loadPOHeader({PONumber:filter.PONumber,dateRange:range,PartnerCode:filter.PartnerCode,status:filter.POStatus})">
                 Run
             </md-button>
-            <md-button ng-json-export-excel data="posHeader"
+            <md-button class="md-raised" ng-json-export-excel data="posHeader"
                        report-fields="{PONumber: 'PO Number', PartnerName: 'Partner', PODate: 'Order Date',Division: 'Division data',OrderType: 'Order Type',PartnerCode: 'Partner Code',ShipToName: 'Ship to Name',POStatus: 'Status'}"
                        filename="'MyPOs'" separator=","> Export
             </md-button>
@@ -46,8 +46,8 @@
     </md-card>
 
     <md-card flex="30" md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch layout-margin
-             style="background-color: #B3E5FC;">
-        <md-card-header style="background-color: #29B6F6;">
+             style="background-color: #B3E5FC;"> 
+                   <md-card-header style="background-color: #29B6F6;">
             <md-card-header-text>
                 <span class="md-title">My PO Summary:</span>
             </md-card-header-text>
@@ -144,13 +144,12 @@
             <td md-cell>{{item.PONumber}}</td>
             <td md-cell width="80%">{{item.PartnerName}}</td>
             <td md-cell width="100%">{{item.PODate | date:'yyyy-dd-MM'}}</td>
+            <td md-cell width="60%">{{item.PartnerCode}}</td>
+            <td md-cell ng-class="{Invoiced: item.POStatus === 'Invoiced', Pending: item.POStatus === 'Pending'}" class="poHeader" style="font-weight: bolder;">{{item.POStatus}}</td>
             <td md-cell>{{item.podetails.length}}</td>
             <td md-cell>{{item.Division}}</td>
             <td md-cell>{{item.OrderType}}</td>
-            <td md-cell>{{item.PartnerCode}}</td>
             <td md-cell width="100%">{{item.ShipToName}}</td>
-            <!--<td>{{item.POERPStatus}}</td>-->
-            <td class="poHeader" style="font-weight: bolder;">{{item.POStatus}}</td>
         </tr>
         </tbody>
     </table>
