@@ -126,8 +126,8 @@
     </section>
 -->
 
-    <md-list class="md-actions" ng-show="POdetails[0].invoicefiles.length>0">
-        <md-subheader class="md-no-sticky">Invoice Attachments</md-subheader>
+    <md-list style="background-color: #ECEFF1; color: #000; margin-bottom: 10px;" class="md-actions" ng-show="POdetails[0].invoicefiles.length>0">
+        <md-subheader style="background: #29B6F6; color: #000;" class="md-no-sticky">Invoice Attachments</md-subheader>
         <md-list-item ng-repeat="file in POdetails[0].invoicefiles">
             <p> {{file.filename}}
                 <a
@@ -144,9 +144,6 @@
         <div class="md-toolbar-tools">
             <span>Invoice Lines:</span>
             <span flex></span>
-            <md-button class="md-icon-button" ng-click="_inv_loadStuff()">
-                <md-icon>refresh</md-icon>
-            </md-button>
         </div>
     </md-toolbar>
 
