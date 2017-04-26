@@ -129,8 +129,6 @@
         name: 'Division'
       }, {
         name: 'Order Type'
-      }, {
-        name: 'Ship to Name'
       }];
 
     /* // function that takes an array of objects
