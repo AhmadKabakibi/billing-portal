@@ -97,14 +97,14 @@
         <span>{{selected.length}} {{selected.length > 1 ? 'POs' : 'Po'}} selected</span>
         <div flex></div>
 
-        <md-button class="md-warn" ng-show="selected[0].POStatus=='Pending'" ng-click="Accept(selected)">
+        <md-button  class="md-raised" ng-show="selected[0].POStatus=='Pending'" ng-click="Accept(selected)">
             <div class="md-tile-content">Accept</div>
             <md-tooltip>
                 Accept
             </md-tooltip>
         </md-button>
 
-        <md-button class="md-warn" ng-show="selected[0].POStatus=='Pending'" ng-click="Change($event,selected)">
+        <md-button class="md-raised" ng-show="selected[0].POStatus=='Pending'" ng-click="Change($event,selected)">
             <div class="md-tile-content">Change</div>
             <md-tooltip>
                 Change

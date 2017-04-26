@@ -42,9 +42,6 @@
         <div class="md-toolbar-tools">
             <span>PO Details:</span>
             <span flex></span>
-            <md-button class="md-icon-button" ng-click="_pd_loadStuff()">
-                <md-icon>refresh</md-icon>
-            </md-button>
         </div>
     </md-toolbar>
 
@@ -201,7 +198,7 @@
         </md-button>
 
         <md-button class="md-warn" ng-show="POdetails[0].POStatus=='Accepted'" ng-click="AcknowledgeInvoice($event)">
-            <div class="md-tile-content">Acknowledge</div>
+            <div class="md-tile-content">Invoice</div>
             <md-tooltip>
                 Acknowledge and invoice
             </md-tooltip>
