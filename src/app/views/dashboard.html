@@ -145,7 +145,7 @@
             <td md-cell width="80%">{{item.PartnerName}}</td>
             <td md-cell width="100%">{{item.PODate | date:'yyyy-dd-MM'}}</td>
             <td md-cell width="60%">{{item.PartnerCode}}</td>
-            <td md-cell ng-class="{Invoiced: item.POStatus === 'Invoiced', Pending: item.POStatus === 'Pending'}" class="poHeader" style="font-weight: bolder;">{{item.POStatus}}</td>
+            <td md-cell ng-class="{Invoiced: item.POStatus === 'Invoiced',Pending: item.POStatus === 'Pending',Accepted: item.POStatus === 'Accepted',UnderReview: item.POStatus === 'UnderReview',Rejected: item.POStatus === 'Rejected'}" style="font-weight: bolder;">{{item.POStatus}}</td>
             <td md-cell>{{item.podetails.length}}</td>
             <td md-cell>{{item.Division}}</td>
             <td md-cell>{{item.OrderType}}</td>
