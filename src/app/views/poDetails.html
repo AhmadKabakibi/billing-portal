@@ -189,7 +189,7 @@
 
     <div class="md-actions" layout="row" layout-align="start center">
 
-        <md-button class="md-warn" ng-show="POdetails[0].POStatus=='UnderReview' && currentUser.type=='admin'"
+        <md-button class="md-raised" ng-show="POdetails[0].POStatus=='UnderReview' && currentUser.type=='admin'"
                    ng-click="Approved(POdetails)">
             <div class="md-tile-content">Approve and Mark Invoiced</div>
             <md-tooltip>
@@ -197,14 +197,14 @@
             </md-tooltip>
         </md-button>
 
-        <md-button class="md-warn" ng-show="POdetails[0].POStatus=='Accepted'" ng-click="AcknowledgeInvoice($event)">
+        <md-button class="md-raised" ng-show="POdetails[0].POStatus=='Accepted'" ng-click="AcknowledgeInvoice($event)">
             <div class="md-tile-content">Invoice</div>
             <md-tooltip>
                 Acknowledge and invoice
             </md-tooltip>
         </md-button>
 
-        <md-button class="md-warn" ng-click="TimeLine($event)">
+        <md-button class="md-raised" ng-click="TimeLine($event)">
             <div class="md-tile-content">Actions History</div>
             <md-tooltip>
                 View Actions History
@@ -430,20 +430,20 @@
             </md-dialog-content>
 
             <md-dialog-actions layout="row">
-                <md-button ng-click="discard()" md-autofocus>
+                <md-button class="md-raised" ng-click="discard()" md-autofocus>
                     discard
                 </md-button>
 
                 <span flex></span>
-                <md-button ng-show="!invoicePreview.isDisabled" ng-click="preview()">
+                <md-button class="md-raised" ng-show="!invoicePreview.isDisabled" ng-click="preview()">
                     Preview
                 </md-button>
 
-                <md-button ng-show="invoicePreview.isDisabled" ng-click="unpreview()">
+                <md-button class="md-raised" ng-show="invoicePreview.isDisabled" ng-click="unpreview()">
                     Undo
                 </md-button>
 
-                <md-button type="submit" ng-click="sendInvoice()">
+                <md-button class="md-raised" type="submit" ng-click="sendInvoice()">
                     Send
                 </md-button>
             </md-dialog-actions>
