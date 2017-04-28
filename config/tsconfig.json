@@ -7,7 +7,7 @@
     "dialect": "mssql",
     "logging":false,
     "dialectOptions": {
-	  "instanceName": "SQLEXPRESS"	  
+	  "instanceName": "SQLEXPRESS"
     },
     "timezone": "Europe/Amsterdam",
     "ftp":{
