@@ -309,7 +309,7 @@
                                     <input type="text" name="QuantityInvoiced"
                                            ng-model="item.QuantityInvoiced"
                                            ng-required="true"
-                                           value="item.QuantityOrdered" 
+                                           ng-value="item.QuantityOrdered" 
                                            class="form-control"
                                            ng-class="qty.QuantityInvoiced.$error.validPercentage ? 'has-error' : '' "
                                            ng-disabled="invoicePreview.isDisabled"
