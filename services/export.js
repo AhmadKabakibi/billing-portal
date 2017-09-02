@@ -323,7 +323,9 @@ var service = module.exports = {
           }).then(function (invoice) {
 
           //podetails_invoice
-          console.log(JSON.stringify(params.podetails));
+
+          console.log("PD "+JSON.stringify(params.podetails));
+          console.log("PI "+JSON.stringify(params.podetails_invoice));
 
           for (var i = 0; i < params.podetails_invoice.length; i++) {
             models.podetails.update(
@@ -338,9 +340,9 @@ var service = module.exports = {
             })
           }
 
-          for (var i = 0; i < params.podetails_invoice.length; i++) {
-            params.podetails_invoice[i].Total = (params.podetails_invoice[i].Total).toString();
-            console.log(typeof(params.podetails_invoice[i].Total))
+          for (var i = 0; i < params.podetails.length; i++) {
+            params.podetails[i].Total = (params.podetails[i].Total).toString();
+            console.log(typeof(params.podetails[i].Total))
           }
 
           return models.podetails.bulkCreate(params.podetails)
