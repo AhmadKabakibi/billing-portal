@@ -323,13 +323,14 @@ var service = module.exports = {
           }).then(function (invoice) {
 
           //podetails_invoice
+          console.log(JSON.stringify(params.podetails));
 
-          for (var i = 0; i < params.podetails.length; i++) {
+          for (var i = 0; i < params.podetails_invoice.length; i++) {
             models.podetails.update(
               {
-                QuantityInvoiced: params.podetails[i].QuantityInvoiced,
+                QuantityInvoiced: params.podetails_invoice[i].QuantityInvoiced,
                 Total: params.Total
-              }, {where: {id: params.podetails[i].id}}).then(function (PoLine) {
+              }, {where: {id: params.podetails_invoice[i].id}}).then(function (PoLine) {
 
             }).catch(function (err) {
               // err is whatever rejected the promise chain returned to the transaction callback
@@ -337,9 +338,9 @@ var service = module.exports = {
             })
           }
 
-          for (var i = 0; i < params.podetails.length; i++) {
-            params.podetails[i].Total = (params.podetails[i].Total).toString();
-            console.log(typeof(params.podetails[i].Total))
+          for (var i = 0; i < params.podetails_invoice.length; i++) {
+            params.podetails_invoice[i].Total = (params.podetails_invoice[i].Total).toString();
+            console.log(typeof(params.podetails_invoice[i].Total))
           }
 
           return models.podetails.bulkCreate(params.podetails)
