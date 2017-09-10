@@ -20,7 +20,6 @@ var service = module.exports = {
       return models.poheader.findAll({
         include: [{model: models.podetails}]
       });
-    return models.poheader.findAll();
   },
   listPartners: function () {
     return models.poheader.findAll({
@@ -330,8 +329,7 @@ var service = module.exports = {
           for (var i = 0; i < params.podetails_invoice.length; i++) {
             models.podetails.update(
               {
-                QuantityInvoiced: params.podetails_invoice[i].QuantityInvoiced,
-                Total: params.Total
+                QuantityInvoiced: params.podetails_invoice[i].QuantityInvoiced
               }, {where: {id: params.podetails_invoice[i].id}}).then(function (PoLine) {
 
             }).catch(function (err) {
