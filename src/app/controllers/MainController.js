@@ -123,9 +123,9 @@
         name: 'Partner Code'
       }, {
         name: 'Status'
-      },{
+      },/*{
         name: 'Number of lines'
-      },{
+      },*/{
         name: 'Division'
       }, {
         name: 'Order Type'
