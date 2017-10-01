@@ -70,7 +70,7 @@ var service = module.exports = {
                 service.sweepFTP();
             }
             service.pingFTP();
-            service.generateInvoicedPos();
+            //service.generateInvoicedPos();
         });
 
     },

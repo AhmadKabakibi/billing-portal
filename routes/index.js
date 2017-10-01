@@ -12,7 +12,15 @@ var config = require(__dirname + '/../config/tsconfig.json')[env];
 var path = require('path'),
     rootPath = path.normalize(__dirname + '/../'),
     apiRouter = express.Router(),
-    router = express.Router();
+    router = express.Router(),
+     moment = require('moment') //timing utulity module
+     successHandler = function (res, result) {
+    res.json({success: true, data: result});
+      },
+      errorHandler = function (res, error) {
+        return res.status(400).json({success: false, error: error});
+      }
+
 
 module.exports = function (app, passport) {
 
@@ -23,6 +31,40 @@ module.exports = function (app, passport) {
     // API routes
     require('../api/index.js')(apiRouter);
 
+  app.get('/v1/invoices',function(req,res){
+      var csv =[];
+      models.podetails.findAll({
+            include: [{model: models.poheader, where: {POStatus: 'Invoiced'}, include: [{model: models.invoice}]}]
+        }).then(function (Invoicedline) {
+            for (let line of Invoicedline) {
+                 csv.push({
+                "type":"I",
+                "atr01":"",
+                "atr02":"",
+                "InvoiceDate":moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY'),
+                "PartnerCode":line.poheader.PartnerCode,
+                "PartnerName":line.poheader.PartnerName,
+                "InvoiceDate":moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY'),
+                "InvoiceNumber":line.poheader.invoices[0].InvoiceNumber,
+                "atr03":moment(line.poheader.invoices[0].InvoiceDate).format('MM/DD/YYYY'),
+                "atr04":"NONTAX",
+                "FreightAmount":line.FreightAmount,
+                "atr05":"",
+                "ItemCode":line.ItemCode,
+                "atr06":"4521-000",
+                "UnitofMeasure":line.UnitofMeasure,
+                "QuantityOrdered":line.QuantityOrdered,
+                "QuantityInvoiced":line.QuantityInvoiced,
+                "UnitCost":line.UnitCost,
+                "Total":line.Total
+              })
+            }
+          return successHandler(res, csv);
+        }).catch(function (error) {
+            console.log(error);
+          return errorHandler(res, error);
+        })
+  })
 
     // =====================================
     // HOME PAGE (with login links) ========

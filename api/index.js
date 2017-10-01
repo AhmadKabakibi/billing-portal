@@ -14,6 +14,7 @@ var exportService = require('../services/export.js'),
   }
 
 var models = require('../models');
+var moment = require('moment') //timing utulity module
 var jwt = require('jwt-simple');
 //var bcrypt = require('bcrypt');
 var env = process.env.NODE_ENV || 'development';
