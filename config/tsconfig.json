@@ -1,5 +1,6 @@
 {
   "development": {
+    "url":"postgres://hxvoddymxpielm:c650e484df270703f78ea5bbd6c58ec9b0bf567e5d018feef9c6953a76926fe7@ec2-176-34-222-188.eu-west-1.compute.amazonaws.com:5432/df3bkqp6gea9r1",
     "username": "portal",
     "password": "1q2w3e4r@sa",
     "database": "portal_development",

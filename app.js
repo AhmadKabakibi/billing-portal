@@ -135,7 +135,7 @@ require('./routes/index')(app, passport);
 
 
 var server = app.listen(app.get('port'), function () {
-    console.log("NODE_ENV: " + process.env.NODE_ENV + ' Billing Portal server listening on port ' + server.address().port);
+    console.log("NODE_ENV: " + env + ' Billing Portal server listening on port ' + server.address().port);
 });
 
 module.exports = app;
